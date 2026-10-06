@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tổng quan nhân sự | OnboardAI</title>
+  <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/hr-dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="page page--hr-dashboard" data-page="hr-dashboard">
+  <div class="app-shell">
+    <header class="app-header" id="app-header"></header>
+    <aside class="app-sidebar" id="app-sidebar"></aside>
+    <main class="app-main" id="main-content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Tổng quan nhân sự</h1>
+          <p class="page-header__description">Tiến độ hội nhập, danh sách nhân sự mới và khu vực đánh giá rủi ro.</p>
+        </div>
+      </div>
+      <div class="page-body">
+        <div class="stats-grid" data-region="dashboard-stats" aria-label="Thống kê nhân sự"></div>
+        <section class="card" aria-label="Tiến độ nhân sự mới">
+          <form class="toolbar" data-region="dashboard-filters" role="search">
+            <div class="toolbar__search form-field">
+              <label class="form-field__label" for="dashboard-search">Nhân sự</label>
+              <input class="form-field__control" id="dashboard-search" name="search" type="search" placeholder="Nhập tên hoặc email…">
+            </div>
+            <div class="toolbar__filters form-field">
+              <label class="form-field__label" for="dashboard-department">Phòng ban</label>
+              <select class="form-field__control" id="dashboard-department" name="departmentId">
+                <option value="">Tất cả phòng ban</option>
+              </select>
+            </div>
+          </form>
+          <div data-region="dashboard-state" aria-live="polite"></div>
+          <div class="table-wrap" data-region="dashboard-table" hidden>
+            <table class="table">
+              <caption class="sr-only">Tiến độ hội nhập theo nhân sự</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Nhân sự</th>
+                  <th scope="col">Phòng ban</th>
+                  <th scope="col">Người hướng dẫn</th>
+                  <th scope="col">Tiến độ</th>
+                  <th scope="col">Rủi ro</th>
+                  <th scope="col">Trạng thái</th>
+                  <th scope="col">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody data-region="dashboard-rows"></tbody>
+            </table>
+          </div>
+          <p class="form-field__hint hr-dashboard__summary" data-region="dashboard-summary" aria-live="polite"></p>
+        </section>
+        <section class="card" aria-labelledby="risk-panel-title">
+          <div class="card__header">
+            <div>
+              <h2 class="card__title" id="risk-panel-title">Phân tích rủi ro tiến độ</h2>
+              <p class="card__subtitle">AI-3 — bản xem trước: kết quả là draft, chưa can thiệp vào hồ sơ hay checklist.</p>
+            </div>
+            <span class="badge badge--info">Bản xem trước</span>
+          </div>
+          <form class="hr-dashboard__composer" data-region="risk-form" novalidate>
+            <div class="form-field">
+              <label class="form-field__label" for="risk-newHireId">Nhân sự mới <span class="form-field__required" aria-hidden="true">*</span></label>
+              <select class="form-field__control" id="risk-newHireId" name="newHireId" required aria-describedby="risk-newHireId-error">
+                <option value="">— Chọn nhân sự —</option>
+              </select>
+              <p class="form-field__error" id="risk-newHireId-error" data-error-for="newHireId" hidden></p>
+            </div>
+            <div class="toolbar__actions">
+              <button class="btn btn--primary" type="submit" data-action="analyze-risk">Phân tích rủi ro</button>
+            </div>
+          </form>
+          <div data-region="risk-state" aria-live="polite"></div>
+          <div class="ai-panel" data-region="risk-result" hidden>
+            <div class="hr-dashboard__risk-head">
+              <span class="badge" data-region="risk-badge"></span>
+              <p data-region="risk-text"></p>
+            </div>
+            <div class="ai-panel__explanation">
+              <p class="alert__title">Lý do (draft)</p>
+              <p class="alert__message" data-region="risk-explanation"></p>
+            </div>
+            <div class="ai-panel__sources">
+              <p class="alert__title">Nguồn dữ liệu</p>
+              <div data-region="risk-sources"></div>
+            </div>
+            <div class="ai-panel__actions" data-region="risk-actions" hidden>
+              <button class="btn btn--primary btn--sm" type="button" data-action="accept-risk">Chấp nhận</button>
+              <button class="btn btn--secondary btn--sm" type="button" data-action="edit-risk">Sửa</button>
+              <button class="btn btn--ghost btn--sm" type="button" data-action="reject-risk">Từ chối</button>
+              <button class="btn btn--secondary btn--sm" type="button" data-action="rerun-risk">Tạo lại</button>
+              <button class="btn btn--secondary btn--sm" type="button" data-action="save-risk">Lưu</button>
+            </div>
+          </div>
+        </section>
+        <p class="hr-dashboard__preview">Giai đoạn giao diện: phân tích rủi ro là bản mô phỏng từ dữ liệu minh họa, chưa gọi dịch vụ AI thật.</p>
+      </div>
+    </main>
+  </div>
+  <div id="modal-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+  <script type="module" src="../js/main.js"></script>
+</body>
+</html>
