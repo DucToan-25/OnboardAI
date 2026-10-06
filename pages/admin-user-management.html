@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quản lý tài khoản | OnboardAI</title>
+  <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/admin-user-management.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="page page--admin-user-management" data-page="admin-user-management">
+  <div class="app-shell">
+    <header class="app-header" id="app-header"></header>
+    <aside class="app-sidebar" id="app-sidebar"></aside>
+    <main class="app-main" id="main-content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Quản lý tài khoản</h1>
+          <p class="page-header__description">Tài khoản hệ thống, vai trò và phòng ban được phân công.</p>
+        </div>
+        <div class="page-header__actions">
+          <button class="btn btn--primary" type="button" data-action="open-user-form">Thêm tài khoản</button>
+        </div>
+      </div>
+      <div class="page-body">
+        <section class="card" aria-label="Danh sách tài khoản">
+          <form class="toolbar" data-region="user-filters" role="search">
+            <div class="toolbar__search form-field">
+              <label class="form-field__label" for="user-search">Tài khoản</label>
+              <input class="form-field__control" id="user-search" name="search" type="search" placeholder="Nhập tên hoặc email…">
+            </div>
+            <div class="toolbar__filters form-field">
+              <label class="form-field__label" for="user-role">Vai trò</label>
+              <select class="form-field__control" id="user-role" name="role">
+                <option value="">Tất cả vai trò</option>
+              </select>
+            </div>
+            <div class="toolbar__filters form-field">
+              <label class="form-field__label" for="user-status">Trạng thái</label>
+              <select class="form-field__control" id="user-status" name="status">
+                <option value="">Tất cả</option>
+                <option value="active">Hoạt động</option>
+                <option value="disabled">Vô hiệu hóa</option>
+              </select>
+            </div>
+            <div class="toolbar__filters form-field">
+              <label class="form-field__label" for="user-department">Phòng ban</label>
+              <select class="form-field__control" id="user-department" name="departmentId">
+                <option value="">Tất cả phòng ban</option>
+              </select>
+            </div>
+          </form>
+          <div data-region="user-state" aria-live="polite"></div>
+          <div class="table-wrap" data-region="user-table" hidden>
+            <table class="table">
+              <caption class="sr-only">Danh sách tài khoản hệ thống</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Tài khoản</th>
+                  <th scope="col">Vai trò</th>
+                  <th scope="col">Phòng ban</th>
+                  <th scope="col">Trạng thái</th>
+                  <th scope="col">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody data-region="user-rows"></tbody>
+            </table>
+          </div>
+          <p class="form-field__hint admin-users__summary" data-region="user-summary" aria-live="polite"></p>
+        </section>
+        <p class="admin-users__preview">Giai đoạn giao diện: thay đổi tài khoản chỉ được xem trước, chưa ghi vào kho dữ liệu.</p>
+      </div>
+    </main>
+  </div>
+  <div id="modal-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+  <script type="module" src="../js/main.js"></script>
+</body>
+</html>
