@@ -1,14 +1,15 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ghi chú check-in | OnboardAI</title>
-  <link rel="stylesheet" href="../css/base.css" />
-  <link rel="stylesheet" href="../css/layout.css" />
-  <link rel="stylesheet" href="../css/components.css" />
-  <link rel="stylesheet" href="../css/pages/mentor-checkin-note.css" />
-  <link rel="stylesheet" href="../css/responsive.css" />
+  <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/mentor-checkin-note.css">
+  <link rel="stylesheet" href="../css/responsive.css">
 </head>
 <body class="page page--mentor-checkin-note" data-page="mentor-checkin-note">
   <div class="app-shell">
@@ -16,12 +17,87 @@
     <aside class="app-sidebar" id="app-sidebar"></aside>
     <main class="app-main" id="main-content">
       <div class="page-header">
-        <div>
-          <h1 class="page-header__title">Ghi chú check-in</h1>
-          <p class="page-header__description">Ghi nhận trao đổi định kỳ với mentee.</p>
+        <h1 class="page-header__title">Ghi chú check-in</h1>
+        <p class="page-header__description">Ghi nhận trao đổi định kỳ với mentee.</p>
+      </div>
+      <div class="page-body">
+        <div class="content-grid content-grid--sidebar mentor-checkin__layout">
+          <section class="card mentor-checkin__form-card">
+            <div class="card__header">
+              <h2 class="card__title" data-region="form-title">Nội dung trao đổi</h2>
+            </div>
+            <form class="form mentor-checkin__form" data-region="checkin-form" novalidate>
+              <div class="mentor-checkin__row">
+                <div class="form-field">
+                  <label class="form-field__label" for="checkin-newHireId">Nhân sự <span class="form-field__required" aria-hidden="true">*</span></label>
+                  <select class="form-field__control" id="checkin-newHireId" name="newHireId" required>
+                    <option value="">— Chọn mentee —</option>
+                  </select>
+                  <p class="form-field__error" data-error-for="newHireId" hidden></p>
+                </div>
+                <div class="form-field">
+                  <label class="form-field__label" for="checkin-scheduledAt">Ngày check-in <span class="form-field__required" aria-hidden="true">*</span></label>
+                  <input class="form-field__control" type="date" id="checkin-scheduledAt" name="scheduledAt" required>
+                  <p class="form-field__error" data-error-for="scheduledAt" hidden></p>
+                </div>
+              </div>
+
+              <div class="form-field form-field--full">
+                <label class="form-field__label" for="checkin-situation">Tình hình hiện tại</label>
+                <textarea class="form-field__control" id="checkin-situation" name="situation" rows="3" placeholder="Mô tả tình hình…"></textarea>
+                <p class="form-field__error" data-error-for="situation" hidden></p>
+              </div>
+
+              <div class="form-field form-field--full">
+                <label class="form-field__label" for="checkin-challenges">Khó khăn cần hỗ trợ</label>
+                <textarea class="form-field__control" id="checkin-challenges" name="challenges" rows="3" placeholder="Nhập khó khăn cần hỗ trợ…"></textarea>
+                <p class="form-field__error" data-error-for="challenges" hidden></p>
+              </div>
+
+              <div class="form-field form-field--full">
+                <label class="form-field__label" for="checkin-nextSteps">Việc tiếp theo</label>
+                <textarea class="form-field__control" id="checkin-nextSteps" name="nextSteps" rows="3" placeholder="Kế hoạch tiếp theo…"></textarea>
+                <p class="form-field__error" data-error-for="nextSteps" hidden></p>
+              </div>
+
+              <div class="form-field form-field--full">
+                <label class="form-field__label" for="checkin-status">Trạng thái</label>
+                <select class="form-field__control" id="checkin-status" name="status">
+                  <option value="scheduled">Đã lên lịch</option>
+                  <option value="completed">Hoàn thành</option>
+                  <option value="canceled">Đã hủy</option>
+                </select>
+              </div>
+
+              <div class="alert alert--info" data-region="preview-notice" hidden>
+                <p class="alert__message">Đây là bản xem trước. Bản giao diện chưa lưu ghi chú vào kho dữ liệu.</p>
+              </div>
+
+              <div class="form__actions">
+                <button type="submit" class="btn btn--primary" data-action="save-checkin">Lưu ghi chú</button>
+                <button type="button" class="btn btn--secondary" data-action="reset-checkin">Hủy</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="card">
+            <div class="card__header">
+              <h2 class="card__title">Check-in gần đây</h2>
+              <button type="button" class="btn btn--primary btn--sm" data-action="open-checkin-form" data-mode="create">Tạo mới</button>
+            </div>
+            <form class="toolbar" data-region="checkin-filters" role="search">
+              <div class="form-field toolbar__filters">
+                <label class="form-field__label" for="checkin-filter-mentee">Lọc mentee</label>
+                <select class="form-field__control" id="checkin-filter-mentee" name="newHireId">
+                  <option value="">Tất cả mentee</option>
+                </select>
+              </div>
+            </form>
+            <div data-region="checkin-state" aria-live="polite"></div>
+            <div class="mentor-checkin__list" data-region="checkin-list"></div>
+          </section>
         </div>
       </div>
-      <div class="page-body" data-region="checkin-page"></div>
     </main>
   </div>
   <div id="modal-root"></div>
