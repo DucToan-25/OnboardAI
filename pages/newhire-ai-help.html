@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trợ giúp AI | OnboardAI</title>
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/newhire-ai-help.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="page page--newhire-ai-help" data-page="newhire-ai-help">
+  <div class="app-shell">
+    <header class="app-header" id="app-header"></header>
+    <aside class="app-sidebar" id="app-sidebar"></aside>
+    <main class="app-main" id="main-content">
+      <div class="page-header">
+        <h1 class="page-header__title">Trợ giúp AI</h1>
+      </div>
+      <div class="page-body nh-ai-help__layout">
+        <section class="card ai-panel" aria-labelledby="policy-title">
+          <div class="ai-panel__header">
+            <h2 class="card__title" id="policy-title">Hỏi đáp chính sách</h2>
+          </div>
+          <form class="form nh-ai-help__composer" data-region="question-form" novalidate>
+            <div class="form-field ai-panel__input">
+              <label class="form-field__label" for="policy-question">Câu hỏi của bạn <span class="form-field__required" aria-hidden="true">*</span></label>
+              <textarea class="form-field__control" id="policy-question" name="question" rows="4" required aria-describedby="policy-question-error policy-preview-hint" placeholder="Ví dụ: Giờ làm việc của công ty như thế nào?"></textarea>
+              <p class="form-field__error" id="policy-question-error" data-error-for="question" hidden></p>
+            </div>
+            <div class="nh-ai-help__composer-actions">
+              <div class="form-field">
+                <label class="form-field__label" for="policy-scenario">Trạng thái minh họa</label>
+                <select class="form-field__control" id="policy-scenario" name="scenario">
+                  <option value="success">Có câu trả lời mẫu</option>
+                  <option value="insufficient">Không đủ dữ liệu</option>
+                  <option value="error">Lỗi xử lý</option>
+                </select>
+              </div>
+              <button class="btn btn--primary" type="submit" data-action="ask-policy">Gửi câu hỏi</button>
+            </div>
+            <p class="form-field__hint" id="policy-preview-hint">Bản xem trước dùng câu trả lời mẫu từ kho dữ liệu; chưa kết nối AI thật.</p>
+          </form>
+          <div class="nh-ai-help__conversation" data-region="conversation" aria-live="polite"></div>
+        </section>
+        <aside class="card nh-ai-help__notes" aria-labelledby="notes-title">
+          <div class="card__header"><h2 class="card__title" id="notes-title">Ghi chú đã lưu</h2></div>
+          <p class="form-field__hint">Ghi chú xem trước chỉ tồn tại trong trang hiện tại.</p>
+          <div data-region="saved-notes"></div>
+        </aside>
+      </div>
+    </main>
+  </div>
+  <div id="modal-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+  <script type="module" src="../js/main.js"></script>
+</body>
+</html>

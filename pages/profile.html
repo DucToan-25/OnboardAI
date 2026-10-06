@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ sơ cá nhân · OnboardAI</title>
+    <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages/profile.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+  </head>
+  <body class="page page--profile" data-page="profile">
+    <div class="app-shell">
+      <header class="app-header" id="app-header"></header>
+      <aside class="app-sidebar" id="app-sidebar"></aside>
+      <main class="app-main" id="main-content">
+        <div class="page-header">
+          <h1 class="page-header__title">Hồ sơ cá nhân</h1>
+        </div>
+        <div class="page-body">
+          <div data-region="profile-state" aria-live="polite"></div>
+          <div class="profile__layout" data-region="profile-layout" hidden>
+            <section class="card profile__summary" data-region="profile-summary" aria-label="Tóm tắt hồ sơ"></section>
+            <section class="card profile__details" aria-labelledby="profile-form-heading">
+              <div class="card__header">
+                <h2 class="card__title" id="profile-form-heading">Thông tin cá nhân</h2>
+              </div>
+              <div class="card__body">
+                <form class="form form--two-columns" data-region="profile-form" novalidate>
+                  <div class="form__grid" data-region="profile-fields"></div>
+                  <div class="alert alert--info" data-region="profile-preview" role="status" hidden>
+                    <p class="alert__title">Xem trước thay đổi</p>
+                    <p class="alert__message">Thông tin chưa được lưu vào hồ sơ. Khôi phục để trở về dữ liệu ban đầu.</p>
+                  </div>
+                  <div class="form__actions">
+                    <button class="btn btn--primary" type="submit" data-action="save-profile">Lưu thay đổi</button>
+                    <button class="btn btn--secondary" type="button" data-action="reset-profile">Khôi phục</button>
+                  </div>
+                </form>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+    <div id="modal-root"></div>
+    <div id="toast-root" aria-live="polite"></div>
+    <script type="module" src="../js/main.js"></script>
+  </body>
+</html>

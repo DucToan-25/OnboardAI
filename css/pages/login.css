@@ -1,0 +1,99 @@
+.page--login .login__layout {
+  width: 100%;
+  max-width: 380px;
+}
+
+.page--login .login__panel {
+  padding: var(--space-8);
+}
+
+.page--login .login__heading {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+
+.page--login .login__brand {
+  width: 152px;
+  height: 32px;
+}
+
+.page--login .login__form,
+.page--login .login__fields {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.page--login .login__password-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-2);
+}
+
+.page--login .login__links {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.page--login .login__notice {
+  color: var(--color-muted);
+  font-size: var(--font-size-small);
+  line-height: 1.6;
+}
+
+.page--login .login__demo {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-3);
+}
+
+.page--login .login__demo-list {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
+
+.page--login .login__demo-account {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.page--login .login__account-details {
+  display: grid;
+  gap: var(--space-1);
+  overflow-wrap: anywhere;
+}
+
+.page--login .login__account-email,
+.page--login .login__account-role {
+  color: var(--color-muted);
+  font-size: var(--font-size-small);
+}
+
+.page--login .login__guidance {
+  padding-left: var(--space-5);
+  margin: var(--space-3) 0;
+}
+
+.page--login .login__contact {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 767px) {
+  .page--login .login__panel {
+    padding: var(--space-6);
+  }
+
+  .page--login .login__demo-account {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

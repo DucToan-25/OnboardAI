@@ -1,0 +1,58 @@
+.page--newhire-checklist .nh-checklist__progress {
+  margin-block: var(--space-4);
+}
+
+.page--newhire-checklist .nh-checklist__summary,
+.page--newhire-checklist .nh-checklist__preview {
+  color: var(--color-muted);
+  font-size: var(--font-size-small);
+}
+
+.page--newhire-checklist .nh-checklist__summary {
+  margin-block: var(--space-3) 0;
+}
+
+.page--newhire-checklist .nh-checklist__group {
+  color: var(--color-muted);
+  background: var(--color-background);
+  font-size: var(--font-size-small);
+}
+
+.page--newhire-checklist .nh-checklist__task-label {
+  display: block;
+  color: var(--color-muted);
+  font-size: var(--font-size-small);
+  margin-top: var(--space-1);
+}
+
+.page--newhire-checklist .nh-checklist__detail {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.page--newhire-checklist .nh-checklist__detail-description {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.page--newhire-checklist .nh-checklist__documents {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.page--newhire-checklist .nh-checklist__detail-heading {
+  margin: 0;
+  font-size: var(--font-size-body);
+}
+
+.page--newhire-checklist .nh-checklist__result-preview {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 767px) {
+  .page--newhire-checklist .nh-checklist__progress {
+    margin-block: var(--space-3);
+  }
+}

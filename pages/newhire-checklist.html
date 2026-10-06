@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checklist nhiệm vụ | OnboardAI</title>
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/newhire-checklist.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="page page--newhire-checklist" data-page="newhire-checklist">
+  <div class="app-shell">
+    <header class="app-header" id="app-header"></header>
+    <aside class="app-sidebar" id="app-sidebar"></aside>
+    <main class="app-main" id="main-content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Checklist nhiệm vụ</h1>
+          <p class="page-header__description">Theo dõi công việc trong hành trình hội nhập của bạn.</p>
+        </div>
+        <div class="page-header__actions">
+          <button class="btn btn--primary" type="button" data-action="add-personal-task">
+            <span aria-hidden="true">+</span> Thêm việc cá nhân
+          </button>
+        </div>
+      </div>
+      <div class="page-body">
+        <section class="card" aria-label="Danh sách nhiệm vụ">
+          <div class="toolbar">
+            <div class="toolbar__search form-field">
+              <label class="form-field__label" for="checklist-search">Tên nhiệm vụ</label>
+              <input class="form-field__control" id="checklist-search" name="search" type="search" placeholder="Nhập tên nhiệm vụ…" data-region="search">
+            </div>
+            <div class="toolbar__filters form-field">
+              <label class="form-field__label" for="checklist-status">Trạng thái</label>
+              <select class="form-field__control" id="checklist-status" name="status" data-region="status-filter">
+                <option value="">Tất cả</option>
+              </select>
+            </div>
+          </div>
+          <div class="nh-checklist__progress" data-region="task-progress"></div>
+          <div data-region="task-state" aria-live="polite"></div>
+          <div class="table-wrap" data-region="task-table" hidden>
+            <table class="table">
+              <caption class="sr-only">Nhiệm vụ hội nhập và việc cá nhân xem trước</caption>
+              <thead>
+                <tr><th scope="col">Nhiệm vụ</th><th scope="col">Hạn hoàn thành</th><th scope="col">Trạng thái</th><th scope="col">Thao tác</th></tr>
+              </thead>
+              <tbody data-region="journey-tasks"></tbody>
+              <tbody data-region="personal-tasks"></tbody>
+            </table>
+          </div>
+          <p class="nh-checklist__summary" data-region="task-summary" aria-live="polite"></p>
+        </section>
+        <p class="nh-checklist__preview">Giai đoạn giao diện: kết quả nộp và việc cá nhân chỉ được xem trước trong trang này.</p>
+      </div>
+    </main>
+  </div>
+  <div id="modal-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+  <script type="module" src="../js/main.js"></script>
+</body>
+</html>

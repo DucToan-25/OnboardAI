@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chi tiết tài liệu | OnboardAI</title>
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/document-detail.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="page page--document-detail" data-page="document-detail">
+  <div class="app-shell">
+    <header class="app-header" id="app-header"></header>
+    <aside class="app-sidebar" id="app-sidebar"></aside>
+    <main class="app-main" id="main-content">
+      <div class="page-header"><div><h1 class="page-header__title" data-region="document-title">Chi tiết tài liệu</h1><p class="page-header__description" data-region="document-meta"></p></div><div data-region="document-status"></div></div>
+      <div class="page-body">
+        <div data-region="detail-state" aria-live="polite"></div>
+        <div class="content-grid content-grid--sidebar" data-region="detail-layout" hidden>
+          <article class="card doc-detail__content" data-region="document-content"></article>
+          <nav class="card doc-detail__toc" aria-label="Mục lục tài liệu"><div class="card__header"><h2 class="card__title">Mục lục</h2></div><div data-region="document-toc"></div></nav>
+        </div>
+        <div class="page-header__actions" data-region="document-back"></div>
+      </div>
+    </main>
+  </div>
+  <div id="modal-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+  <script type="module" src="../js/main.js"></script>
+</body>
+</html>

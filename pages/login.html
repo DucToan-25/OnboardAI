@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập · OnboardAI</title>
+    <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages/login.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+  </head>
+  <body class="page page--login" data-page="login">
+    <div class="simple-layout">
+      <main class="simple-layout__content login__layout" id="main-content">
+        <section class="card login__panel" aria-labelledby="login-heading">
+          <div class="login__heading">
+            <img class="login__brand" src="../assets/images/logo.svg" alt="OnboardAI" width="152" height="32">
+            <h1 class="page-header__title" id="login-heading">Đăng nhập</h1>
+            <p class="page-header__description">Truy cập hành trình hội nhập của bạn.</p>
+          </div>
+          <form class="form login__form" data-region="login-form" novalidate>
+            <div data-region="login-fields"></div>
+            <div class="login__links">
+              <button class="btn btn--ghost btn--sm" type="button" data-action="forgot-password">Quên mật khẩu?</button>
+              <button class="btn btn--ghost btn--sm" type="button" data-action="contact-hr">Liên hệ HR</button>
+            </div>
+            <button class="btn btn--primary" type="submit" data-action="login">Đăng nhập demo</button>
+            <p class="login__notice">Bản demo giao diện: chọn tài khoản mẫu, mật khẩu chưa được xác thực.</p>
+          </form>
+          <div class="login__demo">
+            <button class="btn btn--ghost btn--sm" type="button" data-action="choose-demo">Xem và chọn tài khoản demo</button>
+          </div>
+          <div data-region="login-state" aria-live="polite"></div>
+        </section>
+      </main>
+    </div>
+    <div id="modal-root"></div>
+    <div id="toast-root" aria-live="polite"></div>
+    <script type="module" src="../js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,459 @@
+{
+  "schemaVersion": 1,
+  "users": [
+    {
+      "id": "usr-newhire-001",
+      "fullName": "Nguyễn Minh Anh",
+      "email": "minhanh@example.com",
+      "phone": "0901234567",
+      "avatarUrl": "",
+      "role": "newhire",
+      "departmentId": "dep-dev",
+      "jobTitle": "Nhân viên phát triển web",
+      "status": "active"
+    },
+    {
+      "id": "usr-newhire-002",
+      "fullName": "Trần Thu Lan",
+      "email": "thulan@example.com",
+      "phone": "0902345678",
+      "avatarUrl": "",
+      "role": "newhire",
+      "departmentId": "dep-sales",
+      "jobTitle": "Nhân viên kinh doanh",
+      "status": "active"
+    },
+    {
+      "id": "usr-mentor-001",
+      "fullName": "Trần Quang Huy",
+      "email": "mentor@example.com",
+      "phone": "0903456789",
+      "avatarUrl": "",
+      "role": "mentor",
+      "departmentId": "dep-dev",
+      "jobTitle": "Trưởng nhóm phát triển sản phẩm",
+      "status": "active"
+    },
+    {
+      "id": "usr-hr-001",
+      "fullName": "Nguyễn Thu Hà",
+      "email": "hr@example.com",
+      "phone": "0904567890",
+      "avatarUrl": "",
+      "role": "hr",
+      "departmentId": "dep-hr",
+      "jobTitle": "Chuyên viên nhân sự",
+      "status": "active"
+    },
+    {
+      "id": "usr-admin-001",
+      "fullName": "Quản trị viên",
+      "email": "admin@example.com",
+      "phone": "",
+      "avatarUrl": "",
+      "role": "admin",
+      "departmentId": null,
+      "jobTitle": "Quản trị hệ thống",
+      "status": "active"
+    }
+  ],
+  "departments": [
+    {
+      "id": "dep-dev",
+      "name": "Phát triển sản phẩm",
+      "description": "Phát triển sản phẩm và ứng dụng web.",
+      "status": "active"
+    },
+    {
+      "id": "dep-sales",
+      "name": "Kinh doanh",
+      "description": "Kết nối và chăm sóc khách hàng.",
+      "status": "active"
+    },
+    {
+      "id": "dep-hr",
+      "name": "Nhân sự",
+      "description": "Đồng hành cùng nhân viên.",
+      "status": "active"
+    }
+  ],
+  "newHires": [
+    {
+      "id": "nh-001",
+      "userId": "usr-newhire-001",
+      "mentorId": "usr-mentor-001",
+      "startDate": "2026-09-28",
+      "status": "active"
+    },
+    {
+      "id": "nh-002",
+      "userId": "usr-newhire-002",
+      "mentorId": "usr-mentor-001",
+      "startDate": "2026-10-01",
+      "status": "active"
+    }
+  ],
+  "journeys": [
+    {
+      "id": "journey-001",
+      "name": "Hội nhập phát triển web",
+      "departmentId": "dep-dev",
+      "status": "active",
+      "steps": [
+        "Làm quen",
+        "Học quy trình",
+        "Thực hành"
+      ]
+    },
+    {
+      "id": "journey-002",
+      "name": "Hội nhập kinh doanh",
+      "departmentId": "dep-sales",
+      "status": "active",
+      "steps": [
+        "Làm quen",
+        "Tìm hiểu sản phẩm"
+      ]
+    }
+  ],
+  "journeyAssignments": [
+    {
+      "id": "assignment-001",
+      "journeyId": "journey-001",
+      "newHireId": "nh-001",
+      "startDate": "2026-09-28",
+      "status": "active"
+    },
+    {
+      "id": "assignment-002",
+      "journeyId": "journey-002",
+      "newHireId": "nh-002",
+      "startDate": "2026-10-01",
+      "status": "active"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-001",
+      "newHireId": "nh-001",
+      "journeyAssignmentId": "assignment-001",
+      "assignedById": "usr-mentor-001",
+      "title": "Hoàn thiện hồ sơ",
+      "description": "Kiểm tra thông tin cá nhân và cập nhật số điện thoại liên hệ.",
+      "dueDate": "2026-09-28",
+      "status": "completed",
+      "updatedAt": "2026-09-28T08:00:00Z",
+      "relatedDocumentIds": [],
+      "result": null
+    },
+    {
+      "id": "task-002",
+      "newHireId": "nh-001",
+      "journeyAssignmentId": "assignment-001",
+      "assignedById": "usr-mentor-001",
+      "title": "Đọc sổ tay nhân viên",
+      "description": "Tìm hiểu giờ làm việc, quy trình nghỉ phép và các đầu mối hỗ trợ.",
+      "dueDate": "2026-09-30",
+      "status": "completed",
+      "updatedAt": "2026-09-28T08:00:00Z",
+      "relatedDocumentIds": [
+        "doc-001"
+      ],
+      "result": null
+    },
+    {
+      "id": "task-003",
+      "newHireId": "nh-001",
+      "journeyAssignmentId": "assignment-001",
+      "assignedById": "usr-mentor-001",
+      "title": "Đọc quy định bảo mật",
+      "description": "Tìm hiểu cách bảo vệ tài khoản, sử dụng thiết bị và chia sẻ tài liệu. Gửi ghi chú những điểm bạn đã nắm được cho mentor.",
+      "dueDate": "2026-10-05",
+      "status": "in_progress",
+      "updatedAt": "2026-09-28T08:00:00Z",
+      "relatedDocumentIds": [
+        "doc-002"
+      ],
+      "result": null
+    },
+    {
+      "id": "task-004",
+      "newHireId": "nh-001",
+      "journeyAssignmentId": "assignment-001",
+      "assignedById": "usr-mentor-001",
+      "title": "Gửi mục tiêu tuần đầu",
+      "description": "Nêu mục tiêu trong 7 ngày đầu và những hỗ trợ bạn cần từ mentor.",
+      "dueDate": "2026-10-05",
+      "status": "submitted",
+      "updatedAt": "2026-09-28T08:00:00Z",
+      "relatedDocumentIds": [
+        "doc-005"
+      ],
+      "result": {
+        "url": "",
+        "fileName": "muc-tieu-tuan-dau.pdf",
+        "note": "Em đã ghi mục tiêu học quy trình và làm quen dự án."
+      }
+    },
+    {
+      "id": "task-005",
+      "newHireId": "nh-001",
+      "journeyAssignmentId": "assignment-001",
+      "assignedById": "usr-mentor-001",
+      "title": "Check-in với mentor",
+      "description": "Chuẩn bị câu hỏi và trao đổi những khó khăn trong tuần đầu.",
+      "dueDate": "2026-10-06",
+      "status": "pending",
+      "updatedAt": "2026-09-28T08:00:00Z",
+      "relatedDocumentIds": [
+        "doc-006"
+      ],
+      "result": null
+    },
+    {
+      "id": "task-006",
+      "newHireId": "nh-001",
+      "journeyAssignmentId": "assignment-001",
+      "assignedById": "usr-mentor-001",
+      "title": "Hoàn thành khóa học nội bộ",
+      "description": "Tìm hiểu các bước làm việc và ghi chú nội dung cần trao đổi với mentor.",
+      "dueDate": "2026-10-07",
+      "status": "changes_requested",
+      "updatedAt": "2026-09-28T08:00:00Z",
+      "relatedDocumentIds": [
+        "doc-004"
+      ],
+      "result": {
+        "url": "",
+        "fileName": "",
+        "note": "Cần bổ sung phần quy trình review."
+      }
+    },
+    {
+      "id": "task-007",
+      "newHireId": "nh-001",
+      "journeyAssignmentId": "assignment-001",
+      "assignedById": "usr-mentor-001",
+      "title": "Kích hoạt tài khoản công ty",
+      "description": "Kiểm tra tài khoản và bật xác thực hai bước theo hướng dẫn.",
+      "dueDate": "2026-10-01",
+      "status": "completed",
+      "updatedAt": "2026-09-28T08:00:00Z",
+      "relatedDocumentIds": [
+        "doc-002"
+      ],
+      "result": null
+    },
+    {
+      "id": "task-008",
+      "newHireId": "nh-001",
+      "journeyAssignmentId": "assignment-001",
+      "assignedById": "usr-mentor-001",
+      "title": "Xác nhận bàn giao thiết bị",
+      "description": "Kiểm tra thiết bị được cấp và gửi ghi chú nếu cần hỗ trợ.",
+      "dueDate": "2026-10-08",
+      "status": "pending",
+      "updatedAt": "2026-09-28T08:00:00Z",
+      "relatedDocumentIds": [],
+      "result": null
+    },
+    {
+      "id": "task-009",
+      "newHireId": "nh-002",
+      "journeyAssignmentId": "assignment-002",
+      "assignedById": "usr-mentor-001",
+      "title": "Tìm hiểu sản phẩm",
+      "description": "Đọc tài liệu giới thiệu công ty và ghi lại câu hỏi của bạn.",
+      "dueDate": "2026-10-08",
+      "status": "pending",
+      "updatedAt": "2026-09-28T08:00:00Z",
+      "relatedDocumentIds": [
+        "doc-003"
+      ],
+      "result": null
+    }
+  ],
+  "checkins": [
+    {
+      "id": "checkin-001",
+      "newHireId": "nh-001",
+      "mentorId": "usr-mentor-001",
+      "scheduledAt": "2026-10-06T03:00:00Z",
+      "note": "Ghi chú riêng của mentor, không cung cấp cho nhân sự mới.",
+      "status": "scheduled",
+      "sharedWithNewHire": true
+    },
+    {
+      "id": "checkin-002",
+      "newHireId": "nh-002",
+      "mentorId": "usr-mentor-001",
+      "scheduledAt": "2026-10-08T03:00:00Z",
+      "note": "Trao đổi về mục tiêu kinh doanh.",
+      "status": "scheduled",
+      "sharedWithNewHire": false
+    }
+  ],
+  "documents": [
+    {
+      "id": "doc-001",
+      "title": "Sổ tay nhân viên",
+      "category": "Chính sách",
+      "content": "Tổng quan về văn hóa, quy định và quyền lợi dành cho nhân viên mới.\n\n1. Thời gian làm việc\nGiờ làm việc: 08:30–17:30, từ thứ Hai đến thứ Sáu. Nghỉ trưa 12:00–13:00.\n\n2. Quy trình nghỉ phép\nGửi đơn nghỉ phép trước ít nhất 3 ngày làm việc và trao đổi với quản lý trực tiếp để thống nhất kế hoạch.\n\n3. Đầu mối hỗ trợ\nLiên hệ HR khi cần hỗ trợ tài khoản và chính sách. Trao đổi với mentor về lộ trình hội nhập.",
+      "status": "published",
+      "audienceRoles": [
+        "newhire",
+        "mentor",
+        "hr",
+        "admin"
+      ],
+      "departmentIds": [],
+      "updatedById": "usr-hr-001",
+      "updatedAt": "2026-09-28T08:00:00Z"
+    },
+    {
+      "id": "doc-002",
+      "title": "Quy định bảo mật",
+      "category": "Chính sách",
+      "content": "Các bước bảo vệ thông tin trong công ty.\n\n1. Tài khoản\nKhông chia sẻ mật khẩu và bật xác thực hai bước cho tài khoản công việc.\n\n2. Chia sẻ tài liệu\nChỉ chia sẻ tài liệu với người được cấp quyền. Kiểm tra phạm vi trước khi gửi.\n\n3. Hỗ trợ\nBáo ngay cho bộ phận phụ trách nếu phát hiện truy cập bất thường.",
+      "status": "published",
+      "audienceRoles": [
+        "newhire",
+        "mentor",
+        "hr",
+        "admin"
+      ],
+      "departmentIds": [],
+      "updatedById": "usr-hr-001",
+      "updatedAt": "2026-09-28T08:00:00Z"
+    },
+    {
+      "id": "doc-003",
+      "title": "Hướng dẫn công cụ",
+      "category": "Hướng dẫn",
+      "content": "Hướng dẫn sử dụng các công cụ và kênh liên lạc nội bộ.\n\n1. Bắt đầu\nKiểm tra tài khoản công việc, cập nhật thông tin liên hệ và làm quen với kênh trao đổi của nhóm.\n\n2. Khi cần hỗ trợ\nMô tả vấn đề và gửi cho mentor để được hướng dẫn.",
+      "status": "published",
+      "audienceRoles": [
+        "newhire",
+        "mentor",
+        "hr",
+        "admin"
+      ],
+      "departmentIds": [],
+      "updatedById": "usr-hr-001",
+      "updatedAt": "2026-09-28T08:00:00Z"
+    },
+    {
+      "id": "doc-004",
+      "title": "Quy trình làm việc",
+      "category": "Quy trình",
+      "content": "Các bước tiếp nhận và hoàn thành công việc.\n\n1. Tiếp nhận\nĐọc yêu cầu, thống nhất mục tiêu và hạn hoàn thành với mentor.\n\n2. Review\nGửi kết quả, tiếp nhận phản hồi và điều chỉnh trước khi hoàn thành.\n\n3. Làm việc từ xa\nBản chính sách minh họa cho phép tối đa 2 ngày mỗi tuần theo thỏa thuận với quản lý.",
+      "status": "published",
+      "audienceRoles": [
+        "newhire",
+        "mentor",
+        "hr",
+        "admin"
+      ],
+      "departmentIds": [],
+      "updatedById": "usr-hr-001",
+      "updatedAt": "2026-09-28T08:00:00Z"
+    },
+    {
+      "id": "doc-005",
+      "title": "Mẫu mục tiêu tuần đầu",
+      "category": "Biểu mẫu",
+      "content": "Mẫu tham khảo để xác định mục tiêu hội nhập.\n\n1. Mục tiêu\nLiệt kê ba điều bạn muốn hiểu hoặc thực hiện được trong tuần đầu.\n\n2. Kế hoạch\nGhi hoạt động, thời gian dự kiến và hỗ trợ cần thiết cho từng mục tiêu.",
+      "status": "published",
+      "audienceRoles": [
+        "newhire",
+        "mentor",
+        "hr",
+        "admin"
+      ],
+      "departmentIds": [],
+      "updatedById": "usr-hr-001",
+      "updatedAt": "2026-09-28T08:00:00Z"
+    },
+    {
+      "id": "doc-006",
+      "title": "Hướng dẫn check-in",
+      "category": "Hướng dẫn",
+      "content": "Những điểm cần chuẩn bị cho buổi trao đổi với mentor.\n\n1. Trước buổi trao đổi\nGhi lại việc đã làm, khó khăn và câu hỏi cần giải đáp.\n\n2. Sau buổi trao đổi\nThống nhất việc tiếp theo và thời gian check-in kế tiếp.",
+      "status": "published",
+      "audienceRoles": [
+        "newhire",
+        "mentor",
+        "hr",
+        "admin"
+      ],
+      "departmentIds": [],
+      "updatedById": "usr-hr-001",
+      "updatedAt": "2026-09-28T08:00:00Z"
+    },
+    {
+      "id": "doc-dev-only",
+      "title": "Quy ước phát triển sản phẩm",
+      "category": "Quy trình",
+      "content": "Tài liệu trong phạm vi phòng Phát triển sản phẩm.\n\n1. Review mã nguồn\nTrao đổi với người hướng dẫn trước khi ghép thay đổi.",
+      "status": "published",
+      "audienceRoles": [
+        "newhire",
+        "mentor"
+      ],
+      "departmentIds": [
+        "dep-dev"
+      ],
+      "updatedById": "usr-hr-001",
+      "updatedAt": "2026-09-28T08:00:00Z"
+    },
+    {
+      "id": "doc-draft",
+      "title": "Chính sách đang soạn",
+      "category": "Chính sách",
+      "content": "Nội dung nháp chưa được phát hành.",
+      "status": "draft",
+      "audienceRoles": [
+        "newhire",
+        "mentor",
+        "hr",
+        "admin"
+      ],
+      "departmentIds": [],
+      "updatedById": "usr-hr-001",
+      "updatedAt": "2026-09-28T08:00:00Z"
+    }
+  ],
+  "settings": [
+    {
+      "id": "system",
+      "aiPreview": {
+        "question": "Giờ làm việc của công ty như thế nào?",
+        "answer": "Giờ làm việc: 08:30–17:30, từ thứ Hai đến thứ Sáu. Nghỉ trưa 12:00–13:00.",
+        "explanation": "Dựa trên mục Thời gian làm việc trong Sổ tay nhân viên.",
+        "documentIds": [
+          "doc-001"
+        ],
+        "notes": [
+          {
+            "id": "preview-note-001",
+            "title": "Quy trình xin nghỉ phép",
+            "body": "Cần gửi đơn trước ít nhất 3 ngày làm việc và trao đổi với quản lý trực tiếp.",
+            "documentIds": [
+              "doc-001"
+            ],
+            "updatedAt": "2026-10-02T08:00:00Z"
+          },
+          {
+            "id": "preview-note-002",
+            "title": "Chính sách làm việc từ xa",
+            "body": "Được áp dụng tối đa 2 ngày/tuần theo thỏa thuận với quản lý.",
+            "documentIds": [
+              "doc-004"
+            ],
+            "updatedAt": "2026-10-01T08:00:00Z"
+          }
+        ]
+      }
+    }
+  ]
+}
