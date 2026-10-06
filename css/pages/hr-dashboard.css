@@ -1,0 +1,56 @@
+.page--hr-dashboard .hr-dashboard__summary {
+  margin-top: var(--space-3);
+}
+
+.page--hr-dashboard .hr-dashboard__preview {
+  color: var(--color-muted);
+  font-size: var(--font-size-caption);
+}
+
+.page--hr-dashboard .hr-dashboard__composer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-3);
+}
+
+.page--hr-dashboard .hr-dashboard__composer .form-field {
+  flex: 1 1 240px;
+}
+
+.page--hr-dashboard .hr-dashboard__risk-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.page--hr-dashboard .hr-dashboard__risk-details {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.page--hr-dashboard .hr-dashboard__detail-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.page--hr-dashboard .hr-dashboard__name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.page--hr-dashboard .hr-dashboard__meta {
+  color: var(--color-muted);
+  font-size: var(--font-size-caption);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 767px) {
+  .page--hr-dashboard .hr-dashboard__composer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
