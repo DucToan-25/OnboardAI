@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quản lý hành trình | OnboardAI</title>
+  <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/hr-journey-management.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="page page--hr-journey-management" data-page="hr-journey-management">
+  <div class="app-shell">
+    <header class="app-header" id="app-header"></header>
+    <aside class="app-sidebar" id="app-sidebar"></aside>
+    <main class="app-main" id="main-content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Quản lý hành trình</h1>
+          <p class="page-header__description">Mẫu hành trình hội nhập và việc gán nhân sự theo từng mẫu.</p>
+        </div>
+        <div class="page-header__actions">
+          <button class="btn btn--primary" type="button" data-action="open-journey-form">Tạo hành trình</button>
+        </div>
+      </div>
+      <div class="page-body">
+        <section class="card" aria-label="Danh sách mẫu hành trình">
+          <form class="toolbar" data-region="journey-filters" role="search">
+            <div class="toolbar__search form-field">
+              <label class="form-field__label" for="journey-search">Tên hành trình</label>
+              <input class="form-field__control" id="journey-search" name="search" type="search" placeholder="Nhập tên hành trình…">
+            </div>
+            <div class="toolbar__filters form-field">
+              <label class="form-field__label" for="journey-status">Trạng thái</label>
+              <select class="form-field__control" id="journey-status" name="status">
+                <option value="">Tất cả</option>
+                <option value="draft">Bản nháp</option>
+                <option value="active">Đang áp dụng</option>
+                <option value="archived">Đã lưu trữ</option>
+              </select>
+            </div>
+            <div class="toolbar__filters form-field">
+              <label class="form-field__label" for="journey-department">Phòng ban</label>
+              <select class="form-field__control" id="journey-department" name="departmentId">
+                <option value="">Tất cả phòng ban</option>
+              </select>
+            </div>
+          </form>
+          <div data-region="journey-state" aria-live="polite"></div>
+          <div class="table-wrap" data-region="journey-table" hidden>
+            <table class="table">
+              <caption class="sr-only">Mẫu hành trình hội nhập</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Hành trình</th>
+                  <th scope="col">Phòng ban</th>
+                  <th scope="col" class="table__cell--numeric">Số bước</th>
+                  <th scope="col" class="table__cell--numeric">Nhân sự gán</th>
+                  <th scope="col">Trạng thái</th>
+                  <th scope="col">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody data-region="journey-rows"></tbody>
+            </table>
+          </div>
+          <p class="form-field__hint hr-journeys__summary" data-region="journey-summary" aria-live="polite"></p>
+        </section>
+        <p class="hr-journeys__preview">Giai đoạn giao diện: tạo, sửa và lưu trữ hành trình chỉ được xem trước, chưa ghi vào kho dữ liệu.</p>
+      </div>
+    </main>
+  </div>
+  <div id="modal-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+  <script type="module" src="../js/main.js"></script>
+</body>
+</html>
