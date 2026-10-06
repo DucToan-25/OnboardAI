@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quản lý phòng ban | OnboardAI</title>
+  <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/admin-department-management.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="page page--admin-department-management" data-page="admin-department-management">
+  <div class="app-shell">
+    <header class="app-header" id="app-header"></header>
+    <aside class="app-sidebar" id="app-sidebar"></aside>
+    <main class="app-main" id="main-content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Quản lý phòng ban</h1>
+          <p class="page-header__description">Danh sách phòng ban dùng chung cho tài khoản, hành trình và tài liệu.</p>
+        </div>
+        <div class="page-header__actions">
+          <button class="btn btn--primary" type="button" data-action="open-department-form">Thêm phòng ban</button>
+        </div>
+      </div>
+      <div class="page-body">
+        <section class="card" aria-label="Danh sách phòng ban">
+          <form class="toolbar" data-region="department-filters" role="search">
+            <div class="toolbar__search form-field">
+              <label class="form-field__label" for="department-search">Tên phòng ban</label>
+              <input class="form-field__control" id="department-search" name="search" type="search" placeholder="Nhập tên phòng ban…">
+            </div>
+            <div class="toolbar__filters form-field">
+              <label class="form-field__label" for="department-status">Trạng thái</label>
+              <select class="form-field__control" id="department-status" name="status">
+                <option value="">Tất cả</option>
+                <option value="active">Hoạt động</option>
+                <option value="archived">Đã lưu trữ</option>
+              </select>
+            </div>
+          </form>
+          <div data-region="department-state" aria-live="polite"></div>
+          <div class="table-wrap" data-region="department-table" hidden>
+            <table class="table">
+              <caption class="sr-only">Danh sách phòng ban</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Phòng ban</th>
+                  <th scope="col">Mô tả</th>
+                  <th scope="col" class="table__cell--numeric">Tài khoản</th>
+                  <th scope="col">Trạng thái</th>
+                  <th scope="col">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody data-region="department-rows"></tbody>
+            </table>
+          </div>
+          <p class="form-field__hint admin-departments__summary" data-region="department-summary" aria-live="polite"></p>
+        </section>
+        <p class="admin-departments__preview">Giai đoạn giao diện: thêm, sửa và lưu trữ phòng ban chỉ được xem trước, chưa ghi vào kho dữ liệu.</p>
+      </div>
+    </main>
+  </div>
+  <div id="modal-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+  <script type="module" src="../js/main.js"></script>
+</body>
+</html>
