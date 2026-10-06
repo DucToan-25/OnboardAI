@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cài đặt hệ thống | OnboardAI</title>
+  <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages/admin-system-settings.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body class="page page--admin-system-settings" data-page="admin-system-settings">
+  <div class="app-shell">
+    <header class="app-header" id="app-header"></header>
+    <aside class="app-sidebar" id="app-sidebar"></aside>
+    <main class="app-main" id="main-content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-header__title">Cài đặt hệ thống</h1>
+          <p class="page-header__description">Cấu hình dùng chung theo bản ghi hệ thống. Không chứa API key, mật khẩu hay token.</p>
+        </div>
+      </div>
+      <div class="page-body">
+        <div data-region="settings-state" aria-live="polite"></div>
+        <section class="card admin-settings__section" data-region="settings-section" hidden>
+          <div class="tabs admin-settings__tabs" data-region="settings-tabs">
+            <div class="tabs__list" role="tablist" aria-label="Nhóm cài đặt">
+              <button class="tabs__tab" type="button" role="tab" id="settings-tab-ai" aria-controls="settings-panel-ai" aria-selected="true">Trợ lý AI</button>
+              <button class="tabs__tab" type="button" role="tab" id="settings-tab-notes" aria-controls="settings-panel-notes" aria-selected="false">Ghi chú chính sách</button>
+            </div>
+            <div class="tabs__panel" id="settings-panel-ai" role="tabpanel" aria-labelledby="settings-tab-ai">
+              <form class="form" data-region="settings-form" novalidate>
+                <div class="form__grid">
+                  <div class="form-field form-field--full">
+                    <label class="form-field__label" for="settings-question">Câu hỏi mẫu <span class="form-field__required" aria-hidden="true">*</span></label>
+                    <input class="form-field__control" id="settings-question" name="question" type="text" required aria-describedby="settings-question-error">
+                    <p class="form-field__error" id="settings-question-error" data-error-for="question" hidden></p>
+                  </div>
+                  <div class="form-field form-field--full">
+                    <label class="form-field__label" for="settings-answer">Câu trả lời mẫu <span class="form-field__required" aria-hidden="true">*</span></label>
+                    <textarea class="form-field__control" id="settings-answer" name="answer" rows="3" required aria-describedby="settings-answer-error"></textarea>
+                    <p class="form-field__error" id="settings-answer-error" data-error-for="answer" hidden></p>
+                  </div>
+                  <div class="form-field form-field--full">
+                    <label class="form-field__label" for="settings-explanation">Giải thích mẫu</label>
+                    <textarea class="form-field__control" id="settings-explanation" name="explanation" rows="2"></textarea>
+                  </div>
+                </div>
+                <p class="admin-settings__id" data-region="settings-record"></p>
+                <div class="alert alert--info" data-region="settings-notice" hidden>
+                  <p class="alert__message">Bản xem trước — cấu hình chưa được ghi vào hệ thống.</p>
+                </div>
+                <div class="form__actions">
+                  <button class="btn btn--primary" type="submit" data-action="save-settings">Lưu cấu hình</button>
+                  <button class="btn btn--danger" type="button" data-action="reset-settings">Khôi phục mặc định</button>
+                  <button class="btn btn--ghost" type="button" data-action="cancel-settings">Hủy</button>
+                </div>
+              </form>
+            </div>
+            <div class="tabs__panel" id="settings-panel-notes" role="tabpanel" aria-labelledby="settings-tab-notes" hidden>
+              <div class="admin-settings__notes" data-region="notes-list"></div>
+            </div>
+          </div>
+        </section>
+        <p class="admin-settings__preview">Giai đoạn giao diện: lưu và khôi phục chỉ được xem trước, chưa ghi vào cấu hình hệ thống.</p>
+      </div>
+    </main>
+  </div>
+  <div id="modal-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+  <script type="module" src="../js/main.js"></script>
+</body>
+</html>
