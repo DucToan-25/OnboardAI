@@ -39,7 +39,7 @@ export function renderLayout({ currentUser, pageId }) {
     if (ready) link.href = `${item.pageId}.html`;
     else {
       link.classList.add('is-disabled'); link.setAttribute('aria-disabled', 'true');
-      link.title = 'Chưa có trong bản bàn giao SV1';
+      link.title = 'Trang chưa sẵn sàng trong bản hiện tại.';
     }
     const active = item.pageId === pageId || (pageId === 'document-detail' && item.pageId.endsWith('document-library'));
     if (active) { link.classList.add('is-active'); link.setAttribute('aria-current', 'page'); }
