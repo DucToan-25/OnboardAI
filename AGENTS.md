@@ -19,6 +19,21 @@
 
 ## 1. Phạm vi và nguyên tắc làm việc
 
+### Bổ sung theo yêu cầu trang chủ ngày 07/10/2026
+
+- Thêm task `UI-PUBLIC`: `index.html` tại gốc repository, ngoài 18 trang nghiệp vụ trong `pages/`. Đây là trang tin tức công khai theo ảnh Onvera, không thay đổi phân công sáu trang mỗi người. SV3 điều phối tích hợp; owner các file chung vẫn theo mục 3.4, review trước merge.
+- Route `index` là public, layout `simple`; riêng trang chủ dùng header/footer công khai trực tiếp trong HTML, không sidebar hoặc wrapper căn giữa của login. Marker `page page--index`, prefix riêng `index`, CSS `css/pages/index.css`, module `js/pages/index.js`. Vẫn dùng `#app-header`, `#main-content`, `#modal-root`, `#toast-root` và một entry `js/main.js`.
+- Đường dẫn từ root dùng `css/...`, `assets/...`, `js/main.js`, `pages/login.html`; từ `pages/` về trang chủ dùng `../index.html`. Tài nguyên helper dùng URL tương đối với module để hoạt động cả root và deploy dưới thư mục con.
+- Tái sử dụng token/component/UI helper/repository. Tin tức, thông báo, sự kiện lấy từ `portalPosts` trong seed chung theo [hợp đồng dữ liệu](docs/data-contract.md). Chỉ đọc bản ghi `published` và `visibility: public`; phần giới thiệu công khai không chứa nội dung nội bộ bị khóa.
+- Các nút thông tin phụ và chi tiết dùng modal chung; chưa có chính sách/chi tiết nội bộ thì nói rõ đang chờ cập nhật. Không tạo HTML phụ hoặc đăng nhập thứ hai. 19 route tổng cộng gồm index và 18 trang nghiệp vụ.
+
+### Bổ sung khung dùng chung và UI-17 theo yêu cầu ngày 07/10/2026
+
+- Khung đã đăng nhập dùng một logo trong header, là button `btn btn--ghost app-header__brand` với `data-action="toggle-sidebar"`, `aria-controls` và `aria-expanded`. Logo mở/đóng sidebar trên mọi viewport; bỏ nút hamburger, dấu X và dòng “Hành trình hội nhập” lặp ở header. Không bỏ nút đóng của modal.
+- Header nằm trên toàn chiều ngang, sidebar bắt đầu dưới header. Desktop mở mặc định, thu gọn dùng `.app-shell.is-collapsed` để mở rộng nội dung; tablet/mobile đóng mặc định, mở thành drawer. `.app-sidebar.is-open` xác định hiển thị ở mọi viewport; `.page.is-nav-open` chỉ khóa cuộn nền khi drawer mobile mở. Escape/chạm ngoài/trap focus được quản lý một lần tại layout.js.
+- UI-17 giữ `admin-system-settings.html` và quyền Admin, đổi tên hiển thị thành “Quản lý hệ thống”. Gồm thống kê tài khoản/phòng ban/tài liệu từ repository, thông tin tổ chức, quy tắc hội nhập, liên kết đến trang quản trị đã có và phạm vi vai trò từ ROLE_MENUS. Không sửa câu trả lời AI mẫu hoặc sao chép CRUD từ trang khác.
+- Field settings mới theo docs/data-contract.md; chỉ preview, Hủy/khôi phục trả baseline, không ghi hoặc áp dụng cấu hình thật. Các fixture AI vẫn trong seed để ba màn hình AI sử dụng, không thuộc field Admin được sửa.
+
 - Công nghệ hiện tại: HTML5, CSS và JavaScript thuần, dùng ES modules. Không tự chuyển sang React, Vue, TypeScript hoặc thêm framework, thư viện, công cụ build khi chưa có yêu cầu của nhóm.
 - Đợt hiện tại: dựng web tĩnh theo thiết kế, điều hướng, responsive, modal, tab, tìm kiếm/lọc dữ liệu minh họa và kiểm tra biểu mẫu. Dữ liệu đầy đủ, CRUD nghiệp vụ, đăng nhập, phân quyền mô phỏng, ba chức năng AI và tích hợp sẽ phân công ở đợt sau.
 - Ngay từ đợt giao diện phải tách mã hiển thị khỏi dữ liệu, dùng ID và cấu trúc dữ liệu thống nhất. Chỉ chuẩn bị hợp đồng và dữ liệu minh họa tối thiểu; không tự nhận làm toàn bộ phần dữ liệu của nhóm.
@@ -292,9 +307,9 @@ Nếu một trang chỉ dùng layout/component chung, không tạo CSS riêng r�
 
 | Họ class | Tên và biến thể chuẩn | File/owner |
 |---|---|---|
-| Shell | `app-shell`, `app-header`, `app-header__brand`, `app-header__actions`, `app-header__user`, `app-sidebar`, `app-sidebar__header`, `app-sidebar__footer`, `app-main` | `layout.css` / SV3 |
+| Shell | `app-shell` (state `is-collapsed`), `app-header`, `app-header__brand`, `app-header__actions`, `app-header__user`, `app-sidebar` (state `is-open`), `app-sidebar__footer`, `app-main` | `layout.css` / SV3 |
 | Khung đơn giản | `simple-layout`, `simple-layout__content`; dùng ở login/403/404 | `layout.css` / SV3 |
-| Menu | `app-nav`, `app-nav__list`, `app-nav__item`, `app-nav__link`, `app-nav__icon`, `app-nav__label`; link chọn có `is-active` | `layout.css` / SV3 |
+| Menu | `app-nav`, `app-nav__heading`, `app-nav__list`, `app-nav__item`, `app-nav__link`, `app-nav__icon`, `app-nav__label`; link chọn có `is-active` | `layout.css` / SV3 |
 | Khung nội dung | `page`, `page-header`, `page-header__title`, `page-header__description`, `page-header__actions`, `page-body`, `content-grid`, `content-grid--2`, `content-grid--3`, `content-grid--sidebar`, `stats-grid` | `layout.css` / SV3 |
 | Nút | `btn`, `btn__icon`, `btn--primary`, `btn--secondary`, `btn--danger`, `btn--ghost`, `btn--sm`, `btn--icon` | `components.css` / SV1 |
 | Form | `form`, `form__grid`, `form__actions`, `form--two-columns`; `form-field`, `form-field__label`, `form-field__control`, `form-field__hint`, `form-field__error`, `form-field__required`, `form-field--full` | `components.css` / SV1 |
@@ -311,7 +326,7 @@ Nếu một trang chỉ dùng layout/component chung, không tạo CSS riêng r�
 | Card tài liệu | `document-card`, `document-card__icon`, `document-card__title`, `document-card__meta`, `document-card__actions`; dùng thêm `card` | `components.css` / SV1; SV1/SV2 cùng dùng |
 | Hàng nhiệm vụ | `task-item`, `task-item__check`, `task-item__body`, `task-item__title`, `task-item__meta`, `task-item__actions` | `components.css` / SV1; dùng lại ở dashboard/checklist/preview checklist |
 | Modal | `modal`, `modal__backdrop`, `modal__dialog`, `modal__header`, `modal__title`, `modal__close`, `modal__body`, `modal__footer`, `modal--sm`, `modal--lg` | `components.css` / SV1; hành vi do SV2 |
-| Thông báo ngắn | `toast`, `toast__icon`, `toast__message`, `toast__close`, `toast--success`, `toast--danger`, `toast--info` | `components.css` / SV1; `showToast` type `error` map sang tone `danger` |
+| Thông báo ngắn | `toast`, `toast__stack`, `toast__icon`, `toast__message`, `toast__close`, `toast--success`, `toast--danger`, `toast--info` | `components.css` / SV1; `showToast` type `error` map sang tone `danger` |
 | Thông báo trong trang | `alert`, `alert__title`, `alert__message`, `alert--info`, `alert--success`, `alert--warning`, `alert--danger` | `components.css` / SV1 |
 | Loading/rỗng/lỗi | `view-state`, `view-state__icon`, `view-state__title`, `view-state__message`, `view-state__actions`, `view-state--loading`, `view-state--empty`, `view-state--error`; `spinner` khi cần | `components.css` / SV1 |
 | Khu vực AI | `ai-panel`, `ai-panel__header`, `ai-panel__input`, `ai-panel__result`, `ai-panel__explanation`, `ai-panel__sources`, `ai-panel__actions`; dùng thêm `card` nếu cần nền card | `components.css` / SV1; dùng chung ba AI |
@@ -458,6 +473,12 @@ Các ràng buộc cụ thể:
 
 Các kiểu `User`, `Promise<...>` trong bảng mô tả contract; code vẫn là JavaScript thuần, không tự chuyển sang TypeScript. `formatDate` giữ đúng ngày thuần, `formatDateTime` dùng múi giờ cấu hình chung (mặc định `Asia/Ho_Chi_Minh` cho bản demo tiếng Việt).
 
+Bổ sung tích hợp UI ngày 06/10/2026: `format.js` cung cấp `getTodayDate(value = new Date())`, `toDateTimeInput(iso)` và `fromDateTimeInput(localValue)` theo múi giờ cấu hình; giá trị local dùng `YYYY-MM-DDTHH:mm`, chuyển đổi trả ISO UTC hoặc `null` nếu không hợp lệ. Rule dùng lặp `datetime` nằm trong validation chung. `selectors.js` cung cấp `analyzeProgressRisk(tasks)` trả `{ progress, overdue, remaining, hasData, atRisk, level, tone }`; bỏ task canceled khi tính tiến độ, không đánh giá rủi ro khi thiếu task, ngưỡng demo cao dưới 40%, trung bình dưới 70%. Ngày quá hạn lấy từ cùng múi giờ cấu hình. Đây là quy tắc minh họa, chưa phải thuật toán AI.
+
+`roles.js` bổ sung `ROLE_LIBRARY` map role → pageId thư viện; backlink trang chi tiết dùng cấu hình này thay vì định nghĩa lại điều kiện role trong page.
+
+`createTaskItem(task, options)` có thêm `showDueDate`/`showStatus` mặc định `true` để tái sử dụng trong bảng đã có cột hạn/trạng thái mà không lặp thông tin. Renderer vẫn không tự đọc dữ liệu hoặc quyền.
+
 Định dạng rule form thống nhất: `rules` là object `{ fieldName: [rule, ...] }`, mỗi rule có `type` và `message`, thêm tham số nếu cần. Ví dụ `{ fullName: [{ type: 'required', message: 'Vui lòng nhập họ và tên.' }] }`. Các type dùng lặp như `required`, `email`, `date` chỉ có một implementation. Không tự tạo `checkForm`, `validateData`, `isValidForm` với ba cấu trúc kết quả khác nhau.
 
 - Trang giữ ID bản ghi cần xác nhận; chỉ thực hiện thao tác khi `confirmAction(...)` trả `true`. Không dùng title/tên hiển thị để xác định bản ghi.
@@ -508,6 +529,7 @@ Mọi phương thức đều bất đồng bộ, trả `Promise`. Giữ cùng ch
 | `archive(entity, id)` | Bản ghi sau lưu trữ; chỉ dành cho thực thể có hành vi lưu trữ đã định nghĩa |
 | `getMyProfile()` | Hồ sơ của `currentUser.id`; join thông tin phòng ban/mentor khi phù hợp |
 | `updateMyProfile(patch)` | Hồ sơ đã cập nhật; chỉ cho phép các trường cá nhân đã thống nhất |
+| `getDepartmentReferences(departmentId)` | `{ users, journeys, documents }` là số bản ghi tham chiếu; chỉ Admin có quyền quản lý phòng ban. Không trả nội dung journey hoặc cấp quyền mở trang HR. |
 
 `entity` dùng đúng tên trong bảng 8.2. `query` chỉ dùng các khóa đã có trong hợp đồng, như `search`, `status`, `departmentId`, `newHireId`, `page`, `pageSize`. Lọc theo quyền luôn áp dụng, kể cả khi người dùng sửa query. Các lệnh nghiệp vụ đặc biệt phải bổ sung hợp đồng rõ ràng, không lợi dụng `update` để bỏ kiểm tra quyền.
 
@@ -534,6 +556,8 @@ Tất cả ID là chuỗi ổn định, không dùng tên hiển thị hoặc s�
 | `checkins` | `id`, `newHireId`, `mentorId`, `scheduledAt`, `note`, `status`. Mentor là một `users.id`. |
 | `documents` | `id`, `title`, `category`, `content`, `status`, `audienceRoles`, `departmentIds`, `updatedById`, `updatedAt`. `departmentIds: []` nghĩa là áp dụng mọi phòng ban; role vẫn phải phù hợp. |
 | `settings` | Bản ghi cấu hình chung có `id: "system"` và các trường đã được nhóm định nghĩa; không có mật khẩu, API key hoặc token bí mật. |
+
+Các field bổ sung đang dùng trong UI (`tasks.relatedDocumentIds`, `tasks.result`, `checkins.sharedWithNewHire`, `settings.aiPreview`, `settings.checklistPreview`, `settings.riskPreview`) được đặc tả tại [docs/data-contract.md](docs/data-contract.md). Chúng thuộc cùng seed, không tạo kho theo vai trò. Field cá nhân lấy qua `getEditableFields(user, 'profile', profile)`; form quản lý dùng entity `users` và danh sách field Admin trong permissions.js, không dùng contract hồ sơ để sửa người khác.
 
 `newHireId` luôn tham chiếu `newHires.id`, không lẫn `users.id`. Nếu task có `journeyAssignmentId`, nhân sự trong assignment phải khớp `task.newHireId`. Thông tin mentor/phòng ban hiển thị bằng join theo ID.
 

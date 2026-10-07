@@ -74,7 +74,9 @@ Không nhận việc làm hết CSS trang/responsive riêng của SV1/SV2. Khi t
 - Thay tài khoản/role/phòng ban về sau phải phản ánh đúng khi auth/layout/profile tải lại; không làm một bản user riêng cho header của Admin.
 - Nút bị ẩn không thay kiểm tra quyền. Patch fields/capability giữ cùng hợp đồng của permission/repository.
 
-### UI-17 — Cài đặt
+### UI-17 — Quản lý hệ thống
+
+Yêu cầu bổ sung 07/10/2026 thay form câu trả lời AI mẫu bằng tổng quan kho quản trị, thông tin tổ chức và quy tắc hội nhập. Giữ filename/route/quyền Admin. Năm field mới, giới hạn validation và phạm vi preview theo data-contract.md. Liên kết tài khoản/phòng ban/tài liệu về trang đã có, bảng phạm vi lấy ROLE_MENUS; không tạo CRUD hoặc phân quyền riêng.
 
 - Dựng các nhóm form cấu hình theo ảnh, dùng card/form/tabs/button chung; không tự thêm module ngoài thiết kế.
 - Mỗi field khớp schema settings được nhóm chốt, bản ghi có `id: 'system'`. Field mới góp vào hợp đồng/seed với SV2, không đổi tên riêng trong page.
@@ -90,6 +92,8 @@ Không nhận việc làm hết CSS trang/responsive riêng của SV1/SV2. Khi t
 
 ## 5. Quy tắc shell, route và quyền
 
+Bổ sung 07/10/2026: task trang chủ `UI-PUBLIC` theo AGENTS mục 1 thêm `index.html` tại root, route public `index`, prefix `index`; tổng 19 route gồm 18 trang nghiệp vụ. Header/footer công khai nằm trong HTML trang chủ, cùng entry main và helper; không đổi menu/trang đích theo role. SV3 điều phối tích hợp, không thay phân công sáu trang mỗi người.
+
 - Giữ template và điểm mount ở `AGENTS.md` mục 5: header/sidebar/main/modal/toast. Layout điền vào mount, không tạo DOM khung trùng lặp.
 - `main.js` là script HTML duy nhất. Trình tự: route → current user → kiểm tra quyền → repository gắn user → render shell → await `initPage(context)`; có đầu mối bắt lỗi.
 - `context` chính xác là `{ currentUser, repository, permissions, ui, pageId }`. Không thêm role/user giả cho mỗi page; page module không import ngược main.
@@ -100,6 +104,8 @@ Không nhận việc làm hết CSS trang/responsive riêng của SV1/SV2. Khi t
 - `canOpenPage`, `can`, `getEditableFields` giữ chữ ký ở quy tắc chính. Phối hợp SV2 để repository kiểm tra quan hệ thật từ kho, không tin role/mentor ID gửi từ form/URL.
 - Chưa có phiên chuyển login; có phiên thiếu quyền chuyển 403; route thiếu xử lý 404. Public error routes vẫn chạy khi user null.
 - `layout.js` quản lý action toggle-sidebar/logout chung; page không bắt lại event đó. Khi user đổi, dùng cơ chế auth của SV2 và tải lại dữ liệu/layout, không giữ hồ sơ phiên trước.
+
+- Bổ sung theo AGENTS mục 1: logo header là nút toggle duy nhất; không hamburger/dấu X sidebar. Header phủ ngang, sidebar dưới header; desktop thu gọn giải phóng cột, mobile drawer có Escape/outside click/focus trap. Xóa selector cũ app-header__menu/app-sidebar__header/app-sidebar__close; dùng state is-collapsed/is-open đúng registry.
 
 ## 6. CSS và responsive thống nhất
 
@@ -112,6 +118,8 @@ Không nhận việc làm hết CSS trang/responsive riêng của SV1/SV2. Khi t
 - Các marker/prefix chỉ là namespace cho phần cần style riêng. Không tạo class rỗng/utility số pixel/reset/token lặp để tăng số lượng file.
 
 ## 7. Điểm nối dữ liệu với SV1/SV2
+
+Bổ sung tích hợp: dashboard dùng analyzeProgressRisk chung theo AGENTS mục 7; Admin nhận tổng tham chiếu phòng ban qua getDepartmentReferences, không được mở rộng quyền đọc journey. UI-17 đọc các field tổ chức/hội nhập của settings.system theo [hợp đồng dữ liệu](../data-contract.md); Hủy phục hồi bản ghi gốc. Fixture aiPreview.notes chỉ phục vụ màn hình AI, không còn là cấu hình quản trị.
 
 - Page UI chỉ gọi repository qua context. Không fetch seed/API, đọc/ghi storage hoặc tạo mảng users/departments/journeys riêng trong page.
 - Thực thể chủ yếu là users, departments, journeys, journeyAssignments, newHires, tasks, settings. Giữ ID/field/status theo quy tắc chính và cùng seed với SV2.

@@ -1,140 +1,112 @@
-import { formatDateTime } from '../common/format.js';
+import { createField } from '../common/renderers.js';
 import { validateForm, applyFormErrors } from '../common/validation.js';
-import { confirmAction } from '../common/ui.js';
+import { ROLE_LABELS, ROLE_MENUS } from '../config/roles.js';
 
-export async function initPage({ repository, ui }) {
+const FIELDS = [
+  { name: 'organizationName', label: 'Tên tổ chức', required: true, group: 'organization' },
+  { name: 'supportEmail', label: 'Email hỗ trợ nhân sự', type: 'email', required: true, group: 'organization' },
+  { name: 'supportPhone', label: 'Số điện thoại hỗ trợ', type: 'tel', group: 'organization' },
+  { name: 'onboardingDays', label: 'Thời gian hội nhập mặc định (ngày)', type: 'number', required: true, group: 'onboarding', min: 1, max: 365 },
+  { name: 'reminderDays', label: 'Nhắc trước hạn nhiệm vụ (ngày)', type: 'number', required: true, group: 'onboarding', min: 0, max: 30 },
+];
+
+export async function initPage({ currentUser, permissions, repository, ui }) {
   const root = document.querySelector('#main-content');
   const region = (name) => root.querySelector(`[data-region="${name}"]`);
   const form = region('settings-form');
-  let record = null;
+  let record;
+  let baseline;
   let draft = null;
+  const canEdit = () => record && permissions.can(currentUser, 'settings:update', record)
+    && FIELDS.every((field) => permissions.getEditableFields(currentUser, 'settings', record).includes(field.name));
 
   function fillForm(values) {
-    form.elements.question.value = values.question || '';
-    form.elements.answer.value = values.answer || '';
-    form.elements.explanation.value = values.explanation || '';
+    for (const field of FIELDS) form.elements[field.name].value = values[field.name] ?? '';
     applyFormErrors(form, {});
   }
-
-  function readForm() {
-    return {
-      question: form.elements.question.value.trim(),
-      answer: form.elements.answer.value.trim(),
-      explanation: form.elements.explanation.value.trim(),
-    };
+  function discardDraft() {
+    if (!baseline) return;
+    fillForm(baseline); draft = null;
+    region('settings-preview').hidden = true;
+  }
+  function renderPreview() {
+    const list = region('settings-summary'); list.replaceChildren();
+    for (const field of FIELDS) {
+      const label = document.createElement('dt'); label.textContent = field.label;
+      const value = document.createElement('dd'); value.textContent = String(draft[field.name] === '' ? 'Chưa cung cấp' : draft[field.name]);
+      list.append(label, value);
+    }
+    region('settings-preview').hidden = false;
   }
 
-  function renderNotes() {
-    const list = region('notes-list');
-    list.replaceChildren();
-    const notes = Array.isArray(record?.notes) ? record.notes : [];
-    if (!notes.length) {
-      const empty = document.createElement('p');
-      empty.className = 'form-field__hint';
-      empty.textContent = 'Chưa có ghi chú chính sách nào.';
-      list.append(empty);
-      return;
-    }
-    for (const note of notes) {
-      const card = document.createElement('article');
-      card.className = 'card card--compact';
-      card.dataset.id = note.id;
-      const title = document.createElement('h3');
-      title.className = 'card__title';
-      title.textContent = note.title;
-      const meta = document.createElement('p');
-      meta.className = 'admin-settings__note-meta';
-      const id = document.createElement('span');
-      id.textContent = note.id;
-      const updated = document.createElement('span');
-      updated.textContent = `Cập nhật: ${formatDateTime(note.updatedAt)}`;
-      meta.append(id, updated);
-      const body = document.createElement('p');
-      body.textContent = note.body;
-      card.append(title, meta, body);
-      if (Array.isArray(note.documentIds) && note.documentIds.length) {
-        const sources = document.createElement('div');
-        sources.className = 'admin-settings__note-sources';
-        const label = document.createElement('span');
-        label.className = 'form-field__hint';
-        label.textContent = 'Nguồn:';
-        sources.append(label);
-        for (const documentId of note.documentIds) {
-          const link = document.createElement('a');
-          link.href = `document-detail.html?${new URLSearchParams({ id: documentId })}`;
-          link.textContent = documentId;
-          sources.append(link);
-        }
-        card.append(sources);
-      }
-      list.append(card);
-    }
-  }
-
+  form.addEventListener('input', () => { draft = null; region('settings-preview').hidden = true; });
   form.addEventListener('submit', (event) => {
     event.preventDefault();
-    const values = readForm();
-    const { isValid, errors } = validateForm(values, {
-      question: [{ type: 'required', message: 'Nhập câu hỏi mẫu.' }],
-      answer: [{ type: 'required', message: 'Nhập câu trả lời mẫu.' }],
+    if (!canEdit()) return;
+    const values = Object.fromEntries(FIELDS.map((field) => [field.name, form.elements[field.name].value.trim()]));
+    const { errors } = validateForm(values, {
+      organizationName: [{ type: 'required' }, { type: 'maxLength', maxLength: 120, message: 'Tên tổ chức tối đa 120 ký tự.' }],
+      supportEmail: [{ type: 'required' }, { type: 'email', message: 'Nhập địa chỉ email hợp lệ.' }],
+      supportPhone: [{ type: 'phone', message: 'Nhập số điện thoại hợp lệ.' }],
     });
-    applyFormErrors(form, errors);
-    if (!isValid) return;
-    draft = values;
-    region('settings-notice').hidden = false;
-    ui.showToast({ message: 'Xem trước thành công. Bản giao diện chưa lưu cấu hình.', type: 'info' });
-  });
-
-  root.addEventListener('click', async (event) => {
-    const trigger = event.target.closest('[data-action]');
-    if (!trigger) return;
-    const action = trigger.dataset.action;
-    if (action === 'reset-settings') {
-      const ok = await confirmAction({
-        title: 'Khôi phục cấu hình mặc định?',
-        message: 'Các trường mẫu sẽ trở về nội dung mặc định của bản xem trước (xem trước, chưa ghi hệ thống).',
-        confirmLabel: 'Khôi phục',
-        tone: 'danger',
-      });
-      if (!ok) return;
-      fillForm({ question: '', answer: '', explanation: '' });
-      draft = null;
-      region('settings-notice').hidden = false;
-      ui.showToast({ message: 'Đã khôi phục biểu mẫu mặc định (chưa ghi hệ thống).', type: 'info' });
+    for (const field of FIELDS.filter((item) => item.type === 'number')) {
+      const value = Number(values[field.name]);
+      if (!values[field.name] || !Number.isInteger(value) || value < field.min || value > field.max) {
+        errors[field.name] = `Nhập số nguyên từ ${field.min} đến ${field.max}.`;
+      } else values[field.name] = value;
     }
-    if (action === 'cancel-settings') {
-      fillForm(draft || {
-        question: record?.aiPreview?.question || '',
-        answer: record?.aiPreview?.answer || '',
-        explanation: record?.aiPreview?.explanation || '',
-      });
-      region('settings-notice').hidden = true;
-      ui.showToast({ message: 'Đã hủy thay đổi trên biểu mẫu.', type: 'info' });
+    applyFormErrors(form, errors);
+    if (Object.keys(errors).length) { form.querySelector('[aria-invalid="true"]')?.focus(); return; }
+    draft = { id: record.id, ...values };
+    renderPreview();
+    ui.showToast({ message: 'Đã tạo bản xem trước. Cấu hình chưa được áp dụng.', type: 'info' });
+  });
+  root.addEventListener('click', async (event) => {
+    const action = event.target.closest('[data-action]')?.dataset.action;
+    if (action === 'cancel-settings') discardDraft();
+    if (action === 'reset-settings' && canEdit() && permissions.can(currentUser, 'settings:reset', record)) {
+      if (await ui.confirmAction({ title: 'Khôi phục cấu hình đã tải?',
+        message: 'Bỏ thay đổi trên biểu mẫu và trở lại cấu hình ban đầu. Không thay đổi dữ liệu hệ thống.',
+        confirmLabel: 'Khôi phục', tone: 'primary' })) discardDraft();
     }
   });
 
   async function loadData() {
-    ui.setViewState(region('settings-state'), { status: 'loading', message: 'Đang tải cấu hình hệ thống…' });
+    region('settings-content').hidden = true;
+    ui.setViewState(region('settings-state'), { status: 'loading', message: 'Đang tải thông tin hệ thống…' });
     try {
-      record = await repository.get('settings', 'system');
-      fillForm({
-        question: record?.aiPreview?.question || '',
-        answer: record?.aiPreview?.answer || '',
-        explanation: record?.aiPreview?.explanation || '',
-      });
-      region('settings-record').textContent = `Bản ghi: ${record.id}`;
-      renderNotes();
-      region('settings-section').hidden = false;
+      const [settings, users, departments, documents] = await Promise.all([
+        repository.get('settings', 'system'), repository.list('users'),
+        repository.list('departments'), repository.list('documents', { status: 'published' }),
+      ]);
+      record = settings;
+      baseline = Object.fromEntries(FIELDS.map((field) => [field.name, record[field.name] ?? '']));
+      region('users-count').textContent = users.total;
+      region('departments-count').textContent = departments.total;
+      region('documents-count').textContent = documents.total;
+      for (const group of ['organization', 'onboarding']) region(`${group}-fields`).replaceChildren();
+      for (const field of FIELDS) {
+        const node = createField({ ...field, value: baseline[field.name], readOnly: !canEdit() });
+        const control = node.querySelector('[name]');
+        if (field.type === 'number') { control.min = field.min; control.max = field.max; control.step = 1; }
+        region(`${field.group}-fields`).append(node);
+      }
+      region('settings-actions').hidden = !canEdit();
+      const access = region('role-scope'); access.replaceChildren();
+      for (const [role, label] of Object.entries(ROLE_LABELS)) {
+        const row = document.createElement('tr');
+        const name = document.createElement('th'); name.scope = 'row'; name.textContent = label;
+        const scope = document.createElement('td'); scope.textContent = ROLE_MENUS[role].map((item) => item.label).join(', ');
+        row.append(name, scope); access.append(row);
+      }
+      discardDraft();
+      region('settings-content').hidden = false;
       ui.setViewState(region('settings-state'), { status: 'ready' });
-      ui.initTabs(region('settings-tabs'));
     } catch (error) {
-      ui.setViewState(region('settings-state'), { status: 'error', message: error.message || 'Không tải được cấu hình hệ thống.' });
-      const retry = document.createElement('button');
-      retry.type = 'button'; retry.className = 'btn btn--secondary'; retry.textContent = 'Thử lại';
-      retry.addEventListener('click', loadData, { once: true });
-      region('settings-state').append(retry);
+      ui.setViewState(region('settings-state'), { status: 'error', message: error.message || 'Không tải được thông tin hệ thống.' });
+      const retry = document.createElement('button'); retry.type = 'button'; retry.className = 'btn btn--secondary'; retry.textContent = 'Thử lại';
+      retry.addEventListener('click', loadData, { once: true }); region('settings-state').append(retry);
     }
   }
-
   await loadData();
 }

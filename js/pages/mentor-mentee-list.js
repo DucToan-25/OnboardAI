@@ -1,18 +1,23 @@
 import { createAvatar, createStatusBadge } from '../common/renderers.js';
 import { formatDate } from '../common/format.js';
-import { calculateProgress } from '../data/selectors.js';
-import { openModal } from '../common/ui.js';
+import { calculateProgress, analyzeProgressRisk } from '../data/selectors.js';
+import { STATUS_META } from '../config/statuses.js';
 
 export async function initPage({ currentUser, repository, ui }) {
   const root = document.querySelector('#main-content');
   const region = (name) => root.querySelector(`[data-region="${name}"]`);
   const filters = region('mentee-filters');
   let mentees = [];
+  let ready = false;
+  filters.elements.status.replaceChildren(new Option('Tất cả trạng thái', ''),
+    ...Object.entries(STATUS_META.newHires).map(([value, meta]) => new Option(meta.label, value)));
 
   function buildStats(items) {
     const active = items.filter((m) => m.status === 'active').length;
-    const completed = items.filter((m) => m.status === 'completed').length;
-    const atRisk = items.filter((m) => m.progress.percent < 40 && m.status === 'active').length;
+    const atRisk = items.filter((m) => {
+      const risk = analyzeProgressRisk(m.tasks);
+      return m.status === 'active' && risk.hasData && risk.atRisk;
+    }).length;
     const cards = [
       { label: 'Tổng mentee', value: items.length },
       { label: 'Đang hội nhập', value: active },
@@ -20,8 +25,7 @@ export async function initPage({ currentUser, repository, ui }) {
     ];
     region('mentee-stats').replaceChildren(...cards.map((card) => {
       const el = document.createElement('article');
-      el.className = 'stat-card';
-      el.innerHTML = '';
+      el.className = 'card stat-card';
       const label = document.createElement('p'); label.className = 'stat-card__label'; label.textContent = card.label;
       const value = document.createElement('p'); value.className = 'stat-card__value'; value.textContent = String(card.value);
       el.append(label, value);
@@ -30,6 +34,7 @@ export async function initPage({ currentUser, repository, ui }) {
   }
 
   function openDetail(mentee) {
+    if (!ready) return;
     const content = document.createElement('div');
     content.className = 'mentor-mentees__detail';
     const header = document.createElement('div');
@@ -48,6 +53,7 @@ export async function initPage({ currentUser, repository, ui }) {
     const pval = document.createElement('span'); pval.className = 'progress__value'; pval.textContent = `${mentee.progress.percent}%`;
     plabel.append(ptext, pval);
     const bar = document.createElement('progress'); bar.className = 'progress__bar'; bar.max = 100; bar.value = mentee.progress.percent;
+    bar.setAttribute('aria-label', `Tiến độ ${mentee.user.fullName}`);
     progress.append(plabel, bar);
 
     const actions = document.createElement('div');
@@ -63,10 +69,11 @@ export async function initPage({ currentUser, repository, ui }) {
     actions.append(assign, checkin);
 
     content.append(header, progress, actions);
-    openModal({ title: 'Chi tiết mentee', content });
+    ui.openModal({ title: 'Chi tiết mentee', content });
   }
 
   function render() {
+    if (!ready) return;
     const search = filters.elements.search.value.trim().toLocaleLowerCase('vi');
     const status = filters.elements.status.value;
     const matches = mentees.filter((m) => {
@@ -94,6 +101,7 @@ export async function initPage({ currentUser, repository, ui }) {
       const prog = document.createElement('td');
       const progress = document.createElement('div'); progress.className = 'progress';
       const bar = document.createElement('progress'); bar.className = 'progress__bar'; bar.max = 100; bar.value = mentee.progress.percent;
+      bar.setAttribute('aria-label', `Tiến độ ${mentee.user.fullName}`);
       const pct = document.createElement('span'); pct.className = 'progress__value'; pct.textContent = `${mentee.progress.percent}%`;
       progress.append(bar, pct); prog.append(progress);
       const st = document.createElement('td'); st.append(createStatusBadge('newHires', mentee.status));
@@ -121,6 +129,9 @@ export async function initPage({ currentUser, repository, ui }) {
   }
 
   async function loadData() {
+    ready = false;
+    region('mentee-stats').hidden = true;
+    region('mentee-table-wrap').hidden = true;
     ui.setViewState(region('list-state'), { status: 'loading', message: 'Đang tải danh sách mentee…' });
     try {
       const [{ items: newHires }, { items: users }, { items: departments }, { items: tasks }] = await Promise.all([
@@ -136,6 +147,8 @@ export async function initPage({ currentUser, repository, ui }) {
         const related = tasks.filter((t) => t.newHireId === nh.id);
         return { ...nh, user, department, progress: calculateProgress(related), tasks: related };
       });
+      ready = true;
+      region('mentee-stats').hidden = false;
       buildStats(mentees);
       render();
     } catch (error) {

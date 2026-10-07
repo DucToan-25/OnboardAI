@@ -6,6 +6,12 @@ export const ROLE_HOME = Object.freeze({
   newhire: 'newhire-onboarding-dashboard.html', mentor: 'mentor-mentee-list.html',
   hr: 'hr-dashboard.html', admin: 'admin-user-management.html',
 });
+export const ROLE_LIBRARY = Object.freeze({
+  newhire: 'newhire-document-library',
+  mentor: 'hr-document-library',
+  hr: 'hr-document-library',
+  admin: 'hr-document-library',
+});
 const profile = { pageId: 'profile', label: 'Hồ sơ cá nhân', icon: 'user' };
 const library = { pageId: 'hr-document-library', label: 'Thư viện tài liệu', icon: 'folder' };
 export const ROLE_MENUS = Object.freeze({
@@ -27,11 +33,11 @@ export const ROLE_MENUS = Object.freeze({
   admin: [
     { pageId: 'admin-department-management', label: 'Quản lý phòng ban', icon: 'grid' },
     { pageId: 'admin-user-management', label: 'Quản lý tài khoản', icon: 'user' },
-    { pageId: 'admin-system-settings', label: 'Cài đặt hệ thống', icon: 'settings' }, library, profile,
+    { pageId: 'admin-system-settings', label: 'Quản lý hệ thống', icon: 'settings' }, library, profile,
   ],
 });
 
-// Bản bàn giao SV1: giữ home chính thức; dùng profile khi home của owner khác chưa có.
+// Tất cả trang đã đăng ký dùng cùng home chính thức của vai trò.
 export function getPreviewHome(role) {
   const home = ROLE_HOME[role];
   if (!home) return 'login.html';

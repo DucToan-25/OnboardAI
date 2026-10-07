@@ -108,7 +108,7 @@ export async function initPage({ currentUser, repository, permissions, ui }) {
     ui.setViewState(state, { status: 'loading', message: 'Đang tải hồ sơ của bạn…' });
     try {
       profile = await repository.getMyProfile();
-      editableFields = permissions.getEditableFields(currentUser, 'users', profile);
+      editableFields = permissions.getEditableFields(currentUser, 'profile', profile);
       draft = personalValues(profile);
       renderSummary(profile);
       renderForm();
@@ -128,6 +128,7 @@ export async function initPage({ currentUser, repository, permissions, ui }) {
 
   form.addEventListener('input', () => {
     draft = readDraft();
+    renderSummary(profile);
     preview.hidden = true;
   });
 

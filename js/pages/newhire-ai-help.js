@@ -1,6 +1,6 @@
 import { createField } from '../common/renderers.js';
 import { applyFormErrors, validateForm } from '../common/validation.js';
-import { formatDate } from '../common/format.js';
+import { formatDateTime } from '../common/format.js';
 
 export async function initPage({ repository, ui }) {
   const root = document.querySelector('#main-content');
@@ -77,7 +77,7 @@ export async function initPage({ repository, ui }) {
         control.setAttribute('aria-label', `${label} ghi chú ${note.title}`); actions.append(control);
       }
       article.append(node('h3', 'nh-ai-help__note-heading', note.title), node('p', 'nh-ai-help__note-body', note.body),
-        node('p', 'nh-ai-help__note-meta', formatDate(note.updatedAt.slice(0, 10))), sources(note.documentIds), actions);
+        node('p', 'nh-ai-help__note-meta', formatDateTime(note.updatedAt)), sources(note.documentIds), actions);
       notesRoot.append(article);
     }
     const library = node('a', 'btn btn--ghost btn--sm', 'Mở thư viện tài liệu'); library.href = 'newhire-document-library.html'; notesRoot.append(library);
@@ -120,16 +120,18 @@ export async function initPage({ repository, ui }) {
     const record = mode === 'note' ? notes.find((item) => item.id === recordId) : draft;
     if (!record) return;
     const initial = { title: mode === 'note' ? record.title : record.question, body: mode === 'note' ? record.body : record.answer };
-    const editor = node('form', 'form nh-ai-help__editor'); editor.noValidate = true;
+    const editor = node('form', 'form'); editor.noValidate = true;
     editor.append(createField({ name: 'title', label: mode === 'note' ? 'Tiêu đề ghi chú' : 'Câu hỏi', value: initial.title, required: true }),
-      createField({ name: 'body', label: 'Nội dung ghi chú', type: 'textarea', value: initial.body, required: true }));
+      createField({ name: 'body', label: mode === 'note' ? 'Nội dung ghi chú' : 'Nội dung câu trả lời', type: 'textarea', value: initial.body, required: true }));
     const notice = node('div', 'alert alert--info');
     notice.append(node('p', 'alert__title', 'Nguồn tham khảo'), sources(record.documentIds), node('p', 'form-field__hint', 'Chỉnh sửa ghi chú không thay đổi tài liệu chính sách gốc.'));
     const actions = node('div', 'form__actions');
-    const cancel = button('Hủy', 'cancel-note'); const save = button('Lưu ghi chú', 'save-note', 'primary'); save.type = 'submit';
+    const cancel = button('Hủy', 'cancel-note');
+    const save = button(mode === 'note' ? 'Lưu ghi chú' : 'Áp dụng bản nháp', 'save-note', 'primary');
+    save.type = 'submit';
     actions.append(cancel, save); editor.append(notice, actions);
     let allowClose = false;
-    const modal = ui.openModal({ title: 'Sửa ghi chú AI', content: editor, onClose: async () => {
+    const modal = ui.openModal({ title: mode === 'note' ? 'Sửa ghi chú AI' : 'Sửa câu trả lời AI', content: editor, onClose: async () => {
       const dirty = editor.elements.title.value !== initial.title || editor.elements.body.value !== initial.body;
       return allowClose || !dirty || await ui.confirmAction({ title: 'Hủy thay đổi chưa lưu?', message: 'Nội dung ghi chú đang chỉnh sửa sẽ bị bỏ.', confirmLabel: 'Bỏ thay đổi', tone: 'danger' });
     } });
@@ -151,7 +153,7 @@ export async function initPage({ repository, ui }) {
         renderDraft();
       }
       allowClose = true; await modal.close();
-      ui.showToast({ message: 'Đã cập nhật ghi chú trong bản xem trước. Chưa lưu vào kho.', type: 'info' });
+      ui.showToast({ message: mode === 'note' ? 'Đã cập nhật ghi chú trong bản xem trước. Chưa lưu vào kho.' : 'Đã cập nhật bản nháp câu trả lời. Chưa lưu vào kho.', type: 'info' });
     });
   }
   async function loadData() {

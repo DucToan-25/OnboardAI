@@ -1,5 +1,5 @@
 import { formatDate } from '../common/format.js';
-import { createField, createStatusBadge } from '../common/renderers.js';
+import { createField, createStatusBadge, createTaskItem } from '../common/renderers.js';
 import { validateForm, applyFormErrors } from '../common/validation.js';
 import { STATUS_META } from '../config/statuses.js';
 import { calculateProgress } from '../data/selectors.js';
@@ -30,7 +30,14 @@ export async function initPage({ currentUser, repository, permissions, ui }) {
   function renderProgress() {
     const { total, completed, percent } = calculateProgress(tasks);
     const template = document.createElement('template');
-    template.innerHTML = '<div class="progress"><div class="progress__label"><span data-region="label"></span><span class="progress__value" data-region="percent"></span></div><progress class="progress__bar" max="100" aria-label="Tiến độ hội nhập"></progress></div>';
+    template.innerHTML = `
+      <div class="progress">
+        <div class="progress__label">
+          <span data-region="label"></span>
+          <span class="progress__value" data-region="percent"></span>
+        </div>
+        <progress class="progress__bar" max="100" aria-label="Tiến độ hội nhập"></progress>
+      </div>`;
     const content = template.content;
     content.querySelector('[data-region="label"]').textContent = `Tiến độ hội nhập: ${completed}/${total} nhiệm vụ`;
     content.querySelector('[data-region="percent"]').textContent = `${percent}%`;
@@ -72,7 +79,12 @@ export async function initPage({ currentUser, repository, permissions, ui }) {
     const row = document.createElement('tr');
     row.dataset.id = task.id;
     const title = document.createElement('td');
-    title.textContent = task.title;
+    const taskItem = createTaskItem(task, {
+      onOpen: (record) => void openTask(record.id),
+      showDueDate: false,
+      showStatus: false,
+    });
+    title.append(taskItem);
     if (preview || resultDrafts.has(task.id)) {
       const label = document.createElement('span');
       label.className = 'nh-checklist__task-label';
@@ -93,6 +105,7 @@ export async function initPage({ currentUser, repository, permissions, ui }) {
     button.dataset.id = task.id;
     button.textContent = 'Xem';
     button.setAttribute('aria-label', `Xem nhiệm vụ ${task.title}`);
+    button.addEventListener('click', () => void openTask(task.id));
     actions.append(button);
     row.append(title, dueDate, status, actions);
     return row;
@@ -130,7 +143,26 @@ export async function initPage({ currentUser, repository, permissions, ui }) {
     const submittedPreview = resultDrafts.get(taskId);
     const initial = { url: submittedPreview?.url || task.result?.url || '', note: submittedPreview?.note || task.result?.note || '' };
     const template = document.createElement('template');
-    template.innerHTML = '<form class="form nh-checklist__detail" novalidate><div data-region="task-badge"></div><h3 class="nh-checklist__detail-heading" data-region="task-title"></h3><div class="alert alert--info"><p class="alert__title" data-region="task-due"></p><p class="alert__message">Kết quả được gửi để mentor xem xét; trạng thái hoàn thành do luồng duyệt quyết định.</p></div><p class="nh-checklist__detail-description" data-region="description"></p><section class="nh-checklist__documents" data-region="documents"><h3 class="nh-checklist__detail-heading">Tài liệu liên quan</h3></section><h3 class="nh-checklist__detail-heading">Kết quả của bạn</h3><div data-region="result-fields"></div><p class="form-field__hint" data-region="result-hint"></p><div class="form__actions"><button class="btn btn--secondary" type="button" data-action="cancel-task-result">Hủy</button><button class="btn btn--primary" type="submit" data-action="submit-task-result">Gửi kết quả</button></div></form>';
+    template.innerHTML = `
+      <form class="form" novalidate>
+        <div data-region="task-badge"></div>
+        <h3 class="nh-checklist__detail-heading" data-region="task-title"></h3>
+        <div class="alert alert--info">
+          <p class="alert__title" data-region="task-due"></p>
+          <p class="alert__message">Kết quả được gửi để mentor xem xét; trạng thái hoàn thành do luồng duyệt quyết định.</p>
+        </div>
+        <p class="nh-checklist__detail-description" data-region="description"></p>
+        <section class="nh-checklist__documents" data-region="documents">
+          <h3 class="nh-checklist__detail-heading">Tài liệu liên quan</h3>
+        </section>
+        <h3 class="nh-checklist__detail-heading">Kết quả của bạn</h3>
+        <div class="form__grid" data-region="result-fields"></div>
+        <p class="form-field__hint" data-region="result-hint"></p>
+        <div class="form__actions">
+          <button class="btn btn--secondary" type="button" data-action="cancel-task-result">Hủy</button>
+          <button class="btn btn--primary" type="submit" data-action="submit-task-result">Gửi kết quả</button>
+        </div>
+      </form>`;
     const form = template.content.firstElementChild;
     form.querySelector('[data-region="task-badge"]').append(createStatusBadge('tasks', submittedPreview ? 'submitted' : task.status));
     form.querySelector('[data-region="task-title"]').textContent = task.title;
@@ -198,7 +230,23 @@ export async function initPage({ currentUser, repository, permissions, ui }) {
   function openPersonalTaskForm() {
     if (!profile?.newHireId) return;
     const template = document.createElement('template');
-    template.innerHTML = '<form class="form nh-checklist__detail" novalidate><p class="form-field__hint">Việc cá nhân chỉ dùng để xem trước trong trang này.</p><div data-region="personal-fields"></div><label class="checkbox"><input class="checkbox__control" type="checkbox" name="reminder"><span class="checkbox__label">Nhắc tôi trước hạn 1 ngày</span></label><div class="alert alert--info"><p class="alert__title">Việc cá nhân</p><p class="alert__message">Công việc này không thay đổi tiến độ của hành trình chính thức.</p></div><div class="form__actions"><button class="btn btn--secondary" type="button" data-action="cancel-personal-task">Hủy</button><button class="btn btn--primary" type="submit">Thêm việc</button></div></form>';
+    template.innerHTML = `
+      <form class="form" novalidate>
+        <p class="form-field__hint">Việc cá nhân chỉ dùng để xem trước trong trang này.</p>
+        <div class="form__grid" data-region="personal-fields"></div>
+        <label class="checkbox">
+          <input class="checkbox__control" type="checkbox" name="reminder">
+          <span class="checkbox__label">Nhắc tôi trước hạn 1 ngày</span>
+        </label>
+        <div class="alert alert--info">
+          <p class="alert__title">Việc cá nhân</p>
+          <p class="alert__message">Công việc này không thay đổi tiến độ của hành trình chính thức.</p>
+        </div>
+        <div class="form__actions">
+          <button class="btn btn--secondary" type="button" data-action="cancel-personal-task">Hủy</button>
+          <button class="btn btn--primary" type="submit">Thêm việc</button>
+        </div>
+      </form>`;
     const form = template.content.firstElementChild;
     const fields = form.querySelector('[data-region="personal-fields"]');
     fields.append(createField({ name: 'title', label: 'Tên việc cần làm', required: true }));
@@ -219,7 +267,7 @@ export async function initPage({ currentUser, repository, permissions, ui }) {
       });
       applyFormErrors(form, validation.errors);
       if (!validation.isValid) return;
-      const id = `preview-task-${Date.now()}`;
+      const id = `preview-task-${crypto.randomUUID()}`;
       personalTasks.set(id, { id, ...values, newHireId: profile.newHireId, assignedById: currentUser.id, status: 'pending', relatedDocumentIds: [], result: null });
       const reminder = form.elements.reminder.checked;
       allowClose = true;
@@ -236,7 +284,6 @@ export async function initPage({ currentUser, repository, permissions, ui }) {
   root.addEventListener('click', (event) => {
     const action = event.target.closest('[data-action]');
     if (!action) return;
-    if (action.dataset.action === 'open-task') void openTask(action.dataset.id);
     if (action.dataset.action === 'add-personal-task') openPersonalTaskForm();
     if (action.dataset.action === 'retry-tasks') void loadData();
   });

@@ -1,5 +1,59 @@
 {
   "schemaVersion": 1,
+  "portalPosts": [
+    {
+      "id": "news-001", "kind": "news", "status": "published", "visibility": "public",
+      "title": "Onvera mở rộng chương trình hỗ trợ nhân sự mới", "category": "company",
+      "summary": "Hành trình hội nhập sẽ được bổ sung thêm các buổi check-in định kỳ và tài liệu hướng dẫn mới.",
+      "content": "Chương trình hỗ trợ giúp nhân sự mới làm quen với đội ngũ, hiểu công việc và tìm đúng người hỗ trợ. Lịch hội nhập cụ thể sẽ được Phòng Nhân sự thông báo đến từng nhân viên.",
+      "publishedAt": "2026-10-06", "readMinutes": 4, "imageUrl": "", "requiresLogin": false
+    },
+    {
+      "id": "news-002", "kind": "news", "status": "published", "visibility": "public",
+      "title": "Văn phòng mới: không gian làm việc mở và kết nối", "category": "internal",
+      "summary": "Không gian làm việc mới được thiết kế để tăng cường giao tiếp, sáng tạo và trải nghiệm làm việc của đội ngũ.",
+      "content": "Các khu vực trao đổi nhóm và không gian làm việc chung giúp đồng nghiệp kết nối dễ dàng hơn. Hướng dẫn sử dụng không gian sẽ được cập nhật trong tài liệu nội bộ.",
+      "publishedAt": "2026-10-03", "readMinutes": 4, "imageUrl": "", "requiresLogin": false
+    },
+    {
+      "id": "news-003", "kind": "news", "status": "published", "visibility": "public",
+      "title": "Chương trình phát triển năng lực quý IV đã sẵn sàng", "category": "event",
+      "summary": "Khám phá các khóa học mới và lộ trình phát triển dành cho đội ngũ Onvera.",
+      "publishedAt": "2026-10-02", "readMinutes": 4, "imageUrl": "", "requiresLogin": true
+    },
+    {
+      "id": "notice-001", "kind": "notice", "status": "published", "visibility": "public",
+      "title": "Bảo trì hệ thống vào tối 10/10", "label": "Quan trọng", "important": true,
+      "publisher": "Phòng Công nghệ thông tin", "publishedAt": "2026-10-06", "requiresLogin": false,
+      "summary": "Hệ thống dự kiến được bảo trì vào tối 10/10.",
+      "content": "Vui lòng sắp xếp công việc trước thời gian bảo trì. Khung giờ cụ thể và hướng dẫn sẽ được cập nhật trong thông báo tiếp theo."
+    },
+    {
+      "id": "notice-002", "kind": "notice", "status": "published", "visibility": "public",
+      "title": "Lịch nghỉ và làm việc quý IV/2026", "label": "Nhân sự", "important": false,
+      "publisher": "Phòng Nhân sự", "publishedAt": "2026-10-05", "requiresLogin": false,
+      "summary": "Thông tin lịch làm việc quý IV dành cho đội ngũ Onvera.",
+      "content": "Phòng Nhân sự sẽ cập nhật lịch chính thức và hướng dẫn sắp xếp công việc. Hãy liên hệ cán bộ phụ trách nếu cần hỗ trợ."
+    },
+    {
+      "id": "notice-003", "kind": "notice", "status": "published", "visibility": "public",
+      "title": "Cập nhật chính sách phúc lợi", "label": "Nội bộ", "important": false,
+      "publisher": "Phòng Nhân sự", "publishedAt": "2026-10-04", "requiresLogin": true,
+      "summary": "Thông tin cập nhật phúc lợi dành cho nhân viên Onvera."
+    },
+    {
+      "id": "event-001", "kind": "event", "status": "published", "visibility": "public",
+      "title": "Ngày hội sức khỏe Onvera", "publishedAt": "2026-10-06", "requiresLogin": true,
+      "eventDate": "2026-10-12", "startsAt": "2026-10-12T01:30:00Z", "location": "Trụ sở chính",
+      "summary": "Hoạt động chăm sóc sức khỏe dành cho đội ngũ Onvera."
+    },
+    {
+      "id": "event-002", "kind": "event", "status": "published", "visibility": "public",
+      "title": "Kết nối cùng lãnh đạo", "publishedAt": "2026-10-06", "requiresLogin": true,
+      "eventDate": "2026-10-18", "startsAt": "2026-10-18T07:00:00Z", "location": "Trực tuyến",
+      "summary": "Buổi gặp gỡ và trao đổi giữa đội ngũ nhân viên với lãnh đạo Onvera."
+    }
+  ],
   "users": [
     {
       "id": "usr-newhire-001",
@@ -426,6 +480,33 @@
   "settings": [
     {
       "id": "system",
+      "organizationName": "Onvera",
+      "supportEmail": "hr@example.com",
+      "supportPhone": "",
+      "onboardingDays": 30,
+      "reminderDays": 2,
+      "checklistPreview": {
+        "explanation": "Các nhiệm vụ mẫu giúp nhân sự mới tìm hiểu chính sách và công cụ trước khi thực hiện mục tiêu hội nhập. Người hướng dẫn cần xem lại nội dung và thời hạn.",
+        "documentIds": ["doc-001", "doc-003"],
+        "tasks": [
+          {
+            "title": "Đọc sổ tay nhân viên",
+            "description": "Đọc sổ tay và ghi lại các câu hỏi cần trao đổi với người hướng dẫn."
+          },
+          {
+            "title": "Làm quen công cụ làm việc",
+            "description": "Tìm hiểu công cụ của nhóm và xác nhận các quyền truy cập cần thiết."
+          }
+        ]
+      },
+      "riskPreview": {
+        "scenarios": [
+          { "value": "success", "label": "Có dữ liệu" },
+          { "value": "insufficient", "label": "Thiếu dữ liệu" },
+          { "value": "error", "label": "Lỗi xử lý" }
+        ],
+        "errorMessage": "Minh họa lỗi xử lý: chưa thể phân tích tiến độ. Vui lòng thử lại."
+      },
       "aiPreview": {
         "question": "Giờ làm việc của công ty như thế nào?",
         "answer": "Giờ làm việc: 08:30–17:30, từ thứ Hai đến thứ Sáu. Nghỉ trưa 12:00–13:00.",

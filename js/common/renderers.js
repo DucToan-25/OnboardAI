@@ -1,5 +1,5 @@
 import { STATUS_META } from '../config/statuses.js';
-import { formatDate } from './format.js';
+import { formatDate, getTodayDate } from './format.js';
 import { isSafeUrl } from './validation.js';
 
 let fieldCounter = 0;
@@ -8,8 +8,12 @@ export function createIcon(name, className = 'btn__icon') {
   const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   icon.setAttribute('class', className); icon.setAttribute('aria-hidden', 'true');
   icon.setAttribute('focusable', 'false');
+  // Presentation belongs on the instance: external <use> does not inherit the sprite root.
+  icon.setAttribute('fill', 'none'); icon.setAttribute('stroke', 'currentColor');
+  icon.setAttribute('stroke-width', '1.7'); icon.setAttribute('stroke-linecap', 'round');
+  icon.setAttribute('stroke-linejoin', 'round');
   const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-  use.setAttribute('href', `../assets/icons/sprite.svg#${name}`);
+  use.setAttribute('href', new URL(`../../assets/icons/sprite.svg#${name}`, import.meta.url).href);
   icon.append(use);
   return icon;
 }
@@ -78,7 +82,7 @@ export function createDocumentCard(record, { onOpen, compact = false } = {}) {
   const description = document.createElement('p'); description.className = 'document-card__meta';
   description.textContent = record.description || String(record.content || '').split('\n')[0];
   const actions = document.createElement('div'); actions.className = 'document-card__actions';
-  const date = document.createElement('span'); date.className = 'document-card__meta'; date.textContent = formatDate(record.updatedAt?.slice(0, 10));
+  const date = document.createElement('span'); date.className = 'document-card__meta'; date.textContent = formatDate(record.updatedAt ? getTodayDate(record.updatedAt) : '');
   const open = document.createElement(onOpen ? 'button' : 'a'); open.className = 'btn btn--secondary btn--sm';
   open.textContent = 'Đọc tài liệu'; open.dataset.action = 'open-document'; open.dataset.id = record.id;
   open.setAttribute('aria-label', `Đọc ${record.title}`);
@@ -88,7 +92,7 @@ export function createDocumentCard(record, { onOpen, compact = false } = {}) {
   return card;
 }
 
-export function createTaskItem(task, { onOpen } = {}) {
+export function createTaskItem(task, { onOpen, showDueDate = true, showStatus = true } = {}) {
   const item = document.createElement('div'); item.className = 'task-item'; item.dataset.id = task.id;
   const icon = createIcon(task.status === 'completed' ? 'check' : 'clock', 'task-item__check');
   const body = document.createElement('div'); body.className = 'task-item__body';
@@ -98,8 +102,10 @@ export function createTaskItem(task, { onOpen } = {}) {
   if (onOpen) { title.type = 'button'; title.addEventListener('click', () => onOpen(task)); }
   else title.href = `newhire-checklist.html?${new URLSearchParams({ id: task.id })}`;
   const meta = document.createElement('p'); meta.className = 'task-item__meta'; meta.textContent = `Hạn: ${formatDate(task.dueDate)}`;
-  body.append(title, meta);
+  body.append(title);
+  if (showDueDate) body.append(meta);
   const actions = document.createElement('div'); actions.className = 'task-item__actions'; actions.append(createStatusBadge('tasks', task.status));
-  item.append(icon, body, actions);
+  item.append(icon, body);
+  if (showStatus) item.append(actions);
   return item;
 }

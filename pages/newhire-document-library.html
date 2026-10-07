@@ -1,34 +1,34 @@
 <!doctype html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Thư viện tài liệu | OnboardAI</title>
-  <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../css/base.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/responsive.css">
-</head>
-<body class="page page--newhire-document-library" data-page="newhire-document-library">
-  <div class="app-shell">
-    <header class="app-header" id="app-header"></header>
-    <aside class="app-sidebar" id="app-sidebar"></aside>
-    <main class="app-main" id="main-content">
-      <div class="page-header"><h1 class="page-header__title">Thư viện tài liệu</h1></div>
-      <div class="page-body">
-        <form class="toolbar" data-region="document-filters" role="search">
-          <div class="form-field toolbar__search"><label class="form-field__label" for="document-search">Tìm tài liệu</label><input class="form-field__control" type="search" id="document-search" name="search" placeholder="Nhập tên tài liệu…"></div>
-          <div class="form-field toolbar__filters"><label class="form-field__label" for="document-category">Chủ đề</label><select class="form-field__control" id="document-category" name="category"><option value="">Tất cả chủ đề</option></select></div>
-        </form>
-        <div data-region="library-state" aria-live="polite"></div>
-        <div class="content-grid content-grid--3" data-region="documents"></div>
-        <p class="form-field__hint" data-region="document-count" aria-live="polite"></p>
-      </div>
-    </main>
-  </div>
-  <div id="modal-root"></div>
-  <div id="toast-root" aria-live="polite"></div>
-  <script type="module" src="../js/main.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Thư viện tài liệu | OnboardAI</title>
+    <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+  </head>
+  <body class="page page--newhire-document-library" data-page="newhire-document-library">
+    <div class="app-shell">
+      <header class="app-header" id="app-header"></header>
+      <aside class="app-sidebar" id="app-sidebar"></aside>
+      <main class="app-main" id="main-content">
+        <div class="page-header"><h1 class="page-header__title">Thư viện tài liệu</h1></div>
+        <div class="page-body">
+          <form class="toolbar" data-region="document-filters" role="search">
+            <div class="form-field toolbar__search"><label class="form-field__label" for="document-search">Tìm tài liệu</label><input class="form-field__control" type="search" id="document-search" name="search" placeholder="Nhập tên tài liệu…"></div>
+            <div class="form-field toolbar__filters"><label class="form-field__label" for="document-category">Chủ đề</label><select class="form-field__control" id="document-category" name="category"><option value="">Tất cả chủ đề</option></select></div>
+          </form>
+          <div data-region="library-state" aria-live="polite"></div>
+          <div class="content-grid content-grid--3" data-region="documents"></div>
+          <p class="form-field__hint" data-region="document-count" aria-live="polite"></p>
+        </div>
+      </main>
+    </div>
+    <div id="modal-root"></div>
+    <div id="toast-root" aria-live="polite"></div>
+    <script type="module" src="../js/main.js"></script>
+  </body>
 </html>

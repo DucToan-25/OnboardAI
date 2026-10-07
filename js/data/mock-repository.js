@@ -24,7 +24,8 @@ export async function getPreviewUser(id) {
 export async function createMockRepository({ currentUser }) {
   const seed = await readSeed();
   const user = currentUser ? seed.users.find((item) => item.id === currentUser.id && item.status === 'active') : null;
-  const entities = ['users', 'newHires', 'departments', 'journeys', 'journeyAssignments', 'tasks', 'checkins', 'documents', 'settings'];
+  if (currentUser && !user) throw failure('FORBIDDEN', 'Tài khoản không còn hoạt động. Vui lòng chọn lại tài khoản demo.');
+  const entities = ['users', 'newHires', 'departments', 'journeys', 'journeyAssignments', 'tasks', 'checkins', 'documents', 'settings', 'portalPosts'];
   function collection(entity) {
     if (!entities.includes(entity)) throw failure('VALIDATION_ERROR', 'Loại dữ liệu không được hỗ trợ.');
     return seed[entity] || [];
@@ -44,6 +45,7 @@ export async function createMockRepository({ currentUser }) {
     return record;
   }
   function readable(entity, record) {
+    if (entity === 'portalPosts') return can(user, 'portalPosts:read', record);
     if (!user) return entity === 'users' && record.status === 'active';
     return can(user, `${entity}:read`, relationship(entity, record));
   }
@@ -86,9 +88,18 @@ export async function createMockRepository({ currentUser }) {
       mentor: newHire ? seed.users.find((item) => item.id === newHire.mentorId) || null : null,
     });
   }
+  async function getDepartmentReferences(departmentId) {
+    const department = await get('departments', departmentId);
+    if (!can(user, 'departments:update', department)) throw failure('FORBIDDEN', 'Bạn không có quyền xem tham chiếu phòng ban.');
+    return {
+      users: seed.users.filter((item) => item.departmentId === departmentId).length,
+      journeys: seed.journeys.filter((item) => item.departmentId === departmentId).length,
+      documents: seed.documents.filter((item) => item.departmentIds.includes(departmentId)).length,
+    };
+  }
   async function previewOnly() { throw failure('PREVIEW_ONLY', 'Bản giao diện chưa hỗ trợ ghi dữ liệu. Thay đổi chỉ được xem trước.'); }
   return Object.freeze({
-    capabilities: Object.freeze({ write: false }), list, get, getMyProfile,
+    capabilities: Object.freeze({ write: false }), list, get, getMyProfile, getDepartmentReferences,
     create: previewOnly, update: previewOnly, archive: previewOnly, updateMyProfile: previewOnly,
   });
 }

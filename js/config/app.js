@@ -2,6 +2,7 @@ export const APP_CONFIG = Object.freeze({
   mode: 'preview',
   timeZone: 'Asia/Ho_Chi_Minh',
   availablePages: [
+    'index',
     'login', 'profile', '403', '404', 'document-detail',
     'newhire-onboarding-dashboard', 'newhire-checklist', 'newhire-document-library', 'newhire-ai-help',
     'mentor-mentee-list', 'mentor-checkin-note', 'mentor-task-assignment',

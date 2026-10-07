@@ -25,11 +25,6 @@
   margin-top: var(--space-1);
 }
 
-.page--newhire-checklist .nh-checklist__detail {
-  display: grid;
-  gap: var(--space-4);
-}
-
 .page--newhire-checklist .nh-checklist__detail-description {
   margin: 0;
   white-space: pre-wrap;
@@ -44,11 +39,6 @@
 .page--newhire-checklist .nh-checklist__detail-heading {
   margin: 0;
   font-size: var(--font-size-body);
-}
-
-.page--newhire-checklist .nh-checklist__result-preview {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
 }
 
 @media (max-width: 767px) {

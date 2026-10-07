@@ -11,6 +11,13 @@ export async function initPage({ currentUser, pageId }) {
   home.textContent = currentUser ? 'Về trang tổng quan' : 'Về đăng nhập';
   const other = document.createElement(forbidden ? 'a' : 'button'); other.className = 'btn btn--secondary';
   if (forbidden) { other.href = 'login.html'; other.textContent = 'Đổi tài khoản'; }
-  else { other.type = 'button'; other.textContent = 'Quay lại'; other.addEventListener('click', () => history.length > 1 ? history.back() : location.assign(home.href)); }
+  else {
+    other.type = 'button'; other.textContent = 'Quay lại';
+    other.addEventListener('click', () => {
+      const previous = document.referrer ? new URL(document.referrer) : null;
+      if (previous?.origin === location.origin && history.length > 1) history.back();
+      else location.assign(home.href);
+    });
+  }
   actions.replaceChildren(home, other);
 }

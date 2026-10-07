@@ -1,17 +1,18 @@
 import { createStatusBadge } from '../common/renderers.js';
-import { formatDate } from '../common/format.js';
+import { formatDate, getTodayDate } from '../common/format.js';
 import { ROUTES } from '../config/routes.js';
+import { ROLE_LIBRARY } from '../config/roles.js';
 
 export async function initPage({ currentUser, repository, ui }) {
   const root = document.querySelector('#main-content');
   const region = (name) => root.querySelector(`[data-region="${name}"]`);
-  const libraryId = currentUser.role === 'newhire' ? 'newhire-document-library' : 'hr-document-library';
+  const libraryId = ROLE_LIBRARY[currentUser.role];
   const back = document.createElement('a'); back.className = 'btn btn--secondary';
   back.href = ROUTES[libraryId].available ? `${libraryId}.html` : 'profile.html';
   back.textContent = ROUTES[libraryId].available ? '← Quay lại thư viện' : '← Về hồ sơ';
   region('document-back').append(back);
   if (!ROUTES[libraryId].available) {
-    const note = document.createElement('p'); note.className = 'form-field__hint'; note.textContent = 'Thư viện quản lý chưa có trong bản bàn giao SV1.'; region('document-back').append(note);
+    const note = document.createElement('p'); note.className = 'form-field__hint'; note.textContent = 'Thư viện chưa sẵn sàng trong bản hiện tại.'; region('document-back').append(note);
   }
   async function loadData() {
     ui.setViewState(region('detail-state'), { status: 'loading', message: 'Đang tải tài liệu…' });
@@ -21,7 +22,7 @@ export async function initPage({ currentUser, repository, ui }) {
       const record = await repository.get('documents', id);
       region('document-title').textContent = record.title;
       document.title = `${record.title} | OnboardAI`;
-      region('document-meta').textContent = `${record.category} · Cập nhật ${formatDate(record.updatedAt.slice(0, 10))}`;
+      region('document-meta').textContent = `${record.category} · Cập nhật ${formatDate(record.updatedAt ? getTodayDate(record.updatedAt) : '')}`;
       region('document-status').replaceChildren(createStatusBadge('documents', record.status));
       const body = region('document-content'); const toc = region('document-toc');
       body.replaceChildren(); toc.replaceChildren(); toc.className = 'doc-detail__toc-links';

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cài đặt hệ thống | OnboardAI</title>
+  <title>Quản lý hệ thống | OnboardAI</title>
   <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/layout.css">
@@ -18,53 +18,60 @@
     <main class="app-main" id="main-content">
       <div class="page-header">
         <div>
-          <h1 class="page-header__title">Cài đặt hệ thống</h1>
-          <p class="page-header__description">Cấu hình dùng chung theo bản ghi hệ thống. Không chứa API key, mật khẩu hay token.</p>
+          <h1 class="page-header__title">Quản lý hệ thống</h1>
+          <p class="page-header__description">Thông tin tổ chức, quy tắc hội nhập và các khu vực quản trị.</p>
         </div>
+        <span class="badge badge--info">Không gian quản trị</span>
       </div>
-      <div class="page-body">
-        <div data-region="settings-state" aria-live="polite"></div>
-        <section class="card admin-settings__section" data-region="settings-section" hidden>
-          <div class="tabs admin-settings__tabs" data-region="settings-tabs">
-            <div class="tabs__list" role="tablist" aria-label="Nhóm cài đặt">
-              <button class="tabs__tab" type="button" role="tab" id="settings-tab-ai" aria-controls="settings-panel-ai" aria-selected="true">Trợ lý AI</button>
-              <button class="tabs__tab" type="button" role="tab" id="settings-tab-notes" aria-controls="settings-panel-notes" aria-selected="false">Ghi chú chính sách</button>
+      <div data-region="settings-state" aria-live="polite"></div>
+      <div class="page-body" data-region="settings-content" hidden>
+        <div class="stats-grid" aria-label="Tổng quan hệ thống">
+          <article class="card stat-card"><div><p class="stat-card__label">Tài khoản</p><p class="stat-card__value" data-region="users-count">—</p><a href="admin-user-management.html">Quản lý tài khoản →</a></div></article>
+          <article class="card stat-card"><div><p class="stat-card__label">Phòng ban</p><p class="stat-card__value" data-region="departments-count">—</p><a href="admin-department-management.html">Quản lý phòng ban →</a></div></article>
+          <article class="card stat-card"><div><p class="stat-card__label">Tài liệu đã phát hành</p><p class="stat-card__value" data-region="documents-count">—</p><a href="hr-document-library.html">Quản lý tài liệu →</a></div></article>
+        </div>
+        <div class="content-grid content-grid--sidebar">
+          <form class="form form--two-columns" data-region="settings-form" novalidate>
+            <section class="card">
+              <div class="card__header"><div><h2 class="card__title">Thông tin tổ chức</h2><p class="card__subtitle">Tên đơn vị và đầu mối hỗ trợ nhân sự.</p></div></div>
+              <div class="form__grid" data-region="organization-fields"></div>
+            </section>
+            <section class="card">
+              <div class="card__header"><div><h2 class="card__title">Quy tắc hội nhập</h2><p class="card__subtitle">Giá trị mặc định để chuẩn bị cho hành trình và nhắc việc.</p></div></div>
+              <div class="form__grid" data-region="onboarding-fields"></div>
+              <p class="form-field__hint">Chưa áp dụng cho hành trình đang chạy và chưa gửi thông báo tự động.</p>
+            </section>
+            <div class="form__actions" data-region="settings-actions">
+              <button class="btn btn--primary" type="submit" data-action="save-settings">Xem trước thay đổi</button>
+              <button class="btn btn--secondary" type="button" data-action="cancel-settings">Hủy thay đổi</button>
+              <button class="btn btn--ghost" type="button" data-action="reset-settings">Khôi phục cấu hình đã tải</button>
             </div>
-            <div class="tabs__panel" id="settings-panel-ai" role="tabpanel" aria-labelledby="settings-tab-ai">
-              <form class="form" data-region="settings-form" novalidate>
-                <div class="form__grid">
-                  <div class="form-field form-field--full">
-                    <label class="form-field__label" for="settings-question">Câu hỏi mẫu <span class="form-field__required" aria-hidden="true">*</span></label>
-                    <input class="form-field__control" id="settings-question" name="question" type="text" required aria-describedby="settings-question-error">
-                    <p class="form-field__error" id="settings-question-error" data-error-for="question" hidden></p>
-                  </div>
-                  <div class="form-field form-field--full">
-                    <label class="form-field__label" for="settings-answer">Câu trả lời mẫu <span class="form-field__required" aria-hidden="true">*</span></label>
-                    <textarea class="form-field__control" id="settings-answer" name="answer" rows="3" required aria-describedby="settings-answer-error"></textarea>
-                    <p class="form-field__error" id="settings-answer-error" data-error-for="answer" hidden></p>
-                  </div>
-                  <div class="form-field form-field--full">
-                    <label class="form-field__label" for="settings-explanation">Giải thích mẫu</label>
-                    <textarea class="form-field__control" id="settings-explanation" name="explanation" rows="2"></textarea>
-                  </div>
-                </div>
-                <p class="admin-settings__id" data-region="settings-record"></p>
-                <div class="alert alert--info" data-region="settings-notice" hidden>
-                  <p class="alert__message">Bản xem trước — cấu hình chưa được ghi vào hệ thống.</p>
-                </div>
-                <div class="form__actions">
-                  <button class="btn btn--primary" type="submit" data-action="save-settings">Lưu cấu hình</button>
-                  <button class="btn btn--danger" type="button" data-action="reset-settings">Khôi phục mặc định</button>
-                  <button class="btn btn--ghost" type="button" data-action="cancel-settings">Hủy</button>
-                </div>
-              </form>
-            </div>
-            <div class="tabs__panel" id="settings-panel-notes" role="tabpanel" aria-labelledby="settings-tab-notes" hidden>
-              <div class="admin-settings__notes" data-region="notes-list"></div>
-            </div>
-          </div>
+            <section class="card" data-region="settings-preview" aria-live="polite" hidden>
+              <div class="card__header"><h2 class="card__title">Bản xem trước cấu hình</h2></div>
+              <dl class="admin-settings__summary" data-region="settings-summary"></dl>
+              <p class="form-field__hint">Chưa lưu hoặc áp dụng vào hệ thống. Tải lại trang sẽ bỏ bản nháp.</p>
+            </section>
+          </form>
+          <aside class="page-body" aria-label="Hướng dẫn quản trị">
+            <section class="card">
+              <div class="card__header"><h2 class="card__title">Quản trị tập trung</h2></div>
+              <div class="card__body">
+                <p class="card__subtitle">Cấp tài khoản, cập nhật phòng ban và phát hành tài liệu tại các khu vực quản lý tương ứng.</p>
+                <a class="btn btn--secondary" href="admin-user-management.html">Tài khoản và vai trò</a>
+                <a class="btn btn--secondary" href="admin-department-management.html">Cơ cấu phòng ban</a>
+                <a class="btn btn--secondary" href="hr-document-library.html">Kho tài liệu chung</a>
+              </div>
+            </section>
+            <section class="alert alert--info">
+              <h2 class="alert__title">Chế độ xem trước</h2>
+              <p class="alert__message">Thay đổi chỉ nằm trên biểu mẫu để kiểm tra trước khi tích hợp lưu dữ liệu. Không ảnh hưởng đến tài khoản hay quy trình hiện tại.</p>
+            </section>
+          </aside>
+        </div>
+        <section class="card">
+          <div class="card__header"><div><h2 class="card__title">Phạm vi sử dụng theo vai trò</h2><p class="card__subtitle">Các khu vực đã được phân công trong dự án. Quyền đọc từng bản ghi vẫn theo người dùng và phạm vi dữ liệu.</p></div></div>
+          <div class="table-wrap"><table class="table"><thead><tr><th scope="col">Vai trò</th><th scope="col">Khu vực sử dụng</th></tr></thead><tbody data-region="role-scope"></tbody></table></div>
         </section>
-        <p class="admin-settings__preview">Giai đoạn giao diện: lưu và khôi phục chỉ được xem trước, chưa ghi vào cấu hình hệ thống.</p>
       </div>
     </main>
   </div>

@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Thư viện tài liệu | OnboardAI</title>
+  <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/base.css" />
   <link rel="stylesheet" href="../css/layout.css" />
   <link rel="stylesheet" href="../css/components.css" />
@@ -22,7 +23,21 @@
         </div>
         <div class="page-header__actions" data-region="library-actions"></div>
       </div>
-      <div class="page-body" data-region="library-page"></div>
+      <div class="page-body" data-region="library-page">
+        <section class="card">
+          <div class="card__header"><h2 class="card__title">Danh sách tài liệu</h2><span class="form-field__hint" data-region="document-count"></span></div>
+          <form class="toolbar" data-region="document-filters" role="search">
+            <div class="form-field toolbar__search"><label class="form-field__label" for="document-search">Tìm tài liệu</label><input class="form-field__control" id="document-search" name="search" type="search" placeholder="Nhập tên tài liệu"></div>
+            <div class="form-field toolbar__filters"><label class="form-field__label" for="document-category">Chủ đề</label><select class="form-field__control" id="document-category" name="category"><option value="">Tất cả chủ đề</option></select></div>
+            <div class="form-field toolbar__filters"><label class="form-field__label" for="document-status">Trạng thái</label><select class="form-field__control" id="document-status" name="status"></select></div>
+          </form>
+          <div data-region="library-state" aria-live="polite"></div>
+          <div class="table-wrap" data-region="document-table-wrap" hidden>
+            <table class="table"><thead><tr><th scope="col">Tài liệu</th><th scope="col">Chủ đề</th><th scope="col">Trạng thái</th><th scope="col">Cập nhật</th><th scope="col">Thao tác</th></tr></thead><tbody data-region="document-rows"></tbody></table>
+          </div>
+        </section>
+        <section class="card" data-region="document-preview" aria-live="polite" hidden></section>
+      </div>
     </main>
   </div>
   <div id="modal-root"></div>

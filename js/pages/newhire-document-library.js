@@ -7,7 +7,10 @@ export async function initPage({ repository, ui }) {
   const state = root.querySelector('[data-region="library-state"]');
   const count = root.querySelector('[data-region="document-count"]');
   let documents = [];
+  let ready = false;
+
   function render() {
+    if (!ready) return;
     const search = filters.elements.search.value.trim().toLocaleLowerCase('vi');
     const category = filters.elements.category.value;
     const matches = documents.filter((record) => (!category || record.category === category) && record.title.toLocaleLowerCase('vi').includes(search));
@@ -16,10 +19,16 @@ export async function initPage({ repository, ui }) {
     count.textContent = `${matches.length} tài liệu`;
   }
   async function loadData() {
+    ready = false;
+    list.replaceChildren();
+    count.textContent = '';
+    for (const control of filters.elements) control.disabled = true;
     ui.setViewState(state, { status: 'loading', message: 'Đang tải thư viện tài liệu…' });
     try {
       documents = (await repository.list('documents', { status: 'published' })).items;
       filters.elements.category.replaceChildren(new Option('Tất cả chủ đề', ''), ...[...new Set(documents.map((record) => record.category))].map((category) => new Option(category, category)));
+      ready = true;
+      for (const control of filters.elements) control.disabled = false;
       render();
     } catch (error) {
       ui.setViewState(state, { status: 'error', message: error.message || 'Không thể tải thư viện.' });

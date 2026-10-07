@@ -94,6 +94,12 @@ Không tự viết lại `base.css`, `components.css`, `layout.css`, `main.js` h
 
 ## 5. Contract của helper và repository
 
+Bổ sung shell/UI-17 ngày 07/10/2026: createIcon đặt fill/stroke trên SVG instance để mọi class icon dùng cùng nét vẽ, không đổi signature. settings.system bổ sung năm field quản trị theo data-contract.md; fixture AI vẫn giữ nguyên cho các màn hình AI. Owner repository/seed phối hợp review patch; không mở thêm quyền ghi kho.
+
+Bổ sung 07/10/2026: trang chủ `UI-PUBLIC` đọc `portalPosts` qua list/get của repository hiện có, chỉ bản ghi published/public theo permissions chung. Xem schema ở data-contract.md; không chứa chi tiết nội bộ trong teaser. `createIcon` giải quyết đường dẫn sprite theo import.meta.url để dùng ở cả root và pages, không đổi chữ ký.
+
+Bổ sung tích hợp 06/10/2026: chuyển ngày giờ check-in bằng helper format chung và rule datetime theo AGENTS mục 7; thống kê rủi ro dùng analyzeProgressRisk chung. Fixture checklist và field mở rộng được đặc tả ở [hợp đồng dữ liệu](../data-contract.md); quyền field lấy theo entity đang sửa.
+
 Các signature đầy đủ lấy từ `AGENTS.md` mục 7–8. SV2 triển khai đúng contract đang có, không đổi tên/kiểu kết quả riêng cho phần Mentor.
 
 - `ui.confirmAction(...)` trả `Promise<boolean>`; caller giữ ID và chỉ làm hành động khi true. Modal/toast/tab quản lý listener, focus, Escape/close và state một lần.

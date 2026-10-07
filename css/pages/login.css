@@ -3,10 +3,6 @@
   max-width: 380px;
 }
 
-.page--login .login__panel {
-  padding: var(--space-8);
-}
-
 .page--login .login__heading {
   display: grid;
   justify-items: center;
@@ -18,12 +14,6 @@
 .page--login .login__brand {
   width: 152px;
   height: 32px;
-}
-
-.page--login .login__form,
-.page--login .login__fields {
-  display: grid;
-  gap: var(--space-4);
 }
 
 .page--login .login__password-control {
@@ -89,10 +79,6 @@
 }
 
 @media (max-width: 767px) {
-  .page--login .login__panel {
-    padding: var(--space-6);
-  }
-
   .page--login .login__demo-account {
     grid-template-columns: minmax(0, 1fr);
   }

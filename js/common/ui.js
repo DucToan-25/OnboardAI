@@ -101,7 +101,7 @@ export function confirmAction({ title, message, confirmLabel = 'Xác nhận', to
 export function showToast({ message, type = 'info' }) {
   const root = document.querySelector('#toast-root');
   if (!root) return;
-  root.classList.add('toast-stack');
+  root.classList.add('toast__stack');
   const toast = document.createElement('div'); toast.className = `toast toast--${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'info'}`;
   const text = document.createElement('p'); text.className = 'toast__message'; text.textContent = message;
   const close = document.createElement('button'); close.type = 'button'; close.className = 'btn btn--ghost btn--icon toast__close';

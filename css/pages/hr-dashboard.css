@@ -53,4 +53,8 @@
     flex-direction: column;
     align-items: stretch;
   }
+
+  .page--hr-dashboard .hr-dashboard__composer .form-field {
+    flex: initial;
+  }
 }

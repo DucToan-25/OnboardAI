@@ -1,35 +1,16 @@
-.page--admin-system-settings .admin-settings__preview {
-  color: var(--color-muted);
-  font-size: var(--font-size-caption);
-}
-
-.page--admin-system-settings .admin-settings__tabs {
+.page--admin-system-settings .admin-settings__summary {
   display: grid;
-  gap: var(--space-4);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+  overflow-wrap: anywhere;
 }
-
-.page--admin-system-settings .admin-settings__id {
+.page--admin-system-settings .admin-settings__summary dt {
   color: var(--color-muted);
-  font-size: var(--font-size-caption);
 }
-
-.page--admin-system-settings .admin-settings__notes {
-  display: grid;
-  gap: var(--space-4);
-}
-
-.page--admin-system-settings .admin-settings__note-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--color-muted);
-  font-size: var(--font-size-caption);
-}
-
-.page--admin-system-settings .admin-settings__note-sources {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  font-size: var(--font-size-small);
+@media (max-width: 767px) {
+  .page--admin-system-settings .admin-settings__summary {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+  }
 }

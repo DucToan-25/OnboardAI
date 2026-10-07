@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Giao nhiệm vụ | OnboardAI</title>
+  <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../css/base.css" />
   <link rel="stylesheet" href="../css/layout.css" />
   <link rel="stylesheet" href="../css/components.css" />
@@ -21,7 +22,34 @@
           <p class="page-header__description">Tạo nhiệm vụ cho mentee và gợi ý checklist bằng AI.</p>
         </div>
       </div>
-      <div class="page-body" data-region="task-page"></div>
+      <div class="page-body" data-region="task-page">
+        <div data-region="url-state" aria-live="polite" hidden></div>
+        <div class="content-grid content-grid--2">
+          <section class="card">
+            <div class="card__header"><h2 class="card__title" data-region="task-form-title">Giao nhiệm vụ mới</h2></div>
+            <form class="form" data-region="task-form" novalidate></form>
+            <div class="mentor-tasks__preview" data-region="task-preview" aria-live="polite" hidden></div>
+          </section>
+          <section class="card ai-panel">
+            <div class="ai-panel__header"><h2 class="card__title">Gợi ý checklist AI</h2><p class="form-field__hint">Dữ liệu minh họa để duyệt checklist trước khi giao việc.</p></div>
+            <form class="form ai-panel__input" data-region="checklist-form" novalidate></form>
+            <div data-region="checklist-state" aria-live="polite"></div>
+            <div data-region="checklist-result" hidden></div>
+          </section>
+        </div>
+        <section class="card">
+          <div class="card__header"><h2 class="card__title">Nhiệm vụ đã được giao</h2><span class="form-field__hint" data-region="task-count"></span></div>
+          <form class="toolbar" data-region="task-filters" role="search">
+            <div class="form-field toolbar__search"><label class="form-field__label" for="task-search">Tìm nhiệm vụ</label><input class="form-field__control" type="search" id="task-search" name="search"></div>
+            <div class="form-field toolbar__filters"><label class="form-field__label" for="task-mentee-filter">Mentee</label><select class="form-field__control" id="task-mentee-filter" name="newHireId"></select></div>
+            <div class="form-field toolbar__filters"><label class="form-field__label" for="task-status-filter">Trạng thái</label><select class="form-field__control" id="task-status-filter" name="status"></select></div>
+          </form>
+          <div data-region="task-state" aria-live="polite"></div>
+          <div class="table-wrap" data-region="task-table-wrap" hidden>
+            <table class="table"><thead><tr><th scope="col">Nhiệm vụ</th><th scope="col">Mentee</th><th scope="col">Hạn hoàn thành</th><th scope="col">Trạng thái</th><th scope="col">Thao tác</th></tr></thead><tbody data-region="task-rows"></tbody></table>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
   <div id="modal-root"></div>

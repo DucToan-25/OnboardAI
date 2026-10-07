@@ -32,6 +32,7 @@ export function validateForm(values, rules) {
       else if (!value) continue;
       else if (rule.type === 'email') valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
       else if (rule.type === 'date') valid = validDate(value);
+      else if (rule.type === 'datetime') valid = Boolean(fromDateTimeInput(value));
       else if (rule.type === 'phone') valid = /^\+?[\d ()-]{8,20}$/.test(value) && value.replace(/\D/g, '').length >= 8;
       else if (rule.type === 'url') valid = isSafeUrl(value, { allowRelative: Boolean(rule.allowRelative) });
       else if (rule.type === 'maxLength') valid = value.length <= Number(rule.maxLength ?? rule.value ?? rule.max);
@@ -49,6 +50,10 @@ export function applyFormErrors(form, errors = {}) {
     const control = field.querySelector('[name]');
     const message = field.querySelector('.form-field__error');
     if (!control || !message) continue;
+    if (!message.id) message.id = `${control.id || `error-${control.name}`}-error`;
+    const describedBy = new Set((control.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean));
+    describedBy.add(message.id);
+    control.setAttribute('aria-describedby', [...describedBy].join(' '));
     const error = errors[control.name];
     field.classList.toggle('is-invalid', Boolean(error));
     if (error) control.setAttribute('aria-invalid', 'true');
@@ -59,3 +64,4 @@ export function applyFormErrors(form, errors = {}) {
   const firstInvalid = form.querySelector('[aria-invalid="true"]');
   if (firstInvalid) firstInvalid.focus();
 }
+import { fromDateTimeInput } from './format.js';

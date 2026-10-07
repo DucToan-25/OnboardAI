@@ -9,12 +9,12 @@ import { createRepository } from './data/repository.js';
 async function bootstrap() {
   const pageId = document.body.dataset.page;
   const route = ROUTES[pageId];
-  if (!route) { location.replace('404.html'); return; }
+  if (!route) { location.replace(new URL('../pages/404.html', import.meta.url)); return; }
   const root = document.querySelector('#main-content');
   try {
     const currentUser = await getCurrentUser();
-    if (!route.public && !currentUser) { location.replace('login.html'); return; }
-    if (!permissions.canOpenPage(currentUser, pageId)) { location.replace('403.html'); return; }
+    if (!route.public && !currentUser) { location.replace(new URL('../pages/login.html', import.meta.url)); return; }
+    if (!permissions.canOpenPage(currentUser, pageId)) { location.replace(new URL('../pages/403.html', import.meta.url)); return; }
     const repository = await createRepository({ currentUser: pageId === 'login' ? null : currentUser, mode: APP_CONFIG.mode });
     renderLayout({ currentUser, pageId });
     const page = await route.loadPage();

@@ -61,7 +61,7 @@
           <div class="card__header">
             <div>
               <h2 class="card__title" id="risk-panel-title">Phân tích rủi ro tiến độ</h2>
-              <p class="card__subtitle">AI-3 — bản xem trước: kết quả là draft, chưa can thiệp vào hồ sơ hay checklist.</p>
+              <p class="card__subtitle">Xem trước đề xuất từ dữ liệu minh họa để HR xem xét.</p>
             </div>
             <span class="badge badge--info">Bản xem trước</span>
           </div>
@@ -72,6 +72,11 @@
                 <option value="">— Chọn nhân sự —</option>
               </select>
               <p class="form-field__error" id="risk-newHireId-error" data-error-for="newHireId" hidden></p>
+            </div>
+            <div class="form-field">
+              <label class="form-field__label" for="risk-scenario">Tình huống xem trước</label>
+              <select class="form-field__control" id="risk-scenario" name="scenario" aria-describedby="risk-scenario-error"></select>
+              <p class="form-field__error" id="risk-scenario-error" data-error-for="scenario" hidden></p>
             </div>
             <div class="toolbar__actions">
               <button class="btn btn--primary" type="submit" data-action="analyze-risk">Phân tích rủi ro</button>
@@ -87,6 +92,7 @@
               <p class="alert__title">Lý do (draft)</p>
               <p class="alert__message" data-region="risk-explanation"></p>
             </div>
+            <p class="form-field__hint" data-region="risk-draft-status" aria-live="polite"></p>
             <div class="ai-panel__sources">
               <p class="alert__title">Nguồn dữ liệu</p>
               <div data-region="risk-sources"></div>

@@ -21,6 +21,7 @@ export function canOpenPage(currentUser, pageId) {
 }
 
 export function can(currentUser, action, resource = {}) {
+  if (action === 'portalPosts:read') return resource.status === 'published' && resource.visibility === 'public';
   if (!isActive(currentUser)) return false;
   const role = currentUser.role;
   const [entity, operation] = action.split(':');
@@ -39,27 +40,45 @@ export function can(currentUser, action, resource = {}) {
       && ['pending', 'in_progress', 'changes_requested'].includes(resource.status);
     if (['create', 'update', 'cancel', 'review'].includes(operation)) return role === 'mentor' && mentorsNewHire(currentUser, resource);
   }
-  if (entity === 'checkins') return operation === 'read'
-    ? (role === 'mentor' && mentorsNewHire(currentUser, resource)) || (role === 'newhire' && ownsNewHire(currentUser, resource) && resource.sharedWithNewHire === true)
-    : role === 'mentor' && mentorsNewHire(currentUser, resource);
+  if (entity === 'checkins') {
+    if (operation === 'read') return (role === 'mentor' && mentorsNewHire(currentUser, resource))
+      || (role === 'newhire' && ownsNewHire(currentUser, resource) && resource.sharedWithNewHire === true);
+    return ['create', 'update', 'cancel'].includes(operation)
+      && role === 'mentor' && mentorsNewHire(currentUser, resource);
+  }
   if (entity === 'newHires' || entity === 'journeyAssignments') return operation === 'read'
     && ((role === 'newhire' && ownsNewHire(currentUser, resource)) || (role === 'mentor' && mentorsNewHire(currentUser, resource)) || role === 'hr');
-  if (entity === 'journeys') return role === 'hr' || (operation === 'read' && resource.assignedToUserId === currentUser.id);
+  if (entity === 'journeys') return (role === 'hr' && ['read', 'create', 'update', 'archive'].includes(operation))
+    || (operation === 'read' && resource.assignedToUserId === currentUser.id);
   if (entity === 'users') {
-    if (role === 'admin') return true;
+    if (operation === 'disable' && resource.id === currentUser.id) return false;
+    if (role === 'admin') return ['read', 'create', 'update', 'disable', 'restore'].includes(operation);
     if (operation !== 'read') return false;
     return resource.id === currentUser.id || resource.mentorForUserId === currentUser.id
       || (role === 'mentor' && resource.assignedMentorId === currentUser.id)
       || (role === 'hr' && ['newhire', 'mentor'].includes(resource.role));
   }
-  if (entity === 'departments') return operation === 'read' || role === 'admin';
-  if (entity === 'settings') return operation === 'read' || role === 'admin';
+  if (entity === 'departments') return operation === 'read'
+    || (role === 'admin' && ['create', 'update', 'archive'].includes(operation));
+  if (entity === 'settings') return operation === 'read'
+    || (role === 'admin' && ['update', 'reset'].includes(operation));
   return false;
 }
 
 export function getEditableFields(currentUser, entity, resource = {}) {
   if (!isActive(currentUser)) return [];
-  if ((entity === 'users' || entity === 'profile') && resource.id === currentUser.id) return ['fullName', 'phone', 'avatarUrl'];
+  if (entity === 'profile' && resource.id === currentUser.id) return ['fullName', 'phone', 'avatarUrl'];
+  if (entity === 'users' && can(currentUser, 'users:update', resource)) {
+    return ['fullName', 'email', 'phone', 'role', 'departmentId', 'jobTitle', 'status'];
+  }
+  if (entity === 'departments' && can(currentUser, 'departments:update', resource)) return ['name', 'description', 'status'];
+  if (entity === 'journeys' && can(currentUser, 'journeys:update', resource)) return ['name', 'departmentId', 'status', 'steps'];
+  if (entity === 'documents' && can(currentUser, 'documents:update', resource)) {
+    return ['title', 'category', 'content', 'status', 'audienceRoles', 'departmentIds'];
+  }
+  if (entity === 'settings' && can(currentUser, 'settings:update', resource)) return ['organizationName', 'supportEmail', 'supportPhone', 'onboardingDays', 'reminderDays'];
+  if (entity === 'tasks' && can(currentUser, 'tasks:update', resource)) return ['title', 'description', 'dueDate', 'relatedDocumentIds'];
   if (entity === 'tasks' && can(currentUser, 'tasks:submit', resource)) return ['result'];
+  if (entity === 'checkins' && can(currentUser, 'checkins:update', resource)) return ['scheduledAt', 'note', 'status'];
   return [];
 }

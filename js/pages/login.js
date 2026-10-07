@@ -11,7 +11,7 @@ export async function initPage({ repository, ui }) {
   let users = [];
   let signingIn = false;
 
-  fields.className = 'login__fields';
+  fields.className = 'form__grid';
   fields.append(createField({
     name: 'email', label: 'Email', type: 'email', value: '', required: true,
   }));

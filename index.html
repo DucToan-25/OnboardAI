@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Tin tức, thông báo và sự kiện dành cho hành trình hội nhập tại Onvera.">
+  <title>Onvera · Tin tức &amp; Thông báo</title>
+  <link rel="icon" href="assets/images/logo-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages/index.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="page page--index" data-page="index">
+  <header class="index__header" id="app-header">
+    <div class="index__container index__header-row">
+      <a class="index__brand" href="index.html" aria-label="Onvera — Trang chủ">
+        <img src="assets/images/logo-mark.svg" width="42" height="42" alt="">
+        <span><strong>ONVERA</strong><small class="index__muted">Cổng thông tin OnboardAI</small></span>
+      </a>
+      <nav class="index__nav" data-region="section-nav" aria-label="Điều hướng chính">
+        <a href="#home" class="is-active" aria-current="location">Trang chủ</a>
+        <a href="#news">Tin tức</a>
+        <a href="#announcements">Thông báo</a>
+        <a href="#events">Sự kiện</a>
+      </nav>
+      <form class="index__search" data-region="header-search" role="search">
+        <label class="sr-only" for="header-search">Tìm kiếm tin tức</label>
+        <input class="form-field__control" id="header-search" name="search" type="search" placeholder="Tìm kiếm tin tức…">
+        <button class="btn btn--ghost btn--icon" type="submit" aria-label="Tìm kiếm"><svg class="btn__icon" aria-hidden="true"><use href="assets/icons/sprite.svg#search"></use></svg></button>
+      </form>
+      <a class="btn btn--primary" href="pages/login.html">Đăng nhập <svg class="btn__icon" aria-hidden="true"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a>
+    </div>
+  </header>
+  <main class="index__container index__main" id="main-content">
+    <section class="index__intro" id="home" aria-labelledby="welcome-title">
+      <p class="index__eyebrow">ONVERA NEWS &amp; ANNOUNCEMENTS</p>
+      <h1 class="index__title" id="welcome-title">Khởi đầu vững vàng, kết nối để trưởng thành.</h1>
+      <p class="index__muted">Tin tức, thông báo và sự kiện dành cho hành trình hội nhập của bạn tại Onvera.</p>
+      <div class="index__welcome">
+        <div><h2 class="card__title">Chào mừng đến với Onvera</h2><p class="index__muted">Trang này giúp bạn cập nhật nhanh thông tin công ty, thông báo quan trọng và các hoạt động nội bộ trước khi bắt đầu hành trình hội nhập.</p></div>
+        <div class="card stat-card index__stat"><span class="index__stat-icon"><svg class="btn__icon" aria-hidden="true"><use href="assets/icons/sprite.svg#check"></use></svg></span><div><p class="stat-card__label">Thông báo mới</p><strong class="stat-card__value" data-region="notice-count">—</strong></div></div>
+        <div class="card stat-card index__stat"><span class="index__stat-icon index__stat-icon--event"><svg class="btn__icon" aria-hidden="true"><use href="assets/icons/sprite.svg#clock"></use></svg></span><div><p class="stat-card__label">Sự kiện sắp tới</p><strong class="stat-card__value" data-region="event-count">—</strong></div></div>
+      </div>
+    </section>
+    <div class="index__columns">
+      <section id="announcements" aria-labelledby="announcements-title">
+        <div class="index__section-heading"><h2 id="announcements-title">Thông báo quan trọng</h2><button class="btn btn--ghost btn--sm" type="button" data-action="all-notices">Xem tất cả</button></div>
+        <div class="card" data-region="notices"><p class="index__muted">Đang tải thông báo…</p></div>
+      </section>
+      <section id="events" aria-labelledby="events-title">
+        <div class="index__section-heading"><h2 id="events-title">Sự kiện nội bộ</h2><button class="btn btn--ghost btn--sm" type="button" data-action="calendar">Xem lịch</button></div>
+        <div class="card" data-region="events"><p class="index__muted">Đang tải sự kiện…</p></div>
+      </section>
+    </div>
+    <section id="news" aria-labelledby="news-title">
+      <div class="index__section-heading"><h2 id="news-title">Tin tức công ty</h2><button class="btn btn--ghost btn--sm" type="button" data-action="all-news">Xem thêm</button></div>
+      <div class="toolbar index__toolbar">
+        <div class="toolbar__search index__news-search"><label class="sr-only" for="news-search">Tìm tin tức</label><input class="form-field__control" id="news-search" name="search" type="search" placeholder="Tìm tin tức…"></div>
+        <div class="toolbar__actions" role="group" aria-label="Danh mục tin tức">
+          <button class="btn btn--primary btn--sm is-active" type="button" data-action="filter" data-category="all" aria-pressed="true">Tất cả</button>
+          <button class="btn btn--secondary btn--sm" type="button" data-action="filter" data-category="company" aria-pressed="false">Doanh nghiệp</button>
+          <button class="btn btn--secondary btn--sm" type="button" data-action="filter" data-category="internal" aria-pressed="false">Nội bộ</button>
+          <button class="btn btn--secondary btn--sm" type="button" data-action="filter" data-category="event" aria-pressed="false">Sự kiện</button>
+        </div>
+        <div><label class="sr-only" for="news-sort">Sắp xếp tin tức</label><select class="form-field__control" id="news-sort" name="sort"><option value="newest">Mới nhất</option><option value="oldest">Cũ nhất</option></select></div>
+      </div>
+      <div class="card" data-region="news"><p class="index__muted">Đang tải tin tức…</p></div>
+      <nav class="pagination" aria-label="Phân trang tin tức"><p class="pagination__summary" data-region="news-summary" aria-live="polite"></p><div class="pagination__list" data-region="pagination"></div></nav>
+    </section>
+    <div class="index__columns">
+      <section class="index__membership" aria-labelledby="membership-title">
+        <svg class="btn__icon" aria-hidden="true"><use href="assets/icons/sprite.svg#user"></use></svg>
+        <h2 id="membership-title">Bạn là thành viên Onvera?</h2>
+        <p>Đăng nhập để xem đầy đủ thông báo, tài liệu và hoạt động dành cho bạn.</p>
+        <a class="btn btn--primary" href="pages/login.html">Đăng nhập <svg class="btn__icon" aria-hidden="true"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a>
+        <p class="index__caption">Chưa có tài khoản? <button class="index__text-action" type="button" data-info="contact">Liên hệ Phòng Nhân sự.</button></p>
+      </section>
+      <aside class="index__aside" aria-label="Sự kiện và hỗ trợ">
+        <section class="card"><h2 class="card__title">Sắp diễn ra</h2><div data-region="upcoming"></div></section>
+        <div class="index__support"><strong>Cần hỗ trợ truy cập?</strong><p class="index__muted">Liên hệ Phòng Nhân sự để được hỗ trợ.</p><button class="btn btn--ghost btn--sm" type="button" data-info="faq">Câu hỏi thường gặp →</button></div>
+      </aside>
+    </div>
+  </main>
+  <footer class="index__footer">
+    <div class="index__container">
+      <div class="index__footer-row"><div><strong>ONVERA</strong><p class="index__muted">Một điểm chạm. Nhiều kết nối.</p></div><nav class="index__footer-links" aria-label="Thông tin Onvera"><button class="index__text-action" type="button" data-info="about">Về Onvera</button><button class="index__text-action" type="button" data-info="contact">Liên hệ</button><button class="index__text-action" type="button" data-info="privacy">Chính sách bảo mật</button><button class="index__text-action" type="button" data-info="terms">Điều khoản sử dụng</button></nav></div>
+      <div class="index__footer-row index__copyright"><p>© 2026 Onvera. Mọi quyền được bảo lưu.</p><p>Được quản lý bởi Ban Truyền thông Onvera</p></div>
+    </div>
+  </footer>
+  <div id="modal-root"></div>
+  <div id="toast-root" aria-live="polite"></div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

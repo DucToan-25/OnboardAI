@@ -9,6 +9,7 @@ function route(pageId, allowedRoles, isPublic = false) {
   };
 }
 export const ROUTES = Object.freeze({
+  index: route('index', [], true),
   login: route('login', [], true), profile: route('profile', all),
   'newhire-onboarding-dashboard': route('newhire-onboarding-dashboard', ['newhire']),
   'newhire-checklist': route('newhire-checklist', ['newhire']),

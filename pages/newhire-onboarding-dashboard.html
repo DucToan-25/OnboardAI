@@ -1,48 +1,48 @@
 <!doctype html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tổng quan hội nhập | OnboardAI</title>
-  <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../css/base.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages/newhire-onboarding-dashboard.css">
-  <link rel="stylesheet" href="../css/responsive.css">
-</head>
-<body class="page page--newhire-onboarding-dashboard" data-page="newhire-onboarding-dashboard">
-  <div class="app-shell">
-    <header class="app-header" id="app-header"></header>
-    <aside class="app-sidebar" id="app-sidebar"></aside>
-    <main class="app-main" id="main-content">
-      <div class="page-header"><div><h1 class="page-header__title">Tổng quan</h1><p class="page-header__description">Chào bạn, đây là những việc cần theo dõi.</p></div></div>
-      <div data-region="dashboard-state" aria-live="polite"></div>
-      <div class="page-body" data-region="dashboard" hidden>
-        <div class="stats-grid" data-region="stats"></div>
-        <section class="card card--compact progress" aria-labelledby="progress-title">
-          <div class="progress__label"><div><h2 class="nh-dashboard__label" id="progress-title">Tiến độ hội nhập</h2><p class="form-field__hint" data-region="journey-name"></p></div><span class="progress__value" data-region="progress-value"></span></div>
-          <progress class="progress__bar" data-region="progress-bar" value="0" max="100" aria-labelledby="progress-title"></progress>
-        </section>
-        <div class="content-grid content-grid--sidebar">
-          <section class="card">
-            <div class="card__header"><h2 class="card__title">Việc cần làm tiếp theo</h2><a href="newhire-checklist.html" class="btn btn--ghost btn--sm">Xem checklist</a></div>
-            <div data-region="upcoming-tasks"></div>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tổng quan hội nhập | OnboardAI</title>
+    <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages/newhire-onboarding-dashboard.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+  </head>
+  <body class="page page--newhire-onboarding-dashboard" data-page="newhire-onboarding-dashboard">
+    <div class="app-shell">
+      <header class="app-header" id="app-header"></header>
+      <aside class="app-sidebar" id="app-sidebar"></aside>
+      <main class="app-main" id="main-content">
+        <div class="page-header"><div><h1 class="page-header__title">Tổng quan</h1><p class="page-header__description">Chào bạn, đây là những việc cần theo dõi.</p></div></div>
+        <div data-region="dashboard-state" aria-live="polite"></div>
+        <div class="page-body" data-region="dashboard" hidden>
+          <div class="stats-grid" data-region="stats"></div>
+          <section class="card card--compact progress" aria-labelledby="progress-title">
+            <div class="progress__label"><div><h2 class="nh-dashboard__label" id="progress-title">Tiến độ hội nhập</h2><p class="form-field__hint" data-region="journey-name"></p></div><span class="progress__value" data-region="progress-value"></span></div>
+            <progress class="progress__bar" data-region="progress-bar" value="0" max="100" aria-labelledby="progress-title"></progress>
           </section>
+          <div class="content-grid content-grid--sidebar">
+            <section class="card">
+              <div class="card__header"><h2 class="card__title">Việc cần làm tiếp theo</h2><a href="newhire-checklist.html" class="btn btn--ghost btn--sm">Xem checklist</a></div>
+              <div data-region="upcoming-tasks"></div>
+            </section>
+            <section class="card">
+              <div class="card__header"><h2 class="card__title">Mentor của bạn</h2></div>
+              <div class="card__body" data-region="mentor"></div>
+            </section>
+          </div>
           <section class="card">
-            <div class="card__header"><h2 class="card__title">Mentor của bạn</h2></div>
-            <div class="card__body" data-region="mentor"></div>
+            <div class="card__header"><h2 class="card__title">Tài liệu nên đọc</h2><a class="btn btn--ghost btn--sm" href="newhire-document-library.html">Xem thư viện</a></div>
+            <div class="content-grid content-grid--2" data-region="recommended-documents"></div>
           </section>
         </div>
-        <section class="card">
-          <div class="card__header"><h2 class="card__title">Tài liệu nên đọc</h2><a class="btn btn--ghost btn--sm" href="newhire-document-library.html">Xem thư viện</a></div>
-          <div class="content-grid content-grid--2" data-region="recommended-documents"></div>
-        </section>
-      </div>
-    </main>
-  </div>
-  <div id="modal-root"></div>
-  <div id="toast-root" aria-live="polite"></div>
-  <script type="module" src="../js/main.js"></script>
-</body>
+      </main>
+    </div>
+    <div id="modal-root"></div>
+    <div id="toast-root" aria-live="polite"></div>
+    <script type="module" src="../js/main.js"></script>
+  </body>
 </html>

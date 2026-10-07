@@ -25,6 +25,10 @@ JS trang đặt tại `js/pages/<tên-gốc-html>.js`; CSS riêng, nếu cần t
 
 ## 3. File chung SV1 phụ trách
 
+Bổ sung shell/UI-17 ngày 07/10/2026: logo dùng button chuẩn để toggle sidebar, bỏ hamburger/dấu X sidebar theo registry mới tại AGENTS. Header/sidebar dùng chung cho bốn vai trò; không tạo CSS hoặc markup riêng cho login/profile. Icon SVG instance có presentation attributes tại createIcon, dùng cùng sprite hiện có.
+
+Bổ sung 07/10/2026: trang chủ `UI-PUBLIC` dùng token/component và logo-mark/sprite hiện có; CSS riêng scope `page--index .index__...` theo ngoại lệ root tại AGENTS mục 1. Component chung bổ sung pagination theo registry và nét vẽ cho btn__icon để external SVG không bị tô đen; không tạo block/modifier mới. Ảnh tin dùng imageUrl khi được cung cấp, mặc định icon chung. Patch components.css cần SV1/SV3 review trước merge.
+
 | File/phạm vi | Công việc của SV1 | Reviewer |
 |---|---|---|
 | `css/base.css` | Reset, token, font, focus, `sr-only`, quy tắc `hidden` | SV3 |
@@ -100,6 +104,8 @@ JS trang đặt tại `js/pages/<tên-gốc-html>.js`; CSS riêng, nếu cần t
 - Không override component bằng selector riêng hoặc `!important`; sửa đúng component/modifier. Không minify/obfuscate source của bài tập.
 
 ## 6. Điểm nối HTML/JS/dữ liệu
+
+Bổ sung tích hợp 06/10/2026: profile gọi quyền field với entity `profile`; checklist dùng options của createTaskItem tại AGENTS mục 7 khi hạn/status đã có cột riêng. Field fixture/result bổ sung đọc theo [hợp đồng dữ liệu](../data-contract.md), không tạo bản riêng trong page.
 
 - Giữ `#app-header`, `#app-sidebar`, `#main-content`, `#modal-root`, `#toast-root` theo loại layout của quy tắc chính. Không tạo thêm header/sidebar ngoài điểm mount.
 - `context` vẫn là `{ currentUser, repository, permissions, ui, pageId }`. Không có một `currentRole` hoặc `mockProfile` khác trong mỗi page.
