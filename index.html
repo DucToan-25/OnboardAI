@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Danh sách mentee | OnboardAI</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Sidebar (Desktop) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">O</span>
+        <span class="logo-text">OnboardAI</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <p class="nav-label">NGƯỜI HƯỚNG DẪN</p>
+      <a href="#" class="nav-item active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Danh sách mentee
+      </a>
+      <a href="#" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Ghi chú check-in
+      </a>
+      <a href="#" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"/>
+          <line x1="8" y1="12" x2="21" y2="12"/>
+          <line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/>
+          <line x1="3" y1="12" x2="3.01" y2="12"/>
+          <line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+        Giao nhiệm vụ
+      </a>
+      <a href="#" class="nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        Hồ sơ cá nhân
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="avatar">TH</div>
+        <div class="user-text">
+          <p class="user-name">Lê Thu Hà</p>
+          <p class="user-role">Mentor kỹ thuật</p>
+        </div>
+      </div>
+      <a href="#" class="logout-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Đăng xuất
+      </a>
+    </div>
+  </aside>
+
+  <!-- Overlay for mobile sidebar -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Main content -->
+  <div class="main-wrapper">
+    <!-- Top header -->
+    <header class="top-header">
+      <button class="menu-toggle" id="menuToggle" aria-label="Mở menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+      <div class="header-left">
+        <span class="breadcrumb">Hành trình hội nhập</span>
+      </div>
+      <div class="header-right">
+        <span class="date-text" id="currentDate">Hôm nay, 06/10/2026</span>
+        <button class="icon-btn" aria-label="Thông báo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+        </button>
+        <div class="header-avatar">TH</div>
+      </div>
+    </header>
+
+    <!-- Page content -->
+    <main class="page-content">
+      <div class="page-header">
+        <h1>Danh sách mentee</h1>
+        <p class="page-subtitle">Theo dõi nhân sự bạn đang hướng dẫn.</p>
+      </div>
+
+      <!-- Stats cards -->
+      <section class="stats-grid" id="statsGrid">
+        <!-- Rendered by JS -->
+      </section>
+
+      <!-- Filters -->
+      <section class="filter-bar">
+        <div class="search-box">
+          <label for="searchInput">Tìm nhân sự</label>
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input
+            type="search"
+            id="searchInput"
+            placeholder="Nhập tên nhân sự..."
+            autocomplete="off"
+          />
+        </div>
+        <div class="filter-select">
+          <label for="statusFilter">Trạng thái</label>
+          <select id="statusFilter">
+            <option value="all">Tất cả</option>
+            <option value="onboarding">Đang hội nhập</option>
+            <option value="on-track">Đúng tiến độ</option>
+            <option value="need-support">Cần hỗ trợ</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Desktop table -->
+      <section class="table-section desktop-only">
+        <div class="table-wrapper">
+          <table class="mentee-table">
+            <thead>
+              <tr>
+                <th>Nhân sự</th>
+                <th>Phòng ban</th>
+                <th>Tiến độ</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="menteeTableBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+        <p class="table-footer" id="tableFooter">Hiển thị 0 nhân sự đang được hướng dẫn</p>
+      </section>
+
+      <!-- Mobile cards -->
+      <section class="cards-section mobile-only">
+        <div class="cards-header">
+          <h2>Mentee của bạn</h2>
+          <span class="cards-count" id="cardsCount">0 nhân sự</span>
+        </div>
+        <div class="mentee-cards" id="menteeCards">
+          <!-- Rendered by JS -->
+        </div>
+        <p class="table-footer" id="cardsFooter">Hiển thị 0 nhân sự đang được hướng dẫn</p>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal chi tiết mentee -->
+  <div class="modal-overlay" id="modalOverlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h2 id="modalTitle">Chi tiết mentee</h2>
+        <button class="modal-close" id="modalClose" aria-label="Đóng">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Content by JS -->
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
