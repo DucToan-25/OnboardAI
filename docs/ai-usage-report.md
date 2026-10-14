@@ -2,7 +2,7 @@
 
 AI được dùng để đối chiếu `KiemTraGiuaKi.md`, rút gọn code và hướng dẫn cách đọc. Theo đề, sinh viên phải tự hiểu, chạy thử, trình bày và sửa được lỗi cơ bản; không coi file này là minh chứng đã tự trình bày.
 
-Thay đổi trong bản `index-only`:
+Thay đổi trong bản `Onvera`:
 
 - Giữ trang tin Onvera, dữ liệu minh họa OnboardAI và các thao tác công khai.
 - Rút từ 16 file JavaScript xuống 3 file, từ 5 CSS xuống 1 CSS chỉ dành cho trang.
@@ -10,8 +10,6 @@ Thay đổi trong bản `index-only`:
 - Dùng template HTML, DOM/textContent, sự kiện, mảng/object, JSON và một khóa localStorage.
 - Dùng dialog của trình duyệt thay cho stack modal tự quản lý; xóa lựa chọn dùng confirm cơ bản.
 - Bổ sung mục bắt buộc của README và dàn ý video 3 phút. Chưa có link Figma/GitHub/video thực tế.
-
-Chỉ sửa bản sao; giữ nguyên file đề và nguồn website nhóm. Cần sinh viên đối chiếu Figma và bổ sung các thông tin nộp bài.
 
 Đã kiểm tra bản rút gọn bằng Chrome headless ngày 14/10/2026:
 
@@ -23,7 +21,3 @@ Chỉ sửa bản sao; giữ nguyên file đề và nguồn website nhóm. Cần
 - Nội dung yêu cầu đăng nhập chỉ có phần giới thiệu; nút cổng nhân viên có hướng dẫn và không dẫn tới file thiếu.
 - localStorage hỏng/bị chặn không làm trang ngừng chạy; lỗi tải JSON có thông báo và nút Thử lại hoạt động.
 - Không có exception JavaScript chưa xử lý hoặc HTTP 404 trong luồng bình thường.
-
-Script kiểm tra phục vụ người hỗ trợ đặt ngoài bài nộp tại `../../.tmp/midterm-smoke.cjs`; ảnh tại `../../.tmp/midterm-1440.png`, `midterm-768.png`, `midterm-390.png`. Không cần mang các file này sang GitHub cá nhân. Kiểm tra tự động cố định ngày 14/10/2026 để lịch minh họa có kết quả lặp lại; website dùng ngày giờ hiện tại.
-
-Chưa kiểm tra độ khớp Figma vì chưa có link thiết kế; chưa tạo GitHub cá nhân, quay hoặc upload video. Đây là các mục sinh viên cần hoàn thành trước khi nộp.
