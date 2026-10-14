@@ -9,7 +9,7 @@ Onvera và lịch hoạt động là dữ liệu minh họa cho dự án. Bản 
 | Nội dung | Thông tin |
 | --- | --- |
 | Họ tên / mã sinh viên | Chưa cung cấp — cần điền |
-| Link Figma Desktop và phương án Mobile | Chưa cung cấp — cần bổ sung link có quyền xem |
+| Link Figma Desktop và phương án Mobile | https://www.figma.com/design/j0AmwQikDkrlmCzYHiRk4m/Untitled?node-id=0-1&t=p2TWyYjIIXSyqaPx-1 |
 | Link GitHub cá nhân | Chưa cung cấp — cần tạo repository cá nhân và điền link |
 | Link video trên Channel học phần | Chưa cung cấp — cần quay, upload rồi điền link |
 
