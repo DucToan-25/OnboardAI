@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE_GK</title>
+    <link rel="stylesheet" href="cse_gk.css">
+</head>
+<body>
+
+    <div class="overlay">
+        <div class="model" id="myModal">
+            <div class="model-header">
+                <div>
+                    <h1>Hủy thay đổi chưa lưu?</h1>
+                    <p>Vui lòng kiểm tra trước khi xác nhận.</p>
+                </div>
+
+                <button class="model-btn" id="closeBtn"
+                        type="button" aria-label="Đóng">
+                    &times;
+                </button>
+            </div>
+            <div class="model-body">
+
+                <div class="warning-icon">!</div>
+
+                <h2>Bạn có chắc chắn muốn rời khỏi trang?</h2>
+
+                <p class="description">
+                    Những thay đổi bạn đã thực hiện có thể chưa được lưu.
+                    Nếu tiếp tục, các thay đổi chưa lưu sẽ bị mất.
+                </p>
+
+                <div class="notice">
+                    <h3>Lưu ý</h3>
+                    <p>
+                        Hãy kiểm tra và lưu lại nội dung quan trọng
+                        trước khi xác nhận.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="model-footer">
+                <button class="btn btn-cancel" id="cancelBtn"
+                        type="button">
+                    Tiếp tục chỉnh sửa
+                </button>
+
+                <button class="btn btn-danger" id="discardBtn"
+                        type="button">
+                    Loại bỏ thay đổi
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="toast" id="toast" role="status"
+         aria-live="polite"></div>
+
+    <script src="cse_gk.js"></script>
+
+</body>
+</html>
