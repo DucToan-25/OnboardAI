@@ -43,9 +43,9 @@ project/
 
 ## Link
 
-- **Figma**: *(điền link Figma của bạn)*
-- **Video**: *(điền link video trình bày)*
-- **GitHub**: *(điền link repository này)*
+- **Figma**: *(https://www.figma.com/design/GPkcqM1oUPlitfbPCiOlx8/Untitled?node-id=5-7720&t=MzDEMYIJRj0bN2mQ-1)*
+- **Video**: *(https://youtu.be/NK94jCIRlyw)*
+- **GitHub**: *(https://github.com/tangphan/project_KTGK)*
 
 ## Cách chạy
 
