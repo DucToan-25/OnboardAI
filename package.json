@@ -1,0 +1,10 @@
+{
+  "name": "onboardai",
+  "private": true,
+  "type": "module",
+  "description": "OnboardAI – web tĩnh HTML/CSS/JS thuần, ES modules, dữ liệu qua LocalStorage theo OnboardAI_QuyTac_LocalStorage.md",
+  "scripts": {
+    "serve": "node scripts/serve.cjs 8000",
+    "test": "node scripts/test-integration.mjs"
+  }
+}

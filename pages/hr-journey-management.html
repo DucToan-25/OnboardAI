@@ -38,18 +38,8 @@
                 <label class="form-field__label" for="journey-status">Trạng thái</label>
                 <select class="form-field__control" id="journey-status" name="status">
                   <option value="" selected="">Tất cả</option>
-                  <option value="draft">Bản nháp</option>
                   <option value="active">Đang áp dụng</option>
-                  <option value="archived">Đã lưu trữ</option>
-                </select>
-              </div>
-              <div class="toolbar__filters form-field">
-                <label class="form-field__label" for="journey-department">Phòng ban</label>
-                <select class="form-field__control" id="journey-department" name="departmentId">
-                  <option value="" selected="">Tất cả phòng ban</option>
-                  <option value="dep-dev">Phát triển sản phẩm</option>
-                  <option value="dep-sales">Kinh doanh</option>
-                  <option value="dep-hr">Nhân sự</option>
+                  <option value="inactive">Ngừng áp dụng</option>
                 </select>
               </div>
             </form>
@@ -62,45 +52,12 @@
                   <tr>
                     <th scope="col">Hành trình</th>
                     <th scope="col">Phòng ban</th>
-                    <th scope="col" class="table__cell--numeric">Số bước</th>
-                    <th scope="col" class="table__cell--numeric">Nhân sự gán</th>
+                    <th scope="col" class="table__cell--numeric">Thời lượng (ngày)</th>
                     <th scope="col">Trạng thái</th>
                     <th scope="col">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody data-region="journey-rows">
-                  <tr data-id="journey-001">
-                    <td>
-                      <strong>Hội nhập phát triển web</strong>
-                    </td>
-                    <td>Phát triển sản phẩm</td>
-                    <td class="table__cell--numeric">3</td>
-                    <td class="table__cell--numeric">1</td>
-                    <td>
-                      <span class="badge badge--success">Đang áp dụng</span>
-                    </td>
-                    <td class="table__actions">
-                      <button type="button" class="btn btn--ghost btn--sm" data-action="view-journey" data-id="journey-001">Chi tiết</button>
-                      <button type="button" class="btn btn--secondary btn--sm" data-action="edit-journey" data-id="journey-001">Sửa</button>
-                      <button type="button" class="btn btn--danger btn--sm" data-action="archive-journey" data-id="journey-001">Lưu trữ</button>
-                    </td>
-                  </tr>
-                  <tr data-id="journey-002">
-                    <td>
-                      <strong>Hội nhập kinh doanh</strong>
-                    </td>
-                    <td>Kinh doanh</td>
-                    <td class="table__cell--numeric">2</td>
-                    <td class="table__cell--numeric">1</td>
-                    <td>
-                      <span class="badge badge--success">Đang áp dụng</span>
-                    </td>
-                    <td class="table__actions">
-                      <button type="button" class="btn btn--ghost btn--sm" data-action="view-journey" data-id="journey-002">Chi tiết</button>
-                      <button type="button" class="btn btn--secondary btn--sm" data-action="edit-journey" data-id="journey-002">Sửa</button>
-                      <button type="button" class="btn btn--danger btn--sm" data-action="archive-journey" data-id="journey-002">Lưu trữ</button>
-                    </td>
-                  </tr>
                 </tbody>
               </table>
             </div>
@@ -118,8 +75,8 @@
                 Tên hành trình
                 <span class="form-field__required" aria-hidden="true">*</span>
               </label>
-              <input type="text" class="form-field__control" id="field-name-1" name="name" required="" aria-describedby="field-name-1-error" value="">
-              <p class="form-field__error" id="field-name-1-error" data-error-for="name" hidden="">
+              <input type="text" class="form-field__control" id="field-name-1" name="title" required="" aria-describedby="field-name-1-error" value="">
+              <p class="form-field__error" id="field-name-1-error" data-error-for="title" hidden="">
               </p>
             </div>
             <div class="form-field">
@@ -129,9 +86,10 @@
               </label>
               <select class="form-field__control" id="field-departmentId-2" name="departmentId" required="" aria-describedby="field-departmentId-2-error">
                 <option value="" selected="">— Chọn phòng ban —</option>
-                <option value="dep-dev">Phát triển sản phẩm</option>
-                <option value="dep-sales">Kinh doanh</option>
-                <option value="dep-hr">Nhân sự</option>
+                <option value="dept-engineering">Công nghệ</option>
+                <option value="dept-product">Sản phẩm</option>
+                <option value="dept-people">Nhân sự</option>
+                <option value="dept-marketing">Marketing</option>
               </select>
               <p class="form-field__error" id="field-departmentId-2-error" data-error-for="departmentId" hidden="">
               </p>
@@ -139,23 +97,23 @@
             <div class="form-field">
               <label class="form-field__label" for="field-status-3">Trạng thái</label>
               <select class="form-field__control" id="field-status-3" name="status" aria-describedby="field-status-3-error">
-                <option value="draft" selected="">Bản nháp</option>
-                <option value="active">Đang áp dụng</option>
-                <option value="archived">Đã lưu trữ</option>
+                <option value="active" selected="">Đang áp dụng</option>
+                <option value="inactive">Ngừng áp dụng</option>
               </select>
               <p class="form-field__error" id="field-status-3-error" data-error-for="status" hidden="">
               </p>
             </div>
             <div class="form-field">
-              <label class="form-field__label" for="field-steps-4">Các bước mẫu</label>
-              <textarea class="form-field__control" id="field-steps-4" name="steps" aria-describedby="field-steps-4-error field-steps-4-hint"></textarea>
-              <p class="form-field__error" id="field-steps-4-error" data-error-for="steps" hidden="">
+              <label class="form-field__label" for="field-steps-4">
+                Thời lượng (ngày)
+                <span class="form-field__required" aria-hidden="true">*</span>
+              </label>
+              <input type="number" class="form-field__control" id="field-steps-4" name="durationDays" min="1" step="1" required="" aria-describedby="field-steps-4-error field-steps-4-hint" value="">
+              <p class="form-field__error" id="field-steps-4-error" data-error-for="durationDays" hidden="">
               </p>
-              <p class="form-field__hint" id="field-steps-4-hint">Mỗi bước một dòng.</p>
+              <p class="form-field__hint" id="field-steps-4-hint">Số nguyên dương, ví dụ 30.</p>
             </div>
           </div>
-          <div class="alert alert--info" hidden="">
-            </div>
           <div class="modal__footer">
             <button type="button" class="btn btn--secondary">Hủy</button>
             <button type="submit" class="btn btn--primary">Tạo hành trình</button>

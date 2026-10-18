@@ -53,9 +53,10 @@
                 <label class="form-field__label" for="dashboard-department">Phòng ban</label>
                 <select class="form-field__control" id="dashboard-department" name="departmentId">
                   <option value="" selected="">Tất cả phòng ban</option>
-                  <option value="dep-dev">Phát triển sản phẩm</option>
-                  <option value="dep-sales">Kinh doanh</option>
-                  <option value="dep-hr">Nhân sự</option>
+                  <option value="Công nghệ">Công nghệ</option>
+                  <option value="Sản phẩm">Sản phẩm</option>
+                  <option value="Nhân sự">Nhân sự</option>
+                  <option value="Marketing">Marketing</option>
                 </select>
               </div>
             </form>
@@ -76,68 +77,6 @@
                   </tr>
                 </thead>
                 <tbody data-region="dashboard-rows">
-                  <tr data-id="nh-001">
-                    <td>
-                      <div class="hr-dashboard__name">
-                        <span class="avatar avatar--sm" aria-label="Nguyễn Minh Anh">
-                          <span class="avatar__initials">MA</span>
-                        </span>
-                        <div>
-                          <strong>Nguyễn Minh Anh</strong>
-                          <p class="hr-dashboard__meta">minhanh@example.com</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td>Phát triển sản phẩm</td>
-                    <td>Trần Quang Huy</td>
-                    <td>
-                      <div class="progress">
-                        <progress class="progress__bar" max="100" value="38">
-                        </progress>
-                        <span class="progress__value">38%</span>
-                      </div>
-                    </td>
-                    <td>
-                      <span class="badge badge--danger">Rủi ro Cao</span>
-                    </td>
-                    <td>
-                      <span class="badge badge--info">Đang hội nhập</span>
-                    </td>
-                    <td class="table__actions">
-                      <button type="button" class="btn btn--ghost btn--sm" data-action="open-newhire" data-id="nh-001">Chi tiết</button>
-                    </td>
-                  </tr>
-                  <tr data-id="nh-002">
-                    <td>
-                      <div class="hr-dashboard__name">
-                        <span class="avatar avatar--sm" aria-label="Trần Thu Lan">
-                          <span class="avatar__initials">TL</span>
-                        </span>
-                        <div>
-                          <strong>Trần Thu Lan</strong>
-                          <p class="hr-dashboard__meta">thulan@example.com</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td>Kinh doanh</td>
-                    <td>Trần Quang Huy</td>
-                    <td>
-                      <div class="progress">
-                        <progress class="progress__bar" max="100" value="0">
-                        </progress>
-                        <span class="progress__value">0%</span>
-                      </div>
-                    </td>
-                    <td>
-                      <span class="badge badge--danger">Rủi ro Cao</span>
-                    </td>
-                    <td>
-                      <span class="badge badge--info">Đang hội nhập</span>
-                    </td>
-                    <td class="table__actions">
-                      <button type="button" class="btn btn--ghost btn--sm" data-action="open-newhire" data-id="nh-002">Chi tiết</button>
-                    </td>
-                  </tr>
                 </tbody>
               </table>
             </div>
@@ -157,8 +96,6 @@
                 </label>
                 <select class="form-field__control" id="risk-newHireId" name="newHireId" required="" aria-describedby="risk-newHireId-error">
                   <option value="" selected="">— Chọn nhân sự —</option>
-                  <option value="nh-001">Nguyễn Minh Anh (28/09/2026)</option>
-                  <option value="nh-002">Trần Thu Lan (01/10/2026)</option>
                 </select>
                 <p class="form-field__error" id="risk-newHireId-error" data-error-for="newHireId" hidden="">
                 </p>

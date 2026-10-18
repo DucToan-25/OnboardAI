@@ -27,11 +27,14 @@ export const ROLE_MENUS = Object.freeze({
   ],
   hr: [
     { pageId: 'hr-journey-management', label: 'Quản lý hành trình', icon: 'checklist' }, library,
+    { pageId: 'admin-news-management', label: 'Bản tin nội bộ', icon: 'chat' },
     { pageId: 'hr-dashboard', label: 'Tổng quan nhân sự', icon: 'grid' }, profile,
   ],
   admin: [
     { pageId: 'admin-department-management', label: 'Quản lý phòng ban', icon: 'grid' },
     { pageId: 'admin-user-management', label: 'Quản lý tài khoản', icon: 'user' },
+    { pageId: 'admin-company-info', label: 'Thông tin công ty', icon: 'file' },
+    { pageId: 'admin-news-management', label: 'Bản tin nội bộ', icon: 'chat' },
     { pageId: 'admin-system-settings', label: 'Quản lý hệ thống', icon: 'settings' }, library, profile,
   ],
 });
