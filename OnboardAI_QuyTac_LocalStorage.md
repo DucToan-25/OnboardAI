@@ -1,5 +1,22 @@
 # OnboardAI – Phân công và quy tắc LocalStorage
 
+## Bổ sung triển khai SV1 — 18/10/2026
+
+Người dùng yêu cầu triển khai toàn bộ SV1 và sử dụng trường `password` đã bổ sung cho 97 tài khoản. Bộ JSON đã được chuyển nguyên nội dung từ `data-json/` sang `assets/data/`, không có bản sao seed thứ hai. Quy tắc này thay phần dữ liệu tĩnh/preview cũ trong AGENTS.md.
+
+- `auth.login(userIdOrEmail, password)` thay chữ ký `login(userId)` đề xuất ban đầu; không có lối đăng nhập bỏ qua mật khẩu. Chỉ tài khoản active, role hợp lệ được vào. `getCurrentUser()` và people trả user không chứa password; khóa phiên chỉ chứa userId. Mật khẩu trong JSON/LocalStorage là dữ liệu mô phỏng có thể đọc từ trình duyệt; không dùng mật khẩu thật hoặc coi là bảo mật server.
+- Profile tự sửa fullName/email. Các trường mật khẩu/role/departmentId/jobTitle/status được quản trị qua people, không nhận patch tùy ý từ trang cá nhân. Quên mật khẩu hiện hướng dẫn liên hệ quản lý; không giả xác minh số điện thoại hoặc gửi email.
+- `people.js`: getMyHire(), getMyProfile(), updateMyProfile(patch), listUsers() (Admin), listHires() (Admin/HR hoặc mentee của Mentor), createUser(input), updateUser(id, patch) (Admin), updateHire(id, patch) (Admin/HR). Chuyển phòng ban cần Admin, kiểm tra trước rồi cập nhật users/newHires; lỗi giữa hai lần ghi yêu cầu thử lại cùng ID và phòng ban.
+- Tạo tài khoản kèm hồ sơ: gọi prepareNewHireCreation() một lần, giữ `{ userId, hireId }` trong form; gọi createNewHireAccount(userInput, hireInput, operation). Khi lỗi lưu bước sau, giữ operation để thử lại. Email duy nhất và ID ổn định ngăn tạo trùng. Không tự thêm timestamp vào newHires.
+- `ai-history.js`: createHistory(input), listMyHistory(featureType), getHistory(id), updateHistory(id, patch), decideHistory(id, decision), deleteHistory(id), askPolicy(question). Chỉ chủ sở hữu được đọc/sửa/xóa; kết quả chỉ sửa lúc pending. Q&A tự lưu pending sau khi tra cứu thành công; nút Lưu xác nhận bản ghi đã có, không tạo bản sao.
+- Bàn giao SV2: completeChecklistHistory(historyId, taskIds) chỉ chấp nhận sau khi kiểm tra đủ tasks đã lưu; ID task ổn định là `task-${historyId}-${index}` (index bắt đầu 0). Không cho decideHistory chấp nhận checklist để bỏ qua applyChecklist. Lịch sử đã có task tham chiếu không được xóa.
+- `store.subscribe(collection, callback)` trả hàm hủy đăng ký; hỗ trợ collection, currentUser, schemaVersion hoặc `*`. removeHistory(id) là API lưu trữ nội bộ chỉ dành cho ai-history sau khi kiểm tra quyền/tham chiếu; không có hàm xóa chung cho các collection khác.
+- Phụ thuộc tối thiểu đã nối: tasks.getTasksForHire/getProgress/updateTaskStatus, resources.getReadableDocuments/getDocument, organization.getCompanyInfo/getPublishedNews. getProgress trả `{ total, completed, percent }`, bỏ archived. SV2/SV3 tiếp tục CRUD trong chính các module này, không tạo bản song song.
+- Quy ước audience của documents hiện tại: targetRole `all` đọc toàn công ty khi active; `newhire` ánh xạ role `newHire`; `engineer` thuộc dept-engineering. Audience cụ thể còn phải khớp departmentId (hoặc departmentId null). HR/Admin đọc metadata mọi trạng thái. Không đổi giá trị seed.
+- `task-004` tham chiếu journeys-001 nhưng hire-002 đang ở journeys-002: giữ nguyên seed và chặn cập nhật khi liên kết lệch. 100 fileUrl của documents chưa có tệp trong repo, trang detail báo thiếu tệp thay vì tạo nội dung chính sách giả.
+
+Các màn hình CRUD mentor/HR/Admin, Checklist Personalizer và Progress Risk chưa được triển khai trong nhiệm vụ SV1 này. Hợp đồng các phần còn lại bên dưới vẫn là việc bàn giao cho owner tương ứng.
+
 Áp dụng cho giai đoạn đưa dữ liệu JSON vào website Frontend CSE122. Vai trò hiện tại: SV1 phụ trách nhân sự mới, SV2 phụ trách mentor, SV3 phụ trách HR/Admin. Đây là hợp đồng triển khai đề xuất cho nhóm, không phải mô tả các hàm đã có sẵn trong mã nguồn.
 
 Mục tiêu: ba thành viên dùng chung dữ liệu, tên trường, hàm thao tác và trạng thái khi ghép code. LocalStorage chỉ chia sẻ giữa các trang cùng origin trong cùng hồ sơ trình duyệt; không tự đồng bộ dữ liệu giữa ba máy. Git đồng bộ mã nguồn và JSON khởi tạo, không đồng bộ LocalStorage.
@@ -170,7 +187,7 @@ Policy Q&A lưu câu trả lời và nguồn để nhân sự xem lại. Progres
 **Phụ trách:** bộ lưu trữ chung, `auth.js`, `people.js`, `ai-history.js`, luồng nhân sự mới và Policy Q&A.
 
 1. Làm `store.js` trước để SV2/SV3 có API dùng chung. Tạo danh sách khóa, init, đọc/ghi, lỗi lưu trữ, đăng ký thay đổi và reset demo theo mục 2.
-2. `auth.js` cung cấp `login(userId)`, `logout()`, `getCurrentUser()`, `requireRoles(roles)`. Đăng nhập mô phỏng chỉ nhận tài khoản active; không thêm mật khẩu thật vào JSON/LocalStorage.
+2. `auth.js` cung cấp `login(userIdOrEmail, password)`, `logout()`, `getCurrentUser()`, `requireRoles(roles)`. Đăng nhập mô phỏng đối chiếu password đã có trong JSON và chỉ nhận tài khoản active. Không dùng mật khẩu thật trong bộ dữ liệu học tập.
 3. `people.js` quản lý users/newHires; cung cấp `getMyHire()`, `updateMyProfile(patch)` và các hàm quản trị tài khoản/hồ sơ cho SV3 gọi. Hồ sơ tự sửa chỉ cho phép trường đã thống nhất, mặc định `fullName`, `email`; email phải duy nhất. Role, departmentId, mentorId, journeyId do nghiệp vụ quản trị xử lý.
 4. Khi tạo tài khoản newHire kèm hồ sơ, kiểm tra liên kết và có cách hoàn tất lại nếu một bước lưu lỗi. Không để nút “Tạo lại” sinh nhiều tài khoản cùng email.
 5. Dashboard/checklist xác định hire qua `newHires.userId === currentUser.id`; không hardcode `hire-001` hoặc lấy bản ghi đầu tiên.
@@ -244,4 +261,4 @@ SV2 rà soát và thống nhất dữ liệu check-in/task với nhóm trước 
 - MDN, Using the Web Storage API: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
 - MDN, Window: storage event: https://developer.mozilla.org/en-US/docs/Web/API/Window/storage_event
 
-Tài liệu này là quy ước cho phần sắp triển khai. Các hàm, sự kiện và bài kiểm tra trên chưa được triển khai/chạy trên mã nguồn website trong lần phân công này.
+Phần SV1 và các phụ thuộc đọc/cập nhật trạng thái tối thiểu đã triển khai theo bổ sung ngày 18/10/2026. Các phần SV2/SV3 chưa nối được phân biệt rõ trong README và bảng màn hình; không coi kiểm tra SV1 là nghiệm thu toàn bộ dự án.

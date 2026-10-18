@@ -1,5 +1,20 @@
 # Bảng màn hình UI
 
+## Trạng thái tích hợp ngày 18/10/2026
+
+| Phạm vi | Trạng thái hiện tại |
+|---|---|
+| UI-01 / UI-02 | Đọc hire theo userId; task và tiến độ từ dịch vụ chung; đổi trạng thái lưu LocalStorage |
+| UI-03 | Policy Q&A tra cứu mock, nguồn theo quyền; lưu/sửa/chấp nhận/từ chối/tạo lại/xóa lịch sử riêng |
+| UI-04 / UI-11 | Thư viện và detail đọc documents thật theo ID/quyền; tệp đính kèm chưa được cung cấp |
+| UI-05 / UI-06 | Email + password của users.json, phiên userId; profile bốn role, tự sửa fullName/email |
+| UI-PUBLIC | Tin published, tìm/lọc/phân trang/chi tiết; sứ mệnh từ company-001 |
+| Shell / 403 / 404 | Guard role từ tài khoản active, đăng xuất và thay đổi phiên giữa các tab |
+| Các trang SV2/SV3 còn lại | Bố cục tĩnh; nghiệp vụ CRUD/Checklist Personalizer/Progress Risk chưa nối |
+
+Các bảng và ghi chú ngày 15/10/2026 trở xuống là lịch sử. Kiểm tra kỹ thuật của đợt này ghi trong báo cáo AI; chưa phải nghiệm thu toàn bộ BTL.
+
+
 > Cập nhật 15/10/2026: giữ đủ 19 màn hình và phân công; các màn hình hiện hiển thị nội dung tĩnh trong HTML. Tìm/lọc, modal, form và shell chạy bằng JS thuần. Các ghi chú về repository/seed/AI ở bảng cũ bên dưới là lịch sử trước đợt dọn; không còn là trạng thái runtime. Không còn ảnh tham chiếu hay bộ test cũ trong repository.
 
 Shell/UI-17 cập nhật theo yêu cầu 07/10/2026: logo header toggle sidebar trên cả bốn vai trò; bỏ hamburger/dấu X/sidebar header trùng. Desktop thu gọn mở rộng nội dung, mobile drawer giữ bàn phím/Escape. UI-17 chuyển sang thông tin tổ chức, quy tắc hội nhập, tổng quan kho quản trị và liên kết trang hiện có; không còn form câu trả lời AI mẫu.

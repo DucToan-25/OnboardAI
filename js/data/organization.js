@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * organization.js — hành trình (journeys), thông tin công ty (companyInfo), tin tức (news).
  * OWNER: SV3. Hợp đồng OnboardAI_QuyTac_LocalStorage.md mục 5.
@@ -297,3 +298,18 @@ export async function setJourneyStatus(id, status) {
   return update('journeys', record.id, { status, updatedAt: now() });
 }
 
+=======
+// SV3 public read contract. Company identity is explicit, never the first record.
+import { getAll, getById } from './store.js';
+import { parseStoredDate } from '../common/format.js';
+
+export function getCompanyInfo() {
+  const company = getById('companyInfo', 'company-001');
+  if (!company) throw new Error('Thiếu cấu hình công ty company-001.');
+  return company;
+}
+export function getPublishedNews() {
+  return getAll('news').filter(item => item.status === 'published')
+    .sort((a, b) => (parseStoredDate(b.publishedAt)?.getTime() || 0) - (parseStoredDate(a.publishedAt)?.getTime() || 0));
+}
+>>>>>>> 906d77f (Update localstorage sv1)

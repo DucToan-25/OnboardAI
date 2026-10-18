@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * store.js — bộ lưu trữ LocalStorage dùng chung (hợp đồng OnboardAI_QuyTac_LocalStorage.md mục 2).
  * OWNER: SV1. File này là bản nền do SV3 dựng đúng chữ ký hợp đồng để organization.js,
@@ -293,3 +294,134 @@ export function resetDemoData() {
   return initStore();
 }
 
+=======
+// All Web Storage access belongs here. Services enforce business permissions.
+export const SCHEMA_VERSION = 1;
+export const COLLECTIONS = Object.freeze(['users', 'newHires', 'tasks', 'departments', 'documents', 'checkins', 'journeys', 'companyInfo', 'news', 'aiMockData', 'aiHistory']);
+export const STORAGE_KEYS = Object.freeze(Object.fromEntries([...COLLECTIONS, 'currentUser', 'schemaVersion'].map(name => [name, `onboardai_${name}`])));
+let initialization;
+const listeners = new Map();
+
+function storage(operation, name, value) {
+  try { return globalThis.localStorage[operation](STORAGE_KEYS[name], value); }
+  catch { throw new Error('Không thể truy cập bộ nhớ trình duyệt. Kiểm tra quyền lưu trữ hoặc dung lượng rồi thử lại. Dữ liệu cũ không bị tự đặt lại.'); }
+}
+function read(name) {
+  const raw = storage('getItem', name);
+  if (raw === null) return null;
+  try { return JSON.parse(raw); }
+  catch { throw new Error(`Dữ liệu ${name} bị lỗi JSON. Hãy khôi phục bản sao hoặc đặt lại dữ liệu demo có xác nhận.`); }
+}
+function assertVersion() {
+  if (read('schemaVersion') !== SCHEMA_VERSION) throw new Error('Phiên bản dữ liệu chưa được hỗ trợ. Cần nâng cấp hoặc đặt lại dữ liệu demo.');
+}
+function assertCollection(name) {
+  if (!COLLECTIONS.includes(name)) throw new Error('Collection chưa được đăng ký.');
+}
+function validateItems(name, items) {
+  if (!Array.isArray(items)) throw new Error(`${name} phải là một mảng.`);
+  const ids = new Set();
+  for (const item of items) {
+    if (!item || typeof item !== 'object' || Array.isArray(item) || typeof item.id !== 'string' || !item.id.trim() || ids.has(item.id)) throw new Error(`${name} có ID thiếu hoặc trùng.`);
+    ids.add(item.id);
+  }
+  return items;
+}
+function emit(name) {
+  for (const callback of [...(listeners.get(name) || []), ...(listeners.get('*') || [])]) {
+    // A rendering failure must never turn a successful storage write into a failed write.
+    try { callback(name); } catch (error) { console.error('Không thể cập nhật giao diện sau thay đổi dữ liệu.', error); }
+  }
+}
+function write(name, value) {
+  let serialized;
+  try { serialized = JSON.stringify(value); } catch { throw new Error(`Không thể mã hóa dữ liệu ${name}.`); }
+  storage('setItem', name, serialized);
+  emit(name);
+}
+export function initStore() {
+  if (initialization) return initialization;
+  initialization = (async () => {
+    const version = read('schemaVersion');
+    if (version !== null && version !== SCHEMA_VERSION) throw new Error('Phiên bản dữ liệu chưa được hỗ trợ. Cần nâng cấp hoặc đặt lại dữ liệu demo.');
+    // Validate/fetch everything before writing, so a fetch failure cannot partially seed.
+    const missing = [];
+    for (const name of COLLECTIONS) {
+      if (storage('getItem', name) !== null) validateItems(name, read(name));
+      else missing.push(name);
+    }
+    const seeds = await Promise.all(missing.map(async name => {
+      if (name === 'aiHistory') return [name, []];
+      const url = new URL(`../../assets/data/${name}.json`, import.meta.url);
+      let response;
+      try { response = await fetch(url); } catch { throw new Error(`Không tải được ${name}.json. Kiểm tra kết nối rồi thử lại.`); }
+      if (!response.ok) throw new Error(`Không tải được ${name}.json (HTTP ${response.status}).`);
+      let items;
+      try { items = await response.json(); } catch { throw new Error(`${name}.json không phải JSON hợp lệ.`); }
+      return [name, validateItems(name, items)];
+    }));
+    // Another tab may have finished initialization during fetch.
+    const latestVersion = read('schemaVersion');
+    if (latestVersion !== null && latestVersion !== SCHEMA_VERSION) throw new Error('Phiên bản dữ liệu đã thay đổi. Vui lòng tải lại trang.');
+    for (const [name, items] of seeds) if (storage('getItem', name) === null) write(name, items);
+    if (latestVersion === null) write('schemaVersion', SCHEMA_VERSION);
+  })().catch(error => { initialization = undefined; throw error; });
+  return initialization;
+}
+export function getAll(name) {
+  assertCollection(name); assertVersion();
+  return validateItems(name, read(name));
+}
+export function getById(name, id) { return getAll(name).find(item => item.id === id) || null; }
+export function create(name, item) {
+  const items = getAll(name);
+  validateItems(name, [...items, item]);
+  write(name, [...items, item]);
+  return getById(name, item.id);
+}
+export function update(name, id, patch) {
+  const items = getAll(name);
+  const index = items.findIndex(item => item.id === id);
+  if (index < 0) throw new Error('Không tìm thấy bản ghi cần cập nhật.');
+  if (!patch || typeof patch !== 'object' || Array.isArray(patch)) throw new Error('Thay đổi phải là object.');
+  items[index] = { ...items[index], ...patch, id };
+  validateItems(name, items); write(name, items);
+  return getById(name, id);
+}
+// Only AI history supports physical deletion; its service checks owner and task references.
+export function removeHistory(id) {
+  const items = getAll('aiHistory');
+  if (!items.some(item => item.id === id)) throw new Error('Không tìm thấy lịch sử.');
+  write('aiHistory', items.filter(item => item.id !== id));
+}
+export function getCurrentUserId() {
+  assertVersion();
+  const session = read('currentUser');
+  if (session === null) return null;
+  if (!session || typeof session.userId !== 'string') throw new Error('Phiên đăng nhập không hợp lệ. Hãy đăng xuất rồi đăng nhập lại.');
+  return session.userId;
+}
+export function setCurrentUserId(id) {
+  assertVersion();
+  if (typeof id !== 'string' || !getById('users', id)) throw new Error('Tài khoản không tồn tại.');
+  write('currentUser', { userId: id });
+}
+export function clearCurrentUser() { storage('removeItem', 'currentUser'); emit('currentUser'); }
+export async function resetDemoData() {
+  initialization = undefined;
+  for (const name of Object.keys(STORAGE_KEYS)) storage('removeItem', name);
+  await initStore();
+  for (const name of Object.keys(STORAGE_KEYS)) emit(name);
+}
+export function subscribe(name, callback) {
+  if (name !== '*' && !Object.hasOwn(STORAGE_KEYS, name)) throw new Error('Khóa theo dõi chưa được đăng ký.');
+  if (!listeners.has(name)) listeners.set(name, new Set());
+  listeners.get(name).add(callback);
+  return () => listeners.get(name)?.delete(callback);
+}
+globalThis.addEventListener?.('storage', event => {
+  if (event.key === null) { for (const name of Object.keys(STORAGE_KEYS)) emit(name); return; }
+  const name = Object.keys(STORAGE_KEYS).find(key => STORAGE_KEYS[key] === event.key);
+  if (name) emit(name);
+});
+>>>>>>> 906d77f (Update localstorage sv1)

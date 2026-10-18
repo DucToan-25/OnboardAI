@@ -1,5 +1,18 @@
 # AGENTS.md — Quy tắc phát triển giao diện OnboardAI
 
+## Phạm vi hiện hành ngày 18/10/2026 — tích hợp LocalStorage SV1
+
+Theo yêu cầu trực tiếp của người dùng, thực hiện toàn bộ phần SV1 trong [quy tắc LocalStorage](OnboardAI_QuyTac_LocalStorage.md), gồm mật khẩu đã có trong users.json. Phần này thay thế các chỉ dẫn giao diện tĩnh/contract dữ liệu cũ bên dưới khi có mâu thuẫn; token, registry CSS, tên trang và phân công UI vẫn giữ nguyên.
+
+- Một bộ JSON tại `assets/data/`, được chuyển nguyên nội dung từ `data-json/`; không duy trì hai bản seed. `store.js` là nơi duy nhất truy cập LocalStorage, dùng khóa `onboardai_*`, schemaVersion 1.
+- Role tài khoản là `newHire`, `mentor`, `hr`, `admin`. Trạng thái và quan hệ ID theo quy tắc LocalStorage và JSON hiện tại, không theo mục 8 lịch sử bên dưới.
+- SV1 sở hữu store, auth, people, ai-history và sáu trang SV1; trang chủ đọc tin/sứ mệnh qua organization. Profile tự sửa `fullName`, `email`; đăng nhập đối chiếu email/ID + password của tài khoản active. Đây là mô phỏng frontend, không phải xác thực máy chủ.
+- `main.js` chờ initStore, kiểm tra phiên/quyền route rồi gọi `initPage({ currentUser, ui, pageId })`. Query role không cấp quyền. Phiên chỉ lưu userId, không lưu mật khẩu hoặc bản sao role. Đổi phiên/role từ tab khác làm tải lại trang và bỏ draft.
+- Phụ thuộc tối thiểu SV2: tasks đọc/cập nhật trạng thái/tính tiến độ, resources đọc tài liệu; SV3: organization đọc company-001/tin published. Đây là patch tích hợp phục vụ SV1, owner tiếp tục mở rộng module, không tạo dịch vụ trùng.
+- Giữ bố cục HTML, dùng vùng render cho dữ liệu SV1. Các trang nghiệp vụ SV2/SV3 còn là giao diện tĩnh và báo chưa kết nối khi ghi; chưa triển khai CRUD mentor/HR/Admin hoặc hai AI còn lại.
+- Giữ quy tắc không lưu script/ảnh/cache kiểm thử tạm trong repo. Reset demo có xác nhận, chỉ xóa khóa dự án; logout chỉ xóa phiên. Không tự sửa/gộp các bất nhất của seed.
+
+
 ## Phạm vi hiện hành ngày 15/10/2026 — giao diện tĩnh
 
 Theo yêu cầu mới của nhóm: chỉ giữ mã nguồn web và tài nguyên giao diện cần thiết; xóa ảnh tham chiếu/ảnh kiểm thử, cache, script test cũ và dữ liệu test. Giữ **nội dung tĩnh giống thiết kế** trong HTML, không thay toàn bộ bằng trạng thái rỗng.

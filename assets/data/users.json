@@ -7,7 +7,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Nhân viên sản phẩm",
     "status": "active",
-    "createdAt": "2026-10-01"
+    "createdAt": "2026-10-01",
+    "password": "MinhAn2026"
   },
   {
     "id": "user-002",
@@ -17,7 +18,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Lập trình viên",
     "status": "active",
-    "createdAt": "2026-10-02"
+    "createdAt": "2026-10-02",
+    "password": "GiaHuy2026"
   },
   {
     "id": "user-003",
@@ -27,7 +29,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Mentor kỹ thuật",
     "status": "active",
-    "createdAt": "2025-03-12"
+    "createdAt": "2025-03-12",
+    "password": "ThuHa123"
   },
   {
     "id": "user-004",
@@ -37,7 +40,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên nhân sự",
     "status": "active",
-    "createdAt": "2024-08-10"
+    "createdAt": "2024-08-10",
+    "password": "NgocLinh2007"
   },
   {
     "id": "user-005",
@@ -47,7 +51,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Quản trị viên",
     "status": "active",
-    "createdAt": "2024-06-05"
+    "createdAt": "2024-06-05",
+    "password": "admin"
   },
   {
     "id": "user-006",
@@ -57,7 +62,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Lập trình viên frontend",
     "status": "active",
-    "createdAt": "2026-10-02"
+    "createdAt": "2026-10-02",
+    "password": "BaoNgoc2026"
   },
   {
     "id": "user-007",
@@ -67,7 +73,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên phân tích sản phẩm",
     "status": "active",
-    "createdAt": "2026-10-04"
+    "createdAt": "2026-10-04",
+    "password": "MinhKhang2026"
   },
   {
     "id": "user-008",
@@ -77,7 +84,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Lập trình viên backend",
     "status": "active",
-    "createdAt": "2026-10-06"
+    "createdAt": "2026-10-06",
+    "password": "HaMy2026"
   },
   {
     "id": "user-009",
@@ -87,7 +95,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên nghiên cứu người dùng",
     "status": "active",
-    "createdAt": "2026-10-08"
+    "createdAt": "2026-10-08",
+    "password": "AnhQuan2026"
   },
   {
     "id": "user-010",
@@ -97,7 +106,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Nhân viên kiểm thử phần mềm",
     "status": "active",
-    "createdAt": "2026-10-11"
+    "createdAt": "2026-10-11",
+    "password": "KhanhLinh2026"
   },
   {
     "id": "user-011",
@@ -107,7 +117,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Nhân viên vận hành sản phẩm",
     "status": "invited",
-    "createdAt": "2026-10-11"
+    "createdAt": "2026-10-11",
+    "password": "TuanKiet2026"
   },
   {
     "id": "user-012",
@@ -117,7 +128,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Trưởng nhóm Backend",
     "status": "active",
-    "createdAt": "2024-08-05"
+    "createdAt": "2024-08-05",
+    "password": "ThanhDat123"
   },
   {
     "id": "user-013",
@@ -127,7 +139,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư phần mềm cao cấp",
     "status": "active",
-    "createdAt": "2024-09-21"
+    "createdAt": "2024-09-21",
+    "password": "HaiLong123"
   },
   {
     "id": "user-014",
@@ -137,7 +150,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Trưởng nhóm Frontend",
     "status": "active",
-    "createdAt": "2024-11-07"
+    "createdAt": "2024-11-07",
+    "password": "QuocBao123"
   },
   {
     "id": "user-015",
@@ -147,7 +161,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư DevOps cao cấp",
     "status": "active",
-    "createdAt": "2024-12-24"
+    "createdAt": "2024-12-24",
+    "password": "HoangNam123"
   },
   {
     "id": "user-016",
@@ -157,7 +172,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Trưởng nhóm QA",
     "status": "active",
-    "createdAt": "2025-02-09"
+    "createdAt": "2025-02-09",
+    "password": "DucHuy123"
   },
   {
     "id": "user-017",
@@ -167,7 +183,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư dữ liệu cao cấp",
     "status": "active",
-    "createdAt": "2025-03-28"
+    "createdAt": "2025-03-28",
+    "password": "ThuTrang123"
   },
   {
     "id": "user-018",
@@ -177,7 +194,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Trưởng nhóm Mobile",
     "status": "active",
-    "createdAt": "2025-05-14"
+    "createdAt": "2025-05-14",
+    "password": "ThiKimChi123"
   },
   {
     "id": "user-019",
@@ -187,7 +205,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư bảo mật",
     "status": "active",
-    "createdAt": "2025-06-30"
+    "createdAt": "2025-06-30",
+    "password": "VanPhuc123"
   },
   {
     "id": "user-020",
@@ -197,7 +216,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư hạ tầng",
     "status": "active",
-    "createdAt": "2025-08-16"
+    "createdAt": "2025-08-16",
+    "password": "TienDung123"
   },
   {
     "id": "user-021",
@@ -207,7 +227,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Trưởng nhóm tích hợp",
     "status": "active",
-    "createdAt": "2025-10-02"
+    "createdAt": "2025-10-02",
+    "password": "HuuKhanh123"
   },
   {
     "id": "user-022",
@@ -217,7 +238,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Quản lý sản phẩm",
     "status": "active",
-    "createdAt": "2025-11-18"
+    "createdAt": "2025-11-18",
+    "password": "MaiPhuong123"
   },
   {
     "id": "user-023",
@@ -227,7 +249,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Trưởng nhóm nghiên cứu UX",
     "status": "active",
-    "createdAt": "2026-01-04"
+    "createdAt": "2026-01-04",
+    "password": "PhuongAnh123"
   },
   {
     "id": "user-024",
@@ -237,7 +260,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên gia phân tích nghiệp vụ",
     "status": "active",
-    "createdAt": "2026-02-20"
+    "createdAt": "2026-02-20",
+    "password": "MinhDuc123"
   },
   {
     "id": "user-025",
@@ -247,7 +271,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Trưởng nhóm thiết kế sản phẩm",
     "status": "active",
-    "createdAt": "2026-04-08"
+    "createdAt": "2026-04-08",
+    "password": "NgocAnh123"
   },
   {
     "id": "user-026",
@@ -257,7 +282,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Quản lý vận hành sản phẩm",
     "status": "active",
-    "createdAt": "2026-05-25"
+    "createdAt": "2026-05-25",
+    "password": "TuanAnh123"
   },
   {
     "id": "user-027",
@@ -267,7 +293,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên gia phân tích dữ liệu sản phẩm",
     "status": "active",
-    "createdAt": "2026-07-11"
+    "createdAt": "2026-07-11",
+    "password": "ThuyDuong123"
   },
   {
     "id": "user-028",
@@ -277,7 +304,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Quản lý phát triển sản phẩm",
     "status": "active",
-    "createdAt": "2024-08-07"
+    "createdAt": "2024-08-07",
+    "password": "KhanhHoa123"
   },
   {
     "id": "user-029",
@@ -287,7 +315,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Trưởng nhóm tuyển dụng",
     "status": "active",
-    "createdAt": "2024-09-23"
+    "createdAt": "2024-09-23",
+    "password": "ThuHuong123"
   },
   {
     "id": "user-030",
@@ -297,7 +326,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Trưởng nhóm nhân sự",
     "status": "active",
-    "createdAt": "2024-11-09"
+    "createdAt": "2024-11-09",
+    "password": "DucTrung123"
   },
   {
     "id": "user-031",
@@ -307,7 +337,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên gia đào tạo nội bộ",
     "status": "active",
-    "createdAt": "2024-12-26"
+    "createdAt": "2024-12-26",
+    "password": "NgocMai123"
   },
   {
     "id": "user-032",
@@ -317,7 +348,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên tuyển dụng",
     "status": "active",
-    "createdAt": "2025-02-11"
+    "createdAt": "2025-02-11",
+    "password": "ThaoNhi2007"
   },
   {
     "id": "user-033",
@@ -327,7 +359,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên quan hệ nhân viên",
     "status": "active",
-    "createdAt": "2025-03-30"
+    "createdAt": "2025-03-30",
+    "password": "KieuOanh2007"
   },
   {
     "id": "user-034",
@@ -337,7 +370,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên hội nhập nhân sự",
     "status": "active",
-    "createdAt": "2025-05-16"
+    "createdAt": "2025-05-16",
+    "password": "QuynhChi2007"
   },
   {
     "id": "user-035",
@@ -347,7 +381,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên đào tạo và phát triển",
     "status": "active",
-    "createdAt": "2025-07-02"
+    "createdAt": "2025-07-02",
+    "password": "GiaBao2007"
   },
   {
     "id": "user-036",
@@ -357,7 +392,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Quản trị hệ thống nội bộ",
     "status": "active",
-    "createdAt": "2025-08-18"
+    "createdAt": "2025-08-18",
+    "password": "admin"
   },
   {
     "id": "user-037",
@@ -367,7 +403,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Điều phối vận hành nội bộ",
     "status": "active",
-    "createdAt": "2025-10-04"
+    "createdAt": "2025-10-04",
+    "password": "admin"
   },
   {
     "id": "user-038",
@@ -377,7 +414,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Lập trình viên Backend",
     "status": "active",
-    "createdAt": "2026-09-19"
+    "createdAt": "2026-09-19",
+    "password": "BaoChau2026"
   },
   {
     "id": "user-039",
@@ -387,7 +425,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư dữ liệu",
     "status": "active",
-    "createdAt": "2026-09-19"
+    "createdAt": "2026-09-19",
+    "password": "MinhAnh2026"
   },
   {
     "id": "user-040",
@@ -397,7 +436,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên kiểm thử trải nghiệm",
     "status": "active",
-    "createdAt": "2026-09-19"
+    "createdAt": "2026-09-19",
+    "password": "ThanhTung2026"
   },
   {
     "id": "user-041",
@@ -407,7 +447,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Lập trình viên Frontend",
     "status": "active",
-    "createdAt": "2026-09-19"
+    "createdAt": "2026-09-19",
+    "password": "NgocAnh2026"
   },
   {
     "id": "user-042",
@@ -417,7 +458,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư DevOps",
     "status": "active",
-    "createdAt": "2026-09-19"
+    "createdAt": "2026-09-19",
+    "password": "HuuPhuoc2026"
   },
   {
     "id": "user-043",
@@ -427,7 +469,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Chuyên viên phân tích hệ thống",
     "status": "active",
-    "createdAt": "2026-09-19"
+    "createdAt": "2026-09-19",
+    "password": "KhanhLy2026"
   },
   {
     "id": "user-044",
@@ -437,7 +480,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư dữ liệu",
     "status": "active",
-    "createdAt": "2026-09-19"
+    "createdAt": "2026-09-19",
+    "password": "DucManh2026"
   },
   {
     "id": "user-045",
@@ -447,7 +491,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư đảm bảo chất lượng",
     "status": "active",
-    "createdAt": "2026-09-19"
+    "createdAt": "2026-09-19",
+    "password": "HoaiThuong2026"
   },
   {
     "id": "user-046",
@@ -457,7 +502,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Điều phối vận hành sản phẩm",
     "status": "active",
-    "createdAt": "2026-09-19"
+    "createdAt": "2026-09-19",
+    "password": "GiaBao2026"
   },
   {
     "id": "user-047",
@@ -467,7 +513,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư DevOps",
     "status": "active",
-    "createdAt": "2026-09-19"
+    "createdAt": "2026-09-19",
+    "password": "ThuyLinh2026"
   },
   {
     "id": "user-048",
@@ -477,7 +524,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên phân tích sản phẩm",
     "status": "active",
-    "createdAt": "2026-09-19"
+    "createdAt": "2026-09-19",
+    "password": "TuanPhong2026"
   },
   {
     "id": "user-049",
@@ -487,7 +535,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư kiểm thử phần mềm",
     "status": "active",
-    "createdAt": "2026-09-19"
+    "createdAt": "2026-09-19",
+    "password": "HaiYen2026"
   },
   {
     "id": "user-050",
@@ -497,7 +546,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư đảm bảo chất lượng",
     "status": "active",
-    "createdAt": "2026-09-23"
+    "createdAt": "2026-09-23",
+    "password": "AnhKhoa2026"
   },
   {
     "id": "user-051",
@@ -507,7 +557,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Lập trình viên Frontend",
     "status": "active",
-    "createdAt": "2026-09-22"
+    "createdAt": "2026-09-22",
+    "password": "MaiChi2026"
   },
   {
     "id": "user-052",
@@ -517,7 +568,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư DevOps",
     "status": "active",
-    "createdAt": "2026-09-21"
+    "createdAt": "2026-09-21",
+    "password": "QuocViet2026"
   },
   {
     "id": "user-053",
@@ -527,7 +579,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Chuyên viên phân tích hệ thống",
     "status": "active",
-    "createdAt": "2026-09-20"
+    "createdAt": "2026-09-20",
+    "password": "ThienKim2026"
   },
   {
     "id": "user-054",
@@ -537,7 +590,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư kiểm thử phần mềm",
     "status": "active",
-    "createdAt": "2026-09-23"
+    "createdAt": "2026-09-23",
+    "password": "NhatHao2026"
   },
   {
     "id": "user-055",
@@ -547,7 +601,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Lập trình viên Mobile",
     "status": "active",
-    "createdAt": "2026-09-22"
+    "createdAt": "2026-09-22",
+    "password": "BaoNgan2026"
   },
   {
     "id": "user-056",
@@ -557,7 +612,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên nghiên cứu người dùng",
     "status": "active",
-    "createdAt": "2026-09-26"
+    "createdAt": "2026-09-26",
+    "password": "ThanhBinh2026"
   },
   {
     "id": "user-057",
@@ -567,7 +623,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư DevOps",
     "status": "active",
-    "createdAt": "2026-09-25"
+    "createdAt": "2026-09-25",
+    "password": "PhuongThao2026"
   },
   {
     "id": "user-058",
@@ -577,7 +634,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Chuyên viên phân tích hệ thống",
     "status": "active",
-    "createdAt": "2026-09-28"
+    "createdAt": "2026-09-28",
+    "password": "DinhHuy2026"
   },
   {
     "id": "user-059",
@@ -587,7 +645,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên phân tích sản phẩm",
     "status": "active",
-    "createdAt": "2026-09-27"
+    "createdAt": "2026-09-27",
+    "password": "ThaoNguyen2026"
   },
   {
     "id": "user-060",
@@ -597,7 +656,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Lập trình viên Mobile",
     "status": "active",
-    "createdAt": "2026-09-26"
+    "createdAt": "2026-09-26",
+    "password": "HoangPhuc2026"
   },
   {
     "id": "user-061",
@@ -607,7 +667,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Lập trình viên Backend",
     "status": "active",
-    "createdAt": "2026-09-25"
+    "createdAt": "2026-09-25",
+    "password": "YenNhi2026"
   },
   {
     "id": "user-062",
@@ -617,7 +678,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên kiểm thử trải nghiệm",
     "status": "active",
-    "createdAt": "2026-10-02"
+    "createdAt": "2026-10-02",
+    "password": "TueMinh2026"
   },
   {
     "id": "user-063",
@@ -627,7 +689,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Chuyên viên phân tích hệ thống",
     "status": "active",
-    "createdAt": "2026-10-01"
+    "createdAt": "2026-10-01",
+    "password": "KhanhNgoc2026"
   },
   {
     "id": "user-064",
@@ -637,7 +700,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Trợ lý quản lý sản phẩm",
     "status": "active",
-    "createdAt": "2026-09-30"
+    "createdAt": "2026-09-30",
+    "password": "DuyKhanh2026"
   },
   {
     "id": "user-065",
@@ -647,7 +711,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên nghiên cứu người dùng",
     "status": "active",
-    "createdAt": "2026-09-29"
+    "createdAt": "2026-09-29",
+    "password": "MyDuyen2026"
   },
   {
     "id": "user-066",
@@ -657,7 +722,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Điều phối vận hành sản phẩm",
     "status": "active",
-    "createdAt": "2026-10-02"
+    "createdAt": "2026-10-02",
+    "password": "VanThanh2026"
   },
   {
     "id": "user-067",
@@ -667,7 +733,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư dữ liệu",
     "status": "active",
-    "createdAt": "2026-10-01"
+    "createdAt": "2026-10-01",
+    "password": "GiaHan2026"
   },
   {
     "id": "user-068",
@@ -677,7 +744,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Chuyên viên phân tích hệ thống",
     "status": "active",
-    "createdAt": "2026-10-04"
+    "createdAt": "2026-10-04",
+    "password": "TrongNhan2026"
   },
   {
     "id": "user-069",
@@ -687,7 +755,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư kiểm thử phần mềm",
     "status": "active",
-    "createdAt": "2026-10-03"
+    "createdAt": "2026-10-03",
+    "password": "KimNgan2026"
   },
   {
     "id": "user-070",
@@ -697,7 +766,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên đào tạo nội bộ",
     "status": "active",
-    "createdAt": "2026-10-06"
+    "createdAt": "2026-10-06",
+    "password": "MinhQuan2026"
   },
   {
     "id": "user-071",
@@ -707,7 +777,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên kiểm thử trải nghiệm",
     "status": "active",
-    "createdAt": "2026-10-05"
+    "createdAt": "2026-10-05",
+    "password": "HaiAnh2026"
   },
   {
     "id": "user-072",
@@ -717,7 +788,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên nhân sự tổng hợp",
     "status": "active",
-    "createdAt": "2026-10-04"
+    "createdAt": "2026-10-04",
+    "password": "DinhPhong2026"
   },
   {
     "id": "user-073",
@@ -727,7 +799,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Trợ lý quản lý sản phẩm",
     "status": "active",
-    "createdAt": "2026-10-03"
+    "createdAt": "2026-10-03",
+    "password": "HongNhung2026"
   },
   {
     "id": "user-074",
@@ -737,7 +810,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư kiểm thử phần mềm",
     "status": "invited",
-    "createdAt": "2026-10-12"
+    "createdAt": "2026-10-12",
+    "password": "ThanhCong2026"
   },
   {
     "id": "user-075",
@@ -747,7 +821,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Trợ lý quản lý sản phẩm",
     "status": "invited",
-    "createdAt": "2026-10-11"
+    "createdAt": "2026-10-11",
+    "password": "UyenNhi2026"
   },
   {
     "id": "user-076",
@@ -757,7 +832,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Lập trình viên Backend",
     "status": "invited",
-    "createdAt": "2026-10-10"
+    "createdAt": "2026-10-10",
+    "password": "TuanKiet2026"
   },
   {
     "id": "user-077",
@@ -767,7 +843,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư dữ liệu",
     "status": "invited",
-    "createdAt": "2026-10-09"
+    "createdAt": "2026-10-09",
+    "password": "ThuyDung2026"
   },
   {
     "id": "user-078",
@@ -777,7 +854,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên đào tạo nội bộ",
     "status": "invited",
-    "createdAt": "2026-10-12"
+    "createdAt": "2026-10-12",
+    "password": "TanLoc2026"
   },
   {
     "id": "user-079",
@@ -787,7 +865,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên phân tích sản phẩm",
     "status": "invited",
-    "createdAt": "2026-10-11"
+    "createdAt": "2026-10-11",
+    "password": "NgocBich2026"
   },
   {
     "id": "user-080",
@@ -797,7 +876,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên phân tích nghiệp vụ",
     "status": "invited",
-    "createdAt": "2026-10-11"
+    "createdAt": "2026-10-11",
+    "password": "TheAnh2026"
   },
   {
     "id": "user-081",
@@ -807,7 +887,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Lập trình viên Backend",
     "status": "invited",
-    "createdAt": "2026-10-10"
+    "createdAt": "2026-10-10",
+    "password": "HoaiAn2026"
   },
   {
     "id": "user-082",
@@ -817,7 +898,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư dữ liệu",
     "status": "invited",
-    "createdAt": "2026-10-13"
+    "createdAt": "2026-10-13",
+    "password": "HuuDat2026"
   },
   {
     "id": "user-083",
@@ -827,7 +909,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên nhân sự tổng hợp",
     "status": "invited",
-    "createdAt": "2026-10-12"
+    "createdAt": "2026-10-12",
+    "password": "NgocHan2026"
   },
   {
     "id": "user-084",
@@ -837,7 +920,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Lập trình viên Frontend",
     "status": "invited",
-    "createdAt": "2026-10-11"
+    "createdAt": "2026-10-11",
+    "password": "VanHung2026"
   },
   {
     "id": "user-085",
@@ -847,7 +931,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên nghiên cứu người dùng",
     "status": "invited",
-    "createdAt": "2026-10-10"
+    "createdAt": "2026-10-10",
+    "password": "NhuQuynh2026"
   },
   {
     "id": "user-086",
@@ -857,7 +942,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên nhân sự tổng hợp",
     "status": "invited",
-    "createdAt": "2026-10-13"
+    "createdAt": "2026-10-13",
+    "password": "MinhHieu2026"
   },
   {
     "id": "user-087",
@@ -867,7 +953,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư dữ liệu",
     "status": "invited",
-    "createdAt": "2026-10-12"
+    "createdAt": "2026-10-12",
+    "password": "PhuongNhi2026"
   },
   {
     "id": "user-088",
@@ -877,7 +964,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên vận hành nhân sự",
     "status": "invited",
-    "createdAt": "2026-10-11"
+    "createdAt": "2026-10-11",
+    "password": "BaoLong2026"
   },
   {
     "id": "user-089",
@@ -887,7 +975,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên phân tích nghiệp vụ",
     "status": "invited",
-    "createdAt": "2026-10-10"
+    "createdAt": "2026-10-10",
+    "password": "AnhDuong2026"
   },
   {
     "id": "user-090",
@@ -897,7 +986,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Chuyên viên phân tích sản phẩm",
     "status": "invited",
-    "createdAt": "2026-10-13"
+    "createdAt": "2026-10-13",
+    "password": "VietHoang2026"
   },
   {
     "id": "user-091",
@@ -907,7 +997,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên nhân sự tổng hợp",
     "status": "invited",
-    "createdAt": "2026-10-12"
+    "createdAt": "2026-10-12",
+    "password": "HaPhuong2026"
   },
   {
     "id": "user-092",
@@ -917,7 +1008,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư dữ liệu",
     "status": "invited",
-    "createdAt": "2026-10-11"
+    "createdAt": "2026-10-11",
+    "password": "QuangHuy2026"
   },
   {
     "id": "user-093",
@@ -927,7 +1019,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên truyền thông nội bộ",
     "status": "invited",
-    "createdAt": "2026-10-10"
+    "createdAt": "2026-10-10",
+    "password": "ThanhTruc2026"
   },
   {
     "id": "user-094",
@@ -937,7 +1030,8 @@
     "departmentId": "dept-product",
     "jobTitle": "Thiết kế UI/UX",
     "status": "invited",
-    "createdAt": "2026-10-13"
+    "createdAt": "2026-10-13",
+    "password": "DangKhoa2026"
   },
   {
     "id": "user-095",
@@ -947,7 +1041,8 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư DevOps",
     "status": "invited",
-    "createdAt": "2026-10-12"
+    "createdAt": "2026-10-12",
+    "password": "VanAnh2026"
   },
   {
     "id": "user-096",
@@ -957,7 +1052,8 @@
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên vận hành nhân sự",
     "status": "invited",
-    "createdAt": "2026-10-11"
+    "createdAt": "2026-10-11",
+    "password": "QuocHung2026"
   },
   {
     "id": "user-097",
@@ -967,6 +1063,7 @@
     "departmentId": "dept-engineering",
     "jobTitle": "Kỹ sư kiểm thử phần mềm",
     "status": "invited",
-    "createdAt": "2026-10-10"
+    "createdAt": "2026-10-10",
+    "password": "BaoVy2026"
   }
 ]

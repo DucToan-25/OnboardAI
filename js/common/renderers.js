@@ -1,6 +1,46 @@
 import { isSafeUrl } from './validation.js';
+import { TASK_STATUSES } from '../config/statuses.js';
+import { formatDate } from './format.js';
 
 let fieldCounter = 0;
+
+export function element(tag, className = '', text) {
+  const node = document.createElement(tag); node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+export function actionButton(label, action, id, tone = 'secondary') {
+  const button = element('button', `btn btn--${tone} btn--sm`, label);
+  button.type = 'button'; button.dataset.action = action;
+  if (id) button.dataset.id = id;
+  return button;
+}
+export function createTaskBadge(status) {
+  const entry = TASK_STATUSES[status] || { label: status, tone: 'neutral' };
+  return element('span', `badge badge--${entry.tone}`, entry.label);
+}
+export function createTaskItem(task, { link = true } = {}) {
+  const item = element('div', 'task-item'); item.dataset.id = task.id;
+  const content = element('div', 'task-item__body');
+  const title = link ? element('a', 'task-item__title', task.title) : actionButton(task.title, 'open-task', task.id, 'ghost');
+  title.classList.add('task-item__title');
+  if (link) title.href = `newhire-checklist.html?${new URLSearchParams({ id: task.id })}`;
+  content.append(title, element('p', 'task-item__meta', `${task.category || 'Nhiệm vụ'} · Hạn ${formatDate(task.dueDate)}`));
+  item.append(createIcon(task.status === 'completed' ? 'check' : 'clock', 'task-item__check'), content);
+  if (link) {
+    const actions = element('div', 'task-item__actions'); actions.append(createTaskBadge(task.status)); item.append(actions);
+  }
+  return item;
+}
+export function createDocumentCard(document) {
+  const card = element('article', 'card document-card'); card.dataset.id = document.id;
+  const icon = element('div', 'document-card__icon'); icon.append(createIcon('file'));
+  card.append(icon, element('span', 'badge badge--info', document.category), element('h3', 'document-card__title', document.title), element('p', 'document-card__meta', document.description));
+  const actions = element('div', 'document-card__actions');
+  const link = element('a', 'btn btn--secondary btn--sm', 'Đọc tài liệu');
+  link.href = `document-detail.html?${new URLSearchParams({ id: document.id })}`;
+  actions.append(link); card.append(actions); return card;
+}
 
 export function createIcon(name, className = 'btn__icon') {
   const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');

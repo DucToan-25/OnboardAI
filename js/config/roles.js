@@ -1,12 +1,12 @@
 
-export const ROLES = Object.freeze({ NEWHIRE: 'newhire', MENTOR: 'mentor', HR: 'hr', ADMIN: 'admin' });
-export const ROLE_LABELS = Object.freeze({ newhire: 'Nhân sự mới', mentor: 'Người hướng dẫn', hr: 'Nhân sự', admin: 'Quản trị viên' });
+export const ROLES = Object.freeze({ NEWHIRE: 'newHire', MENTOR: 'mentor', HR: 'hr', ADMIN: 'admin' });
+export const ROLE_LABELS = Object.freeze({ newHire: 'Nhân sự mới', mentor: 'Người hướng dẫn', hr: 'Nhân sự', admin: 'Quản trị viên' });
 export const ROLE_HOME = Object.freeze({
-  newhire: 'newhire-onboarding-dashboard.html', mentor: 'mentor-mentee-list.html',
+  newHire: 'newhire-onboarding-dashboard.html', mentor: 'mentor-mentee-list.html',
   hr: 'hr-dashboard.html', admin: 'admin-user-management.html',
 });
 export const ROLE_LIBRARY = Object.freeze({
-  newhire: 'newhire-document-library',
+  newHire: 'newhire-document-library',
   mentor: 'hr-document-library',
   hr: 'hr-document-library',
   admin: 'hr-document-library',
@@ -14,7 +14,7 @@ export const ROLE_LIBRARY = Object.freeze({
 const profile = { pageId: 'profile', label: 'Hồ sơ cá nhân', icon: 'user' };
 const library = { pageId: 'hr-document-library', label: 'Thư viện tài liệu', icon: 'folder' };
 export const ROLE_MENUS = Object.freeze({
-  newhire: [
+  newHire: [
     { pageId: 'newhire-onboarding-dashboard', label: 'Tổng quan', icon: 'grid' },
     { pageId: 'newhire-checklist', label: 'Checklist nhiệm vụ', icon: 'checklist' },
     { pageId: 'newhire-document-library', label: 'Thư viện tài liệu', icon: 'folder' },

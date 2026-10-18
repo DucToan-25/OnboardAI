@@ -2,9 +2,24 @@ import { APP_CONFIG } from '../config/app.js';
 
 const EMPTY_VALUE = '—';
 
+// Seed dates without an offset are Vietnam wall-clock dates, never browser-local dates.
+export function parseStoredDate(value) {
+  if (value instanceof Date || typeof value === 'number') {
+    const date = new Date(value); return Number.isNaN(date.getTime()) ? null : date;
+  }
+  const text = String(value || '');
+  const local = text.match(/^(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?$/);
+  if (local) {
+    if (formatDate(local[1]) === EMPTY_VALUE || Number(local[2] || 0) > 23 || Number(local[3] || 0) > 59 || Number(local[4] || 0) > 59) return null;
+    return new Date(`${local[1]}T${local[2] || '00'}:${local[3] || '00'}:${local[4] || '00'}+07:00`);
+  }
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})$/.test(text) || formatDate(text.slice(0, 10)) === EMPTY_VALUE) return null;
+  const date = new Date(text); return Number.isNaN(date.getTime()) ? null : date;
+}
+
 function dateTimeParts(value) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return null;
+  const date = parseStoredDate(value);
+  if (!date) return null;
   return Object.fromEntries(new Intl.DateTimeFormat('en-CA', {
     timeZone: APP_CONFIG.timeZone,
     year: 'numeric', month: '2-digit', day: '2-digit',
@@ -56,8 +71,8 @@ export function formatDate(value) {
 
 export function formatDateTime(value) {
   if (!value) return EMPTY_VALUE;
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return EMPTY_VALUE;
+  const date = parseStoredDate(value);
+  if (!date) return EMPTY_VALUE;
   return new Intl.DateTimeFormat('vi-VN', {
     timeZone: APP_CONFIG.timeZone || 'Asia/Ho_Chi_Minh',
     day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'

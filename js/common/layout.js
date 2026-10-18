@@ -2,6 +2,8 @@ import { ROLE_LABELS, ROLE_MENUS } from '../config/roles.js';
 import { ROUTES } from '../config/routes.js';
 import { createAvatar, createIcon } from './renderers.js';
 import { formatDate, getTodayDate } from './format.js';
+import { logout } from './auth.js';
+import { showToast } from './ui.js';
 
 const initializedLayouts = new WeakSet();
 
@@ -82,7 +84,10 @@ export function renderLayout({ currentUser, pageId }) {
   header.addEventListener('click', (event) => { if (event.target.closest('[data-action="toggle-sidebar"]')) toggle(); });
   sidebar.addEventListener('click', async (event) => {
     const action = event.target.closest('[data-action]')?.dataset.action;
-    if (action === 'logout') { location.assign('login.html'); }
+    if (action === 'logout') {
+      try { logout(); location.assign('login.html'); }
+      catch (error) { showToast({ message: error.message, type: 'error' }); }
+    }
   });
   document.addEventListener('click', (event) => {
     if (opened && media.matches && !document.body.classList.contains('is-modal-open')
@@ -100,4 +105,13 @@ export function renderLayout({ currentUser, pageId }) {
   });
   media.addEventListener('change', () => toggle(!media.matches));
   toggle(!media.matches);
+}
+
+export function refreshLayoutUser(user) {
+  const name = document.querySelector('.app-sidebar__footer .app-header__user strong');
+  if (name) name.textContent = user.fullName;
+  for (const link of document.querySelectorAll('.app-header__user')) {
+    link.querySelector('.avatar')?.replaceWith(createAvatar(user, { size: 'sm' }));
+    if (link.hasAttribute('aria-label')) link.setAttribute('aria-label', `Hồ sơ ${user.fullName}`);
+  }
 }

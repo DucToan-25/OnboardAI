@@ -1,5 +1,12 @@
 # Field bổ sung cho giai đoạn giao diện
 
+## Hợp đồng hiện hành — 18/10/2026
+
+Nguồn chuẩn cho giai đoạn LocalStorage là [OnboardAI_QuyTac_LocalStorage.md](../OnboardAI_QuyTac_LocalStorage.md), gồm schema thực tế, trạng thái, chữ ký hàm và bổ sung mật khẩu. JSON runtime nằm trong `assets/data/`. Nội dung từ phần “Khôi phục mật khẩu” trở xuống là lịch sử thiết kế, không áp dụng thay hợp đồng mới.
+
+Đã nối sáu trang SV1, trang chủ và chi tiết tài liệu. Chưa có tự khôi phục mật khẩu qua email/điện thoại; users.json không có phone. Không tạo trường phone/avatarUrl/settings/journeyAssignments/portalPosts để khớp hợp đồng cũ. Hồ sơ chỉ tự sửa fullName/email; role tài khoản newHire. Tệp tài liệu chưa có: hiển thị metadata và thông báo thiếu tệp, không gán nội dung sổ tay tĩnh cũ cho ID mới.
+
+
 > Trạng thái 15/10/2026: đây là hợp đồng **dự kiến cho giai đoạn dữ liệu**, không phải mã đang chạy. Hiện tại card/bảng/form hiển thị HTML tĩnh, không có seed, repository, phiên đăng nhập hoặc AI fixture. Các mô tả xác minh/lưu/preview dữ liệu bên dưới chỉ được triển khai khi nhóm bắt đầu nối dữ liệu. Form hiện tại chỉ validate và báo chưa kết nối, không xác minh tài khoản hoặc giả đặt lại mật khẩu thành công.
 
 ## Khôi phục mật khẩu — UI-05 (08/10/2026)

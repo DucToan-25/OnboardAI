@@ -55,86 +55,8 @@
         </section>
       </main>
     </div>
-    <template data-template="forgot-password" data-title="Hướng dẫn quên mật khẩu">
-      <div>
-        <form class="form" novalidate="">
-          <div class="form-field">
-            <label class="form-field__label" for="field-email-3">
-              Email tài khoản
-              <span class="form-field__required" aria-hidden="true">*</span>
-            </label>
-            <input type="email" class="form-field__control" id="field-email-3" name="email" required="" aria-describedby="field-email-3-error" value="">
-            <p class="form-field__error" id="field-email-3-error" data-error-for="email" hidden="">
-            </p>
-          </div>
-          <div class="form-field">
-            <label class="form-field__label" for="field-phone-4">
-              Số điện thoại đã liên kết
-              <span class="form-field__required" aria-hidden="true">*</span>
-            </label>
-            <input type="tel" class="form-field__control" id="field-phone-4" name="phone" required="" aria-describedby="field-phone-4-error" value="">
-            <p class="form-field__error" id="field-phone-4-error" data-error-for="phone" hidden="">
-            </p>
-          </div>
-          <div class="alert alert--info">
-            <p class="alert__title">Xác minh tài khoản để đặt lại mật khẩu</p>
-            <p class="alert__message">Nhập đúng email và số điện thoại đã liên kết. Sau khi xác minh, bạn có thể tạo mật khẩu mới ngay.</p>
-          </div>
-          <div class="form__actions">
-            <button type="button" class="btn btn--secondary">Hủy</button>
-            <button type="submit" class="btn btn--primary">Xác minh tài khoản</button>
-          </div>
-        </form>
-      </div>
-    </template>
-    <template data-template="contact-hr" data-title="Liên hệ HR">
-      <div>
-        <div class="login__contact">
-          <strong>Nguyễn Thu Hà</strong>
-          <span>hr@example.com</span>
-        </div>
-        <form class="form" novalidate="">
-          <div class="form-field">
-            <label class="form-field__label" for="field-email-5">
-              Email của bạn
-              <span class="form-field__required" aria-hidden="true">*</span>
-            </label>
-            <input type="email" class="form-field__control" id="field-email-5" name="email" required="" aria-describedby="field-email-5-error" value="">
-            <p class="form-field__error" id="field-email-5-error" data-error-for="email" hidden="">
-            </p>
-          </div>
-          <div class="form-field">
-            <label class="form-field__label" for="field-topic-6">
-              Chủ đề hỗ trợ
-              <span class="form-field__required" aria-hidden="true">*</span>
-            </label>
-            <select class="form-field__control" id="field-topic-6" name="topic" required="" aria-describedby="field-topic-6-error">
-              <option value="access" selected="">Tài khoản và quyền truy cập</option>
-              <option value="onboarding">Hành trình hội nhập</option>
-              <option value="other">Hỗ trợ khác</option>
-            </select>
-            <p class="form-field__error" id="field-topic-6-error" data-error-for="topic" hidden="">
-            </p>
-          </div>
-          <div class="form-field">
-            <label class="form-field__label" for="field-message-7">
-              Nội dung cần hỗ trợ
-              <span class="form-field__required" aria-hidden="true">*</span>
-            </label>
-            <textarea class="form-field__control" id="field-message-7" name="message" required="" aria-describedby="field-message-7-error"></textarea>
-            <p class="form-field__error" id="field-message-7-error" data-error-for="message" hidden="">
-            </p>
-          </div>
-          <p class="form-field__hint">Chuẩn bị nội dung email, sau đó mở ứng dụng email của bạn để gửi cho HR.</p>
-          <div hidden="" class="alert alert--info" role="status">
-          </div>
-          <div class="form__actions">
-            <button class="btn btn--secondary" type="button">Hủy</button>
-            <button class="btn btn--primary" type="submit">Chuẩn bị email</button>
-          </div>
-        </form>
-      </div>
-    </template>
+    <template data-template="forgot-password" data-title="Quên mật khẩu"><p>Bản mô phỏng chưa hỗ trợ tự đặt lại mật khẩu. Liên hệ người quản lý tài khoản để được hỗ trợ; hệ thống không gửi email xác minh.</p></template>
+    <template data-template="contact-hr" data-title="Liên hệ HR"><p>Liên hệ cán bộ HR phụ trách tiếp nhận qua kênh liên lạc đã được công ty cung cấp. Chức năng gửi yêu cầu hỗ trợ chưa được kết nối.</p></template>
     <div id="modal-root">
     </div>
     <div id="toast-root" aria-live="polite">

@@ -1,5 +1,8 @@
 # Quy tắc Codex cho SV2 — Mentor, tài liệu chung và tương tác JavaScript
 
+> **Điểm nối hiện hành 18/10/2026:** theo [quy tắc LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md), store/auth/people/ai-history do SV1 cung cấp. `js/data/tasks.js` đã có getTasksForHire/getProgress/updateTaskStatus; `resources.js` có getReadableDocuments/getDocument; document-detail đã đọc đúng ID và quyền. SV2 tiếp tục bổ sung CRUD/tasks/checkins/resources và applyChecklist trong chính các module này. Các màn hình mentor/thư viện quản lý vẫn tĩnh. Role tài khoản dùng newHire; nguồn dữ liệu assets/data; không dùng lại repository/seed/status cũ bên dưới.
+
+
 > Cập nhật 15/10/2026: áp dụng mục “Phạm vi hiện hành” của [AGENTS.md](../../AGENTS.md). Nội dung thiết kế là HTML tĩnh; không còn seed, repository/auth giả lập, nút demo hoặc bộ chọn tình huống AI. Phần dữ liệu/phiên/fixture bên dưới chuyển sang đợt tích hợp sau. Form, modal, token và phạm vi owner vẫn giữ.
 
 > Vị trí trong repo: `docs/rules/SV2-RULES.md`. Trước mỗi task của SV2, đọc [AGENTS.md chính](../../AGENTS.md), sau đó đọc file này. File này giao việc cụ thể, không thay thế quy tắc chính.

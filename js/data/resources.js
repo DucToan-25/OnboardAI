@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * resources.js — phòng ban, tài liệu, check-in.
  * OWNER: SV2. Hợp đồng OnboardAI_QuyTac_LocalStorage.md mục 4.5–4.8.
@@ -381,4 +382,28 @@ export async function updateCheckin(id, patch = {}) {
   }
 
   return update('checkins', id, { ...changes, updatedAt: now() });
+=======
+// SV2 read contract shared by SV1's library and Policy Q&A.
+import { getAll, getById } from './store.js';
+import { requireRoles } from '../common/auth.js';
+
+function canRead(document, user) {
+  if (['hr', 'admin'].includes(user.role)) return true;
+  if (document.status !== 'active') return false;
+  // Seed's targetRole is an audience: "newhire" maps to the account role newHire.
+  // "all" is company-wide; engineer additionally requires the engineering department.
+  if (document.targetRole === 'all') return true;
+  const role = document.targetRole === 'newhire' ? 'newHire' : document.targetRole;
+  const audience = role === user.role || (role === 'engineer' && user.departmentId === 'dept-engineering');
+  return audience && (document.departmentId === null || document.departmentId === user.departmentId);
+}
+export function getReadableDocuments() {
+  const user = requireRoles();
+  return getAll('documents').filter(item => canRead(item, user));
+}
+export function getDocument(id) {
+  const user = requireRoles(); const item = getById('documents', id);
+  if (!item || !canRead(item, user)) throw new Error('Tài liệu không tồn tại hoặc bạn không có quyền đọc.');
+  return item;
+>>>>>>> 906d77f (Update localstorage sv1)
 }

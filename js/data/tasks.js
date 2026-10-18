@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * tasks.js — nhiệm vụ onboarding và tiến độ.
  * OWNER: SV2. Hợp đồng OnboardAI_QuyTac_LocalStorage.md mục 4.
@@ -310,4 +311,36 @@ export async function applyChecklist(historyId) {
     appliedTaskIds: applied,
     totalItems: items.length,
   };
+=======
+// SV2 service: the small read/status surface needed by SV1. Other CRUD stays with SV2.
+import { getAll, getById, update } from './store.js';
+import { requireRoles } from '../common/auth.js';
+import { parseStoredDate } from '../common/format.js';
+
+function authorizedHire(id) {
+  const actor = requireRoles();
+  const hire = getById('newHires', id);
+  if (!hire || (actor.role === 'newHire' && hire.userId !== actor.id) || (actor.role === 'mentor' && hire.mentorId !== actor.id)) throw new Error('Không có quyền truy cập hồ sơ này.');
+  return { actor, hire };
+}
+export function getTasksForHire(hireId) {
+  const { hire } = authorizedHire(hireId);
+  return getAll('tasks').filter(task => task.newHireId === hireId && task.assignedTo === hire.userId);
+}
+export function getProgress(hireId) {
+  const tasks = getTasksForHire(hireId).filter(task => task.status !== 'archived');
+  const completed = tasks.filter(task => task.status === 'completed').length;
+  return { total: tasks.length, completed, percent: tasks.length ? Math.round(completed * 100 / tasks.length) : 0 };
+}
+export function updateTaskStatus(taskId, status) {
+  const task = getById('tasks', taskId);
+  if (!task) throw new Error('Không tìm thấy nhiệm vụ.');
+  const { hire } = authorizedHire(task.newHireId);
+  if (hire.status === 'archived' || task.status === 'archived') throw new Error('Hồ sơ hoặc nhiệm vụ đã lưu trữ.');
+  if (task.assignedTo !== hire.userId || task.journeyId !== hire.journeyId) throw new Error('Liên kết nhiệm vụ chưa khớp hồ sơ. Cần người quản lý kiểm tra.');
+  if (!['todo', 'inProgress', 'blocked', 'completed'].includes(status)) throw new Error('Trạng thái nhiệm vụ không hợp lệ.');
+  const now = new Date();
+  if (parseStoredDate(task.createdAt)?.getTime() > now.getTime()) throw new Error('Ngày tạo nhiệm vụ nằm trong tương lai. Cần kiểm tra dữ liệu.');
+  return update('tasks', taskId, { status, updatedAt: now.toISOString(), completedAt: status === 'completed' ? now.toISOString() : null });
+>>>>>>> 906d77f (Update localstorage sv1)
 }

@@ -1,6 +1,6 @@
 import { APP_CONFIG } from './app.js';
 
-const all = ['newhire', 'mentor', 'hr', 'admin'];
+const all = ['newHire', 'mentor', 'hr', 'admin'];
 function route(pageId, allowedRoles, isPublic = false) {
   return {
     public: isPublic, allowedRoles, layout: isPublic ? 'simple' : 'app',
@@ -11,10 +11,10 @@ function route(pageId, allowedRoles, isPublic = false) {
 export const ROUTES = Object.freeze({
   index: route('index', [], true),
   login: route('login', [], true), profile: route('profile', all),
-  'newhire-onboarding-dashboard': route('newhire-onboarding-dashboard', ['newhire']),
-  'newhire-checklist': route('newhire-checklist', ['newhire']),
-  'newhire-ai-help': route('newhire-ai-help', ['newhire']),
-  'newhire-document-library': route('newhire-document-library', ['newhire']),
+  'newhire-onboarding-dashboard': route('newhire-onboarding-dashboard', ['newHire']),
+  'newhire-checklist': route('newhire-checklist', ['newHire']),
+  'newhire-ai-help': route('newhire-ai-help', ['newHire']),
+  'newhire-document-library': route('newhire-document-library', ['newHire']),
   'mentor-mentee-list': route('mentor-mentee-list', ['mentor']),
   'mentor-checkin-note': route('mentor-checkin-note', ['mentor']),
   'mentor-task-assignment': route('mentor-task-assignment', ['mentor']),

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Shared labels and tones; persisted records keep the status codes only.
 export const STATUS_META = Object.freeze({
   tasks: {
@@ -46,4 +47,12 @@ export const STATUS_META = Object.freeze({
     published: { label: 'Đã xuất bản', tone: 'success' },
     archived: { label: 'Đã lưu trữ', tone: 'neutral' }
   }
+=======
+export const TASK_STATUSES = Object.freeze({
+  todo: { label: 'Chưa bắt đầu', tone: 'neutral' },
+  inProgress: { label: 'Đang thực hiện', tone: 'info' },
+  blocked: { label: 'Đang vướng mắc', tone: 'warning' },
+  completed: { label: 'Hoàn thành', tone: 'success' },
+  archived: { label: 'Đã lưu trữ', tone: 'neutral' },
+>>>>>>> 906d77f (Update localstorage sv1)
 });

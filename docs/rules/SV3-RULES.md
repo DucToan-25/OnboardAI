@@ -1,5 +1,8 @@
 # Quy tắc Codex cho SV3 — HR, Admin, khung ứng dụng và tích hợp
 
+> **Điểm nối hiện hành 18/10/2026:** theo [quy tắc LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md), main/layout dùng phiên và role từ users, không từ query. `js/data/organization.js` có getCompanyInfo/getPublishedNews phục vụ trang chủ. SV3 gọi people của SV1 cho quản trị user/hire, tiếp tục làm CRUD organization và các màn hình HR/Admin; không tạo store riêng. UI HR/Admin hiện vẫn tĩnh. Cấu trúc dữ liệu/mật khẩu/status mới thay thế phần preview cũ phía dưới.
+
+
 > Cập nhật 15/10/2026: áp dụng mục “Phạm vi hiện hành” của [AGENTS.md](../../AGENTS.md). Nội dung thiết kế là HTML tĩnh; không còn seed, repository/auth giả lập, nút demo hoặc bộ chọn tình huống AI. Phần dữ liệu/phiên/fixture bên dưới chuyển sang đợt tích hợp sau. Form, modal, token và phạm vi owner vẫn giữ.
 
 > Vị trí trong repo: `docs/rules/SV3-RULES.md`. Trước mỗi task của SV3, đọc [AGENTS.md chính](../../AGENTS.md), sau đó đọc file này. File này giao việc cụ thể, không thay thế quy tắc chính.

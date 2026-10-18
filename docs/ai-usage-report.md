@@ -54,3 +54,25 @@ Kiểm tra source: năm module trang và hook DOM tương ứng; kiểm tra tíc
 Theo yêu cầu chung của người dùng, Codex chuyển nội dung thiết kế sang HTML tĩnh, giữ 19 màn hình và helper UI dùng chung; bỏ seed, auth/repository mô phỏng, nút chọn demo, bộ chọn tình huống AI, ảnh tham chiếu và các script/cache kiểm thử. Đây là task dọn chung theo yêu cầu trực tiếp, không thay phân công owner/reviewer.
 
 Kiểm tra bằng Chrome headless cục bộ: 19 trang ở 1440/768/390px không lỗi khởi tạo, console, tài nguyên, ID trùng hay cuộn ngang; kiểm tra modal/validation, bộ lọc, khôi phục form, sidebar và ID tài liệu. Kiểm tra dependency xác nhận các module dữ liệu đã bỏ không còn được import hoặc request. Script và ảnh kiểm tra tạm được xóa sau khi chạy; các báo cáo test cũ được nhắc ở phần lịch sử phía trên cũng đã dọn. Không có đăng nhập, lưu dữ liệu hoặc AI thật.
+
+## SV1 — LocalStorage và đăng nhập bằng mật khẩu — 18/10/2026
+
+Yêu cầu: triển khai toàn bộ phần SV1 trong OnboardAI_QuyTac_LocalStorage.md, dùng password người dùng đã thêm vào users.json, rồi rà soát mã nguồn toàn dự án.
+
+Codex triển khai store/auth/people/ai-history; nối sáu màn hình SV1 và trang chủ; bổ sung phần dịch vụ đọc/cập nhật trạng thái tối thiểu của tasks/resources/organization để tránh bản lưu riêng. Sửa shell/route/logout theo phiên; detail đọc document đúng ID/quyền; đồng bộ role newHire, ngày Việt Nam và tài liệu bàn giao. Người dùng đã sửa users.json trước task; mật khẩu được giữ nguyên khi chuyển toàn bộ JSON sang assets/data. Không tạo tài khoản demo hoặc mật khẩu mới trong seed.
+
+Tái sử dụng component CSS, modal/xác nhận/toast, form validation, avatar/icon và bố cục hiện có; không thêm framework, package build hoặc CSS hệ mới. Profile chỉ ghi fullName/email; quản trị tài khoản/hồ sơ qua API people. Thao tác nhiều khóa có ID ổn định và khả năng thử lại, không tuyên bố có giao dịch như database. Policy Q&A là tra cứu mock, có fallback, nguồn và lịch sử theo user; không gọi AI thật.
+
+Kiểm tra đã chạy:
+
+- 29 kiểm tra dịch vụ: init dùng chung Promise; không seed lại []; fetch lỗi/JSON lỗi/ID trùng/quota/quyền storage; schema chưa hỗ trợ; mật khẩu/session; profile whitelist/email duy nhất; quyền task; completedAt; AI owner/pending/fallback/xóa; thử lại tạo user/hire và chuyển phòng ban; reset đúng namespace; ngày Việt Nam.
+- 50 kiểm tra Chrome headless: đăng nhập form thực tế, task giữ sau điều hướng, profile/header cập nhật, chống role/userId query, Policy Q&A/sửa lịch sử, thư viện/detail/ID lỗi, profile bốn role, các module trang và logout.
+- 70 kiểm tra Chrome bổ sung: 19 trang × 3 viewport 1440/768/390px không tràn ngang toàn trang/ID trùng/lỗi khởi tạo; đổi tài khoản giữa tab, đăng xuất, profile/task đồng bộ, reset có xác nhận, JSON hỏng/schema sai có màn hình phục hồi, modal/drawer mobile và Escape. Không có ngoại lệ JavaScript chưa xử lý. Đã xem ảnh checklist mobile, bảng cuộn trong vùng riêng theo bố cục hiện có.
+- Cú pháp 37 module JavaScript; đường dẫn tài nguyên/import trong HTML/JS không thiếu; git diff --check sạch. Kiểm tra JSON không có ID trùng; nội dung seed ngoài password đã được cung cấp không thay đổi.
+- 5 kiểm tra cuối sau chỉnh giao diện: email trùng báo ngay cạnh trường nhập; badge task dashboard hiển thị và không gây tràn ngang ở cả ba viewport; không có ngoại lệ trình duyệt. Tổng đợt: 29 kiểm tra dịch vụ và 125 kiểm tra trình duyệt.
+
+Phát hiện dữ liệu giữ nguyên để bàn giao: task-004/hire-002 lệch journeyId (dịch vụ chặn cập nhật), 42 nhóm check-in trùng lịch và 100 fileUrl không có tệp. Các bất nhất timestamp cũ nằm trong quy tắc LocalStorage, không tự đoán để sửa seed. Tệp tài liệu thiếu được báo rõ trên detail, không hiển thị chính sách tĩnh không thuộc dữ liệu.
+
+Các trang CRUD mentor/HR/Admin, Checklist Personalizer, Progress Risk, việc cá nhân mới và quên mật khẩu vẫn chưa nối nghiệp vụ; đây là phần SV2/SV3 hoặc ngoài hợp đồng SV1. Rà soát khởi tạo/giao diện của chúng không phải xác nhận nghiệp vụ hoàn tất. Owner review và minh chứng OBS của nhóm vẫn cần thực hiện trước merge.
+
+Script/ảnh/hồ sơ Chrome kiểm thử đặt ngoài repo trong thư mục tạm. Không có commit, merge hoặc triển khai hosting trong nhiệm vụ này.

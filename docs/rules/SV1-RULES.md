@@ -1,5 +1,8 @@
 # Quy tắc Codex cho SV1 — Nhân sự mới và giao diện dùng chung
 
+> **Hiện hành 18/10/2026:** đã chuyển sang phần SV1 của [quy tắc LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md). Các chỉ dẫn preview/seed cũ phía dưới chỉ là lịch sử nếu khác hợp đồng mới. SV1 phụ trách `js/data/store.js`, `js/common/auth.js`, `js/data/people.js`, `js/data/ai-history.js`, sáu trang và nối trang chủ. Login dùng password của users.json; profile sửa fullName/email; task ghi qua tasks.updateTaskStatus. UI giữ token/component chung. Không dựng lại repository cũ, không triển khai phần CRUD của SV2/SV3.
+
+
 > Cập nhật 15/10/2026: áp dụng mục “Phạm vi hiện hành” của [AGENTS.md](../../AGENTS.md). Nội dung thiết kế là HTML tĩnh; không còn seed, repository/auth giả lập, nút demo hoặc bộ chọn tình huống AI. Phần dữ liệu/phiên/fixture bên dưới chuyển sang đợt tích hợp sau. Form, modal, token và phạm vi owner vẫn giữ.
 
 > Vị trí trong repo: `docs/rules/SV1-RULES.md`. Trước mỗi task của SV1, đọc [AGENTS.md chính](../../AGENTS.md), sau đó đọc file này. File này giao việc cụ thể, không thay thế quy tắc chính.
