@@ -9,7 +9,7 @@
   display: flex;
   align-items: end;
   gap: var(--space-3);
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 .page--newhire-ai-help .nh-ai-help__conversation {

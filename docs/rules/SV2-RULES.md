@@ -1,5 +1,7 @@
 # Quy tắc Codex cho SV2 — Mentor, tài liệu chung và tương tác JavaScript
 
+> Cập nhật 15/10/2026: áp dụng mục “Phạm vi hiện hành” của [AGENTS.md](../../AGENTS.md). Nội dung thiết kế là HTML tĩnh; không còn seed, repository/auth giả lập, nút demo hoặc bộ chọn tình huống AI. Phần dữ liệu/phiên/fixture bên dưới chuyển sang đợt tích hợp sau. Form, modal, token và phạm vi owner vẫn giữ.
+
 > Vị trí trong repo: `docs/rules/SV2-RULES.md`. Trước mỗi task của SV2, đọc [AGENTS.md chính](../../AGENTS.md), sau đó đọc file này. File này giao việc cụ thể, không thay thế quy tắc chính.
 
 ## 1. Phạm vi và cách kế thừa

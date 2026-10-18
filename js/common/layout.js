@@ -1,7 +1,6 @@
 import { ROLE_LABELS, ROLE_MENUS } from '../config/roles.js';
 import { ROUTES } from '../config/routes.js';
 import { createAvatar, createIcon } from './renderers.js';
-import { logout } from './auth.js';
 import { formatDate, getTodayDate } from './format.js';
 
 const initializedLayouts = new WeakSet();
@@ -33,7 +32,7 @@ export function renderLayout({ currentUser, pageId }) {
     const ready = ROUTES[item.pageId]?.available;
     const link = document.createElement(ready ? 'a' : 'span');
     link.className = 'app-nav__link';
-    if (ready) link.href = `${item.pageId}.html`;
+    if (ready) link.href = `${item.pageId}.html?${new URLSearchParams({ role: currentUser.role })}`;
     else {
       link.classList.add('is-disabled'); link.setAttribute('aria-disabled', 'true');
       link.title = 'Trang chưa sẵn sàng trong bản hiện tại.';
@@ -45,7 +44,7 @@ export function renderLayout({ currentUser, pageId }) {
   }
   nav.append(heading, list);
   const footer = document.createElement('div'); footer.className = 'app-sidebar__footer';
-  const account = document.createElement('a'); account.className = 'app-header__user'; account.href = 'profile.html';
+  const account = document.createElement('a'); account.className = 'app-header__user'; account.href = `profile.html?${new URLSearchParams({ role: currentUser.role })}`;
   const name = document.createElement('div');
   const fullName = document.createElement('strong'); fullName.textContent = currentUser.fullName;
   const role = document.createElement('p'); role.textContent = ROLE_LABELS[currentUser.role];
@@ -57,7 +56,7 @@ export function renderLayout({ currentUser, pageId }) {
   const date = document.createElement('time');
   const day = getTodayDate();
   date.dateTime = day; date.textContent = `Hôm nay, ${formatDate(day)}`;
-  const avatarLink = document.createElement('a'); avatarLink.className = 'app-header__user'; avatarLink.href = 'profile.html';
+  const avatarLink = document.createElement('a'); avatarLink.className = 'app-header__user'; avatarLink.href = `profile.html?${new URLSearchParams({ role: currentUser.role })}`;
   avatarLink.setAttribute('aria-label', `Hồ sơ ${currentUser.fullName}`); avatarLink.append(createAvatar(currentUser, { size: 'sm' }));
   actions.append(date, avatarLink); header.append(brand, actions);
   const main = document.querySelector('#main-content');
@@ -83,7 +82,7 @@ export function renderLayout({ currentUser, pageId }) {
   header.addEventListener('click', (event) => { if (event.target.closest('[data-action="toggle-sidebar"]')) toggle(); });
   sidebar.addEventListener('click', async (event) => {
     const action = event.target.closest('[data-action]')?.dataset.action;
-    if (action === 'logout') { await logout(); location.replace('login.html'); }
+    if (action === 'logout') { location.assign('login.html'); }
   });
   document.addEventListener('click', (event) => {
     if (opened && media.matches && !document.body.classList.contains('is-modal-open')

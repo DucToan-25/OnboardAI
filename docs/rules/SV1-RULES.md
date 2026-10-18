@@ -1,5 +1,7 @@
 # Quy tắc Codex cho SV1 — Nhân sự mới và giao diện dùng chung
 
+> Cập nhật 15/10/2026: áp dụng mục “Phạm vi hiện hành” của [AGENTS.md](../../AGENTS.md). Nội dung thiết kế là HTML tĩnh; không còn seed, repository/auth giả lập, nút demo hoặc bộ chọn tình huống AI. Phần dữ liệu/phiên/fixture bên dưới chuyển sang đợt tích hợp sau. Form, modal, token và phạm vi owner vẫn giữ.
+
 > Vị trí trong repo: `docs/rules/SV1-RULES.md`. Trước mỗi task của SV1, đọc [AGENTS.md chính](../../AGENTS.md), sau đó đọc file này. File này giao việc cụ thể, không thay thế quy tắc chính.
 
 ## 1. Phạm vi và cách kế thừa
@@ -42,6 +44,8 @@ Bổ sung 07/10/2026: trang chủ `UI-PUBLIC` dùng token/component và logo-mar
 - Với file không thuộc mình, đề xuất patch nhỏ khi task cần và có owner review theo quy tắc chính. Không làm ba bản file chung hoặc mở file CSS để chồng bản sửa.
 
 ## 4. Yêu cầu riêng từng màn hình
+
+Bổ sung UI-05 ngày 08/10/2026: Quên mật khẩu dùng cùng modal theo hai bước: email + số điện thoại → mật khẩu mới/xác nhận. Dữ liệu đối chiếu từ `users` qua repository; khớp thì không chuyển HR. Chỉ preview đặt lại, không ghi mật khẩu hoặc giả gửi email. Nút `contact-hr` giữ nguyên và mở luồng liên hệ riêng. Dùng rule validation chung, không tạo form/trang reset thứ hai.
 
 ### UI-01 — Dashboard nhân sự mới
 

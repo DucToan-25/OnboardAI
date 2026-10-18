@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/pages/login.css">
     <link rel="stylesheet" href="../css/responsive.css">
   </head>
-  <body class="page page--login" data-page="login">
+  <body class="page page--login" data-page="login" data-display-name="Nguyễn Minh Anh" data-layout-role="newhire">
     <div class="simple-layout">
       <main class="simple-layout__content login__layout" id="main-content">
         <section class="card" aria-labelledby="login-heading">
@@ -20,24 +20,126 @@
             <h1 class="page-header__title" id="login-heading">Đăng nhập</h1>
             <p class="page-header__description">Truy cập hành trình hội nhập của bạn.</p>
           </div>
-          <form class="form" data-region="login-form" novalidate>
-            <div data-region="login-fields"></div>
+          <form class="form" data-region="login-form" novalidate="">
+            <div data-region="login-fields" class="form__grid">
+              <div class="form-field">
+                <label class="form-field__label" for="field-email-1">
+                  Email
+                  <span class="form-field__required" aria-hidden="true">*</span>
+                </label>
+                <input type="email" class="form-field__control" id="field-email-1" name="email" required="" aria-describedby="field-email-1-error" autocomplete="username" placeholder="Nhập email của bạn" value="">
+                <p class="form-field__error" id="field-email-1-error" data-error-for="email" hidden="">
+                </p>
+              </div>
+              <div class="form-field">
+                <label class="form-field__label" for="field-password-2">
+                  Mật khẩu
+                  <span class="form-field__required" aria-hidden="true">*</span>
+                </label>
+                <div class="login__password-control">
+                  <input type="password" class="form-field__control" id="field-password-2" name="password" required="" aria-describedby="field-password-2-error" autocomplete="current-password">
+                  <button class="btn btn--ghost btn--sm" type="button" data-action="toggle-password" aria-label="Hiện mật khẩu" aria-pressed="false">Hiện</button>
+                </div>
+                <p class="form-field__error" id="field-password-2-error" data-error-for="password" hidden="">
+                </p>
+              </div>
+            </div>
             <div class="login__links">
               <button class="btn btn--ghost btn--sm" type="button" data-action="forgot-password">Quên mật khẩu?</button>
               <button class="btn btn--ghost btn--sm" type="button" data-action="contact-hr">Liên hệ HR</button>
             </div>
-            <button class="btn btn--primary" type="submit" data-action="login">Đăng nhập demo</button>
-            <p class="login__notice">Bản demo giao diện: chọn tài khoản mẫu, mật khẩu chưa được xác thực.</p>
+            <button class="btn btn--primary" type="submit" data-action="login">Đăng nhập</button>
           </form>
-          <div class="login__demo">
-            <button class="btn btn--ghost btn--sm" type="button" data-action="choose-demo">Xem và chọn tài khoản demo</button>
+          <div data-region="login-state" aria-live="polite" class="view-state" role="status" aria-busy="false" hidden="">
           </div>
-          <div data-region="login-state" aria-live="polite"></div>
         </section>
       </main>
     </div>
-    <div id="modal-root"></div>
-    <div id="toast-root" aria-live="polite"></div>
-    <script type="module" src="../js/main.js"></script>
+    <template data-template="forgot-password" data-title="Hướng dẫn quên mật khẩu">
+      <div>
+        <form class="form" novalidate="">
+          <div class="form-field">
+            <label class="form-field__label" for="field-email-3">
+              Email tài khoản
+              <span class="form-field__required" aria-hidden="true">*</span>
+            </label>
+            <input type="email" class="form-field__control" id="field-email-3" name="email" required="" aria-describedby="field-email-3-error" value="">
+            <p class="form-field__error" id="field-email-3-error" data-error-for="email" hidden="">
+            </p>
+          </div>
+          <div class="form-field">
+            <label class="form-field__label" for="field-phone-4">
+              Số điện thoại đã liên kết
+              <span class="form-field__required" aria-hidden="true">*</span>
+            </label>
+            <input type="tel" class="form-field__control" id="field-phone-4" name="phone" required="" aria-describedby="field-phone-4-error" value="">
+            <p class="form-field__error" id="field-phone-4-error" data-error-for="phone" hidden="">
+            </p>
+          </div>
+          <div class="alert alert--info">
+            <p class="alert__title">Xác minh tài khoản để đặt lại mật khẩu</p>
+            <p class="alert__message">Nhập đúng email và số điện thoại đã liên kết. Sau khi xác minh, bạn có thể tạo mật khẩu mới ngay.</p>
+          </div>
+          <div class="form__actions">
+            <button type="button" class="btn btn--secondary">Hủy</button>
+            <button type="submit" class="btn btn--primary">Xác minh tài khoản</button>
+          </div>
+        </form>
+      </div>
+    </template>
+    <template data-template="contact-hr" data-title="Liên hệ HR">
+      <div>
+        <div class="login__contact">
+          <strong>Nguyễn Thu Hà</strong>
+          <span>hr@example.com</span>
+        </div>
+        <form class="form" novalidate="">
+          <div class="form-field">
+            <label class="form-field__label" for="field-email-5">
+              Email của bạn
+              <span class="form-field__required" aria-hidden="true">*</span>
+            </label>
+            <input type="email" class="form-field__control" id="field-email-5" name="email" required="" aria-describedby="field-email-5-error" value="">
+            <p class="form-field__error" id="field-email-5-error" data-error-for="email" hidden="">
+            </p>
+          </div>
+          <div class="form-field">
+            <label class="form-field__label" for="field-topic-6">
+              Chủ đề hỗ trợ
+              <span class="form-field__required" aria-hidden="true">*</span>
+            </label>
+            <select class="form-field__control" id="field-topic-6" name="topic" required="" aria-describedby="field-topic-6-error">
+              <option value="access" selected="">Tài khoản và quyền truy cập</option>
+              <option value="onboarding">Hành trình hội nhập</option>
+              <option value="other">Hỗ trợ khác</option>
+            </select>
+            <p class="form-field__error" id="field-topic-6-error" data-error-for="topic" hidden="">
+            </p>
+          </div>
+          <div class="form-field">
+            <label class="form-field__label" for="field-message-7">
+              Nội dung cần hỗ trợ
+              <span class="form-field__required" aria-hidden="true">*</span>
+            </label>
+            <textarea class="form-field__control" id="field-message-7" name="message" required="" aria-describedby="field-message-7-error"></textarea>
+            <p class="form-field__error" id="field-message-7-error" data-error-for="message" hidden="">
+            </p>
+          </div>
+          <p class="form-field__hint">Chuẩn bị nội dung email, sau đó mở ứng dụng email của bạn để gửi cho HR.</p>
+          <div hidden="" class="alert alert--info" role="status">
+          </div>
+          <div class="form__actions">
+            <button class="btn btn--secondary" type="button">Hủy</button>
+            <button class="btn btn--primary" type="submit">Chuẩn bị email</button>
+          </div>
+        </form>
+      </div>
+    </template>
+    <div id="modal-root">
+    </div>
+    <div id="toast-root" aria-live="polite">
+    </div>
+    <script type="module" src="../js/main.js">
+    </script>
   </body>
 </html>

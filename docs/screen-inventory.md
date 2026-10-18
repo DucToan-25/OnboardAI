@@ -1,5 +1,7 @@
 # Bảng màn hình UI
 
+> Cập nhật 15/10/2026: giữ đủ 19 màn hình và phân công; các màn hình hiện hiển thị nội dung tĩnh trong HTML. Tìm/lọc, modal, form và shell chạy bằng JS thuần. Các ghi chú về repository/seed/AI ở bảng cũ bên dưới là lịch sử trước đợt dọn; không còn là trạng thái runtime. Không còn ảnh tham chiếu hay bộ test cũ trong repository.
+
 Shell/UI-17 cập nhật theo yêu cầu 07/10/2026: logo header toggle sidebar trên cả bốn vai trò; bỏ hamburger/dấu X/sidebar header trùng. Desktop thu gọn mở rộng nội dung, mobile drawer giữ bàn phím/Escape. UI-17 chuyển sang thông tin tổ chức, quy tắc hội nhập, tổng quan kho quản trị và liên kết trang hiện có; không còn form câu trả lời AI mẫu.
 
 UI-PUBLIC điều hướng theo vị trí cuộn: màu primary và gạch chân chuyển động khi hover/focus/active; `is-active` đồng bộ `aria-current="location"`. Dùng anchor thật, giảm chuyển động theo prefers-reduced-motion. Desktop Thông báo/Sự kiện cùng hàng giữ mục người dùng vừa chọn; mobile theo thứ tự section dọc.
@@ -31,4 +33,4 @@ Theo phân công trong AGENTS.md. Mỗi màn hình vẫn có cùng owner; các b
 | UI-17 | SV3 | admin-system-settings.html | Admin | Quản lý hệ thống: thống kê, tổ chức/hội nhập, preview/validation/Hủy/khôi phục |
 | UI-18 | SV3 | 404.html | Public | Cùng CSS/JS lỗi với 403 |
 
-Kiểm tra tích hợp xem [ui-validation.md](ui-validation.md). 18 trang đã dựng và kiểm tra render/responsive ở mức UI; chưa đánh dấu hoàn thành CRUD/API/AI nghiệp vụ hoặc bàn giao BTL. Thiết kế đủ 18 frame, owner review và OBS cần nhóm bổ sung. Các ảnh tham chiếu hiện có được giữ trong design/references.
+Đã kiểm tra 19 màn hình ở 1440/768/390px sau khi chuyển sang HTML tĩnh. Chưa tích hợp đăng nhập, CRUD, API hoặc AI.

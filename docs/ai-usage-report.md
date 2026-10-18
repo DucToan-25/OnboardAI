@@ -1,5 +1,10 @@
 # Báo cáo AI hỗ trợ sửa giao diện
 
+## UI-05 — khôi phục mật khẩu — 08/10/2026
+
+- Thay hướng dẫn quên mật khẩu gây nhầm bằng luồng xác minh email + số điện thoại và form đặt mật khẩu mới trong cùng modal. Dùng users/repository và validation chung; không tạo trang/helper riêng.
+- Vì adapter hiện `write=false`, kết quả thành công ghi rõ là preview, không giả gửi email hoặc lưu mật khẩu. Nút Liên hệ HR vẫn giữ cho trường hợp cần hỗ trợ.
+
 ## Shell chung và UI-17 — yêu cầu 07/10/2026
 
 - Codex sửa layout chung: logo header là toggle duy nhất, bỏ hamburger/dấu X sidebar và tiêu đề lặp; desktop mở rộng nội dung khi đóng, mobile giữ drawer/accessibility. Xóa selector/markup cũ, không dựng shell theo từng role.
@@ -43,3 +48,9 @@ Kiểm tra source: năm module trang và hook DOM tương ứng; kiểm tra tíc
 - Tái sử dụng button/card/toolbar/badge/pagination/modal, format, icon và entry main. CSS đặc thù chỉ trong index.css. Các nội dung nội bộ/chính sách chưa có thể hiện rõ trạng thái chờ; ảnh bài viết dùng icon thay thế.
 - Patch components.css triển khai pagination theo registry có sẵn và nét vẽ btn__icon; không thêm class component công khai. Cần owner review trước merge. Kiểm tra integration/HTTP/browser và prefix triển khai đều qua; 57 tổ hợp trang/viewport.
 - Task bổ sung do SV3 điều phối theo phạm vi shell, không đại diện minh chứng cá nhân của cả ba SV. Owner review, OBS và xác nhận nội dung chính thức do nhóm bổ sung; xem ui-validation.md cho kiểm tra kỹ thuật.
+
+## Dọn giao diện tĩnh — 15/10/2026
+
+Theo yêu cầu chung của người dùng, Codex chuyển nội dung thiết kế sang HTML tĩnh, giữ 19 màn hình và helper UI dùng chung; bỏ seed, auth/repository mô phỏng, nút chọn demo, bộ chọn tình huống AI, ảnh tham chiếu và các script/cache kiểm thử. Đây là task dọn chung theo yêu cầu trực tiếp, không thay phân công owner/reviewer.
+
+Kiểm tra bằng Chrome headless cục bộ: 19 trang ở 1440/768/390px không lỗi khởi tạo, console, tài nguyên, ID trùng hay cuộn ngang; kiểm tra modal/validation, bộ lọc, khôi phục form, sidebar và ID tài liệu. Kiểm tra dependency xác nhận các module dữ liệu đã bỏ không còn được import hoặc request. Script và ảnh kiểm tra tạm được xóa sau khi chạy; các báo cáo test cũ được nhắc ở phần lịch sử phía trên cũng đã dọn. Không có đăng nhập, lưu dữ liệu hoặc AI thật.

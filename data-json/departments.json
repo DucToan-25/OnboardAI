@@ -1,0 +1,902 @@
+[
+  {
+    "id": "dept-engineering",
+    "name": "Công nghệ",
+    "description": "Phát triển và vận hành sản phẩm công nghệ.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2024-01-10",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-product",
+    "name": "Sản phẩm",
+    "description": "Nghiên cứu nhu cầu và định hướng sản phẩm.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2024-01-10",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-people",
+    "name": "Nhân sự",
+    "description": "Tuyển dụng, hội nhập và phát triển nhân viên.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2024-01-10",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-marketing",
+    "name": "Marketing",
+    "description": "Truyền thông thương hiệu và content.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-03-10",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-finance",
+    "name": "Tài chính",
+    "description": "Quản lý ngân sách và báo cáo tài chính.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-03-20",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-sales",
+    "name": "Kinh doanh",
+    "description": "Phát triển khách hàng và chăm sóc hợp đồng.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-03-30",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-ops",
+    "name": "Vận hành",
+    "description": "Hỗ trợ vận hành nội bộ và cơ sở vật chất.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-04-09",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-design",
+    "name": "Thiết kế",
+    "description": "UI/UX và nhận diện thương hiệu sản phẩm.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-04-19",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-qa",
+    "name": "Đảm bảo chất lượng",
+    "description": "Kiểm thử và đảm bảo chất lượng sản phẩm.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-04-29",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-data",
+    "name": "Dữ liệu",
+    "description": "Phân tích dữ liệu và báo cáo kinh doanh.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-05-09",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-support",
+    "name": "Chăm sóc khách hàng",
+    "description": "Hỗ trợ khách hàng và xử lý phản hồi.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-05-19",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-legal",
+    "name": "Pháp chế",
+    "description": "Tư vấn pháp lý và tuân thủ quy định.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-05-29",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-extra-013",
+    "name": "Nghiên cứu",
+    "description": "Đơn vị nghiên cứu hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-09-09",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-014",
+    "name": "Đào tạo",
+    "description": "Đơn vị đào tạo hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-09-10",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-015",
+    "name": "Mua hàng",
+    "description": "Đơn vị mua hàng hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-09-11",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-016",
+    "name": "Kho vận",
+    "description": "Đơn vị kho vận hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-09-12",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-017",
+    "name": "Truyền thông nội bộ",
+    "description": "Đơn vị truyền thông nội bộ hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-09-13",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-018",
+    "name": "An ninh thông tin",
+    "description": "Đơn vị an ninh thông tin hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-09-14",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-019",
+    "name": "Hạ tầng",
+    "description": "Đơn vị hạ tầng hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-09-15",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-020",
+    "name": "Mobile",
+    "description": "Đơn vị mobile hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "inactive",
+    "createdAt": "2025-09-16",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-021",
+    "name": "Backend",
+    "description": "Đơn vị backend hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-09-17",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-022",
+    "name": "Frontend",
+    "description": "Đơn vị frontend hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-09-18",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-023",
+    "name": "DevOps",
+    "description": "Đơn vị devops hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-09-19",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-024",
+    "name": "AI Lab",
+    "description": "Đơn vị ai lab hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-09-20",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-025",
+    "name": "Partnership",
+    "description": "Đơn vị partnership hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-09-21",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-026",
+    "name": "Customer Success",
+    "description": "Đơn vị customer success hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-09-22",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-027",
+    "name": "Content",
+    "description": "Đơn vị content hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-09-23",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-028",
+    "name": "Nghiên cứu 2",
+    "description": "Đơn vị nghiên cứu 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-09-24",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-029",
+    "name": "Đào tạo 2",
+    "description": "Đơn vị đào tạo 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-09-25",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-030",
+    "name": "Mua hàng 2",
+    "description": "Đơn vị mua hàng 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "inactive",
+    "createdAt": "2025-09-26",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-031",
+    "name": "Kho vận 2",
+    "description": "Đơn vị kho vận 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-09-27",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-032",
+    "name": "Truyền thông nội bộ 2",
+    "description": "Đơn vị truyền thông nội bộ 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-09-28",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-033",
+    "name": "An ninh thông tin 2",
+    "description": "Đơn vị an ninh thông tin 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-09-29",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-034",
+    "name": "Hạ tầng 2",
+    "description": "Đơn vị hạ tầng 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-09-30",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-035",
+    "name": "Mobile 2",
+    "description": "Đơn vị mobile 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-10-01",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-036",
+    "name": "Backend 2",
+    "description": "Đơn vị backend 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-10-02",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-037",
+    "name": "Frontend 2",
+    "description": "Đơn vị frontend 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-10-03",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-038",
+    "name": "DevOps 2",
+    "description": "Đơn vị devops 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-10-04",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-039",
+    "name": "AI Lab 2",
+    "description": "Đơn vị ai lab 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-10-05",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-040",
+    "name": "Partnership 2",
+    "description": "Đơn vị partnership 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "inactive",
+    "createdAt": "2025-10-06",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-041",
+    "name": "Customer Success 2",
+    "description": "Đơn vị customer success 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-10-07",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-042",
+    "name": "Content 2",
+    "description": "Đơn vị content 2 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-10-08",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-043",
+    "name": "Nghiên cứu 3",
+    "description": "Đơn vị nghiên cứu 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-10-09",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-044",
+    "name": "Đào tạo 3",
+    "description": "Đơn vị đào tạo 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-10-10",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-045",
+    "name": "Mua hàng 3",
+    "description": "Đơn vị mua hàng 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-10-11",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-046",
+    "name": "Kho vận 3",
+    "description": "Đơn vị kho vận 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-10-12",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-047",
+    "name": "Truyền thông nội bộ 3",
+    "description": "Đơn vị truyền thông nội bộ 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-10-13",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-048",
+    "name": "An ninh thông tin 3",
+    "description": "Đơn vị an ninh thông tin 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-10-14",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-049",
+    "name": "Hạ tầng 3",
+    "description": "Đơn vị hạ tầng 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-10-15",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-050",
+    "name": "Mobile 3",
+    "description": "Đơn vị mobile 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "inactive",
+    "createdAt": "2025-10-16",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-051",
+    "name": "Backend 3",
+    "description": "Đơn vị backend 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-10-17",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-052",
+    "name": "Frontend 3",
+    "description": "Đơn vị frontend 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-10-18",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-053",
+    "name": "DevOps 3",
+    "description": "Đơn vị devops 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-10-19",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-054",
+    "name": "AI Lab 3",
+    "description": "Đơn vị ai lab 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-10-20",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-055",
+    "name": "Partnership 3",
+    "description": "Đơn vị partnership 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-10-21",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-056",
+    "name": "Customer Success 3",
+    "description": "Đơn vị customer success 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-10-22",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-057",
+    "name": "Content 3",
+    "description": "Đơn vị content 3 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-10-23",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-058",
+    "name": "Nghiên cứu 4",
+    "description": "Đơn vị nghiên cứu 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-10-24",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-059",
+    "name": "Đào tạo 4",
+    "description": "Đơn vị đào tạo 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-10-25",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-060",
+    "name": "Mua hàng 4",
+    "description": "Đơn vị mua hàng 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "inactive",
+    "createdAt": "2025-10-26",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-061",
+    "name": "Kho vận 4",
+    "description": "Đơn vị kho vận 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-10-27",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-062",
+    "name": "Truyền thông nội bộ 4",
+    "description": "Đơn vị truyền thông nội bộ 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-10-28",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-063",
+    "name": "An ninh thông tin 4",
+    "description": "Đơn vị an ninh thông tin 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-10-29",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-064",
+    "name": "Hạ tầng 4",
+    "description": "Đơn vị hạ tầng 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-10-30",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-065",
+    "name": "Mobile 4",
+    "description": "Đơn vị mobile 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-10-31",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-066",
+    "name": "Backend 4",
+    "description": "Đơn vị backend 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-11-01",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-067",
+    "name": "Frontend 4",
+    "description": "Đơn vị frontend 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-11-02",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-068",
+    "name": "DevOps 4",
+    "description": "Đơn vị devops 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-11-03",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-069",
+    "name": "AI Lab 4",
+    "description": "Đơn vị ai lab 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-11-04",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-070",
+    "name": "Partnership 4",
+    "description": "Đơn vị partnership 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "inactive",
+    "createdAt": "2025-11-05",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-071",
+    "name": "Customer Success 4",
+    "description": "Đơn vị customer success 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-11-06",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-072",
+    "name": "Content 4",
+    "description": "Đơn vị content 4 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-11-07",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-073",
+    "name": "Nghiên cứu 5",
+    "description": "Đơn vị nghiên cứu 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-11-08",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-074",
+    "name": "Đào tạo 5",
+    "description": "Đơn vị đào tạo 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-11-09",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-075",
+    "name": "Mua hàng 5",
+    "description": "Đơn vị mua hàng 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-11-10",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-076",
+    "name": "Kho vận 5",
+    "description": "Đơn vị kho vận 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-11-11",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-077",
+    "name": "Truyền thông nội bộ 5",
+    "description": "Đơn vị truyền thông nội bộ 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-11-12",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-078",
+    "name": "An ninh thông tin 5",
+    "description": "Đơn vị an ninh thông tin 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-11-13",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-079",
+    "name": "Hạ tầng 5",
+    "description": "Đơn vị hạ tầng 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-11-14",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-080",
+    "name": "Mobile 5",
+    "description": "Đơn vị mobile 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "inactive",
+    "createdAt": "2025-11-15",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-081",
+    "name": "Backend 5",
+    "description": "Đơn vị backend 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-11-16",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-082",
+    "name": "Frontend 5",
+    "description": "Đơn vị frontend 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-11-17",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-083",
+    "name": "DevOps 5",
+    "description": "Đơn vị devops 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-11-18",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-084",
+    "name": "AI Lab 5",
+    "description": "Đơn vị ai lab 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-11-19",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-085",
+    "name": "Partnership 5",
+    "description": "Đơn vị partnership 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-11-20",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-086",
+    "name": "Customer Success 5",
+    "description": "Đơn vị customer success 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-11-21",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-087",
+    "name": "Content 5",
+    "description": "Đơn vị content 5 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-11-22",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-088",
+    "name": "Nghiên cứu 6",
+    "description": "Đơn vị nghiên cứu 6 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-11-23",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-089",
+    "name": "Đào tạo 6",
+    "description": "Đơn vị đào tạo 6 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-11-24",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-090",
+    "name": "Mua hàng 6",
+    "description": "Đơn vị mua hàng 6 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "inactive",
+    "createdAt": "2025-11-25",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-091",
+    "name": "Kho vận 6",
+    "description": "Đơn vị kho vận 6 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-11-26",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-092",
+    "name": "Truyền thông nội bộ 6",
+    "description": "Đơn vị truyền thông nội bộ 6 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-11-27",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-093",
+    "name": "An ninh thông tin 6",
+    "description": "Đơn vị an ninh thông tin 6 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-11-28",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-094",
+    "name": "Hạ tầng 6",
+    "description": "Đơn vị hạ tầng 6 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-11-29",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-095",
+    "name": "Mobile 6",
+    "description": "Đơn vị mobile 6 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-11-30",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-096",
+    "name": "Backend 6",
+    "description": "Đơn vị backend 6 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-12-01",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-097",
+    "name": "Frontend 6",
+    "description": "Đơn vị frontend 6 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-12-02",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-098",
+    "name": "DevOps 6",
+    "description": "Đơn vị devops 6 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-12-03",
+    "updatedAt": "2026-09-15"
+  },
+  {
+    "id": "dept-extra-099",
+    "name": "AI Lab 6",
+    "description": "Đơn vị ai lab 6 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-12-04",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "dept-extra-100",
+    "name": "Partnership 6",
+    "description": "Đơn vị partnership 6 hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-004",
+    "status": "inactive",
+    "createdAt": "2025-12-05",
+    "updatedAt": "2026-09-15"
+  }
+]

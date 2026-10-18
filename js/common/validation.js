@@ -36,6 +36,7 @@ export function validateForm(values, rules) {
       else if (rule.type === 'phone') valid = /^\+?[\d ()-]{8,20}$/.test(value) && value.replace(/\D/g, '').length >= 8;
       else if (rule.type === 'url') valid = isSafeUrl(value, { allowRelative: Boolean(rule.allowRelative) });
       else if (rule.type === 'maxLength') valid = value.length <= Number(rule.maxLength ?? rule.value ?? rule.max);
+      else if (rule.type === 'minLength') valid = value.length >= Number(rule.minLength ?? rule.value ?? rule.min);
       if (!valid) {
         errors[name] = rule.message || 'Vui lòng kiểm tra lại trường này.';
         break;

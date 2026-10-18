@@ -1,4 +1,3 @@
-import { APP_CONFIG } from './app.js';
 
 export const ROLES = Object.freeze({ NEWHIRE: 'newhire', MENTOR: 'mentor', HR: 'hr', ADMIN: 'admin' });
 export const ROLE_LABELS = Object.freeze({ newhire: 'Nhân sự mới', mentor: 'Người hướng dẫn', hr: 'Nhân sự', admin: 'Quản trị viên' });
@@ -36,10 +35,3 @@ export const ROLE_MENUS = Object.freeze({
     { pageId: 'admin-system-settings', label: 'Quản lý hệ thống', icon: 'settings' }, library, profile,
   ],
 });
-
-// Tất cả trang đã đăng ký dùng cùng home chính thức của vai trò.
-export function getPreviewHome(role) {
-  const home = ROLE_HOME[role];
-  if (!home) return 'login.html';
-  return APP_CONFIG.availablePages.includes(home.replace('.html', '')) ? home : 'profile.html';
-}

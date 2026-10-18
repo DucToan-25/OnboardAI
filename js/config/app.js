@@ -1,5 +1,5 @@
 export const APP_CONFIG = Object.freeze({
-  mode: 'preview',
+  mode: 'ui',
   timeZone: 'Asia/Ho_Chi_Minh',
   availablePages: [
     'index',

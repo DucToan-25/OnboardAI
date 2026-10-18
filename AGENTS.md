@@ -1,5 +1,17 @@
 # AGENTS.md — Quy tắc phát triển giao diện OnboardAI
 
+## Phạm vi hiện hành ngày 15/10/2026 — giao diện tĩnh
+
+Theo yêu cầu mới của nhóm: chỉ giữ mã nguồn web và tài nguyên giao diện cần thiết; xóa ảnh tham chiếu/ảnh kiểm thử, cache, script test cũ và dữ liệu test. Giữ **nội dung tĩnh giống thiết kế** trong HTML, không thay toàn bộ bằng trạng thái rỗng.
+
+- Card/bảng/nội dung/form nằm trong các HTML hiện có; modal đặc thù dùng `template` trong trang cha và khung modal chung. Không có seed, mock repository, tài khoản demo, giả lập phiên hoặc bộ chọn tình huống AI.
+- `main.js` dựng shell, lấy vai trò bố cục từ route/query hợp lệ rồi gọi `initPage({ currentUser, ui, pageId })`. `currentUser` chỉ mang role và tên hiển thị tĩnh; không phải danh tính đã xác thực. Trang mở trực tiếp qua HTTP.
+- `js/common/page-ui.js` dùng lại modal/validation chung cho form và lọc hàng HTML. Tên, ID mẫu trong HTML chỉ phục vụ thiết kế. Không dựng kho dữ liệu ẩn để thay seed.
+- Nút chọn demo và điều khiển kiểm thử đã bỏ. Giữ các nút thuộc thiết kế; thao tác cần dữ liệu thông báo chưa kết nối, không ghi hoặc báo thành công giả.
+- Giữ logo, avatar, SVG, CSS/JS cần dùng, server HTTP nhỏ và tài liệu quy tắc. Không lưu lại script/ảnh/cache kiểm thử tạm vào repo.
+- Các mục bên dưới về seed/repository/auth/permissions và AI fixture là hợp đồng dự kiến cho **giai đoạn dữ liệu sau**, không mô tả triển khai hiện tại và không yêu cầu tái tạo file vừa dọn. Phân công, đường dẫn trang, token, registry CSS, responsive và helper UI vẫn giữ nguyên.
+
+
 > Dùng chung cho Codex trong VS Code và cả ba thành viên. Đặt file này ở thư mục gốc của repository, commit cùng mã nguồn. Trước mỗi nhiệm vụ, đọc file này, `README.md`, bảng màn hình và các thành phần chung đang có. Không dựng một bộ khung riêng cho từng người hoặc từng vai trò.
 
 **Bản chi tiết ngày 04/10/2026.** SV1/SV2/SV3 lần lượt là người 1/người 2/người 3 trong phân công của nhóm. Trọng tâm: một hệ giao diện chung, mỗi file chung có owner, class CSS có danh mục cố định, giao diện tách dữ liệu để tích hợp sau.

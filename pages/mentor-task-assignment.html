@@ -1,59 +1,313 @@
 <!doctype html>
 <html lang="vi">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Giao nhiệm vụ | OnboardAI</title>
-  <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../css/base.css" />
-  <link rel="stylesheet" href="../css/layout.css" />
-  <link rel="stylesheet" href="../css/components.css" />
-  <link rel="stylesheet" href="../css/pages/mentor-task-assignment.css" />
-  <link rel="stylesheet" href="../css/responsive.css" />
-</head>
-<body class="page page--mentor-task-assignment" data-page="mentor-task-assignment">
-  <div class="app-shell">
-    <header class="app-header" id="app-header"></header>
-    <aside class="app-sidebar" id="app-sidebar"></aside>
-    <main class="app-main" id="main-content">
-      <div class="page-header">
-        <div>
-          <h1 class="page-header__title">Giao nhiệm vụ</h1>
-          <p class="page-header__description">Tạo nhiệm vụ cho mentee và gợi ý checklist bằng AI.</p>
-        </div>
-      </div>
-      <div class="page-body" data-region="task-page">
-        <div data-region="url-state" aria-live="polite" hidden></div>
-        <div class="content-grid content-grid--2">
-          <section class="card">
-            <div class="card__header"><h2 class="card__title" data-region="task-form-title">Giao nhiệm vụ mới</h2></div>
-            <form class="form" data-region="task-form" novalidate></form>
-            <div class="mentor-tasks__preview" data-region="task-preview" aria-live="polite" hidden></div>
-          </section>
-          <section class="card ai-panel">
-            <div class="ai-panel__header"><h2 class="card__title">Gợi ý checklist AI</h2><p class="form-field__hint">Dữ liệu minh họa để duyệt checklist trước khi giao việc.</p></div>
-            <form class="form ai-panel__input" data-region="checklist-form" novalidate></form>
-            <div data-region="checklist-state" aria-live="polite"></div>
-            <div data-region="checklist-result" hidden></div>
-          </section>
-        </div>
-        <section class="card">
-          <div class="card__header"><h2 class="card__title">Nhiệm vụ đã được giao</h2><span class="form-field__hint" data-region="task-count"></span></div>
-          <form class="toolbar" data-region="task-filters" role="search">
-            <div class="form-field toolbar__search"><label class="form-field__label" for="task-search">Tìm nhiệm vụ</label><input class="form-field__control" type="search" id="task-search" name="search"></div>
-            <div class="form-field toolbar__filters"><label class="form-field__label" for="task-mentee-filter">Mentee</label><select class="form-field__control" id="task-mentee-filter" name="newHireId"></select></div>
-            <div class="form-field toolbar__filters"><label class="form-field__label" for="task-status-filter">Trạng thái</label><select class="form-field__control" id="task-status-filter" name="status"></select></div>
-          </form>
-          <div data-region="task-state" aria-live="polite"></div>
-          <div class="table-wrap" data-region="task-table-wrap" hidden>
-            <table class="table"><thead><tr><th scope="col">Nhiệm vụ</th><th scope="col">Mentee</th><th scope="col">Hạn hoàn thành</th><th scope="col">Trạng thái</th><th scope="col">Thao tác</th></tr></thead><tbody data-region="task-rows"></tbody></table>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Giao nhiệm vụ | OnboardAI</title>
+    <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages/mentor-task-assignment.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+  </head>
+  <body class="page page--mentor-task-assignment" data-page="mentor-task-assignment" data-display-name="Trần Quang Huy" data-layout-role="mentor">
+    <div class="app-shell is-collapsed">
+      <header class="app-header" id="app-header">
+      </header>
+      <aside class="app-sidebar" id="app-sidebar">
+      </aside>
+      <main class="app-main" id="main-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-header__title">Giao nhiệm vụ</h1>
+            <p class="page-header__description">Tạo nhiệm vụ cho mentee và gợi ý checklist bằng AI.</p>
           </div>
-        </section>
-      </div>
-    </main>
-  </div>
-  <div id="modal-root"></div>
-  <div id="toast-root" aria-live="polite"></div>
-  <script type="module" src="../js/main.js"></script>
-</body>
+        </div>
+        <div class="page-body" data-region="task-page">
+          <div data-region="url-state" aria-live="polite" hidden="" class="view-state" role="status" aria-busy="false">
+          </div>
+          <div class="content-grid content-grid--2">
+            <section class="card">
+              <div class="card__header">
+                <h2 class="card__title" data-region="task-form-title">Giao nhiệm vụ mới</h2>
+              </div>
+              <form class="form" data-region="task-form" novalidate="">
+                <div class="form-field">
+                  <label class="form-field__label" for="field-newHireId-1">
+                    Mentee
+                    <span class="form-field__required" aria-hidden="true">*</span>
+                  </label>
+                  <select class="form-field__control" id="field-newHireId-1" name="newHireId" required="" aria-describedby="field-newHireId-1-error">
+                    <option value="" selected="">— Chọn mentee —</option>
+                    <option value="nh-001">Nguyễn Minh Anh</option>
+                    <option value="nh-002">Trần Thu Lan</option>
+                  </select>
+                  <p class="form-field__error" id="field-newHireId-1-error" data-error-for="newHireId" hidden="">
+                  </p>
+                </div>
+                <div class="form-field">
+                  <label class="form-field__label" for="field-title-2">
+                    Tên nhiệm vụ
+                    <span class="form-field__required" aria-hidden="true">*</span>
+                  </label>
+                  <input type="text" class="form-field__control" id="field-title-2" name="title" required="" aria-describedby="field-title-2-error" value="">
+                  <p class="form-field__error" id="field-title-2-error" data-error-for="title" hidden="">
+                  </p>
+                </div>
+                <div class="form-field">
+                  <label class="form-field__label" for="field-description-3">Mô tả</label>
+                  <textarea class="form-field__control" id="field-description-3" name="description" aria-describedby="field-description-3-error"></textarea>
+                  <p class="form-field__error" id="field-description-3-error" data-error-for="description" hidden="">
+                  </p>
+                </div>
+                <div class="form-field">
+                  <label class="form-field__label" for="field-dueDate-4">
+                    Hạn hoàn thành
+                    <span class="form-field__required" aria-hidden="true">*</span>
+                  </label>
+                  <input type="date" class="form-field__control" id="field-dueDate-4" name="dueDate" required="" aria-describedby="field-dueDate-4-error" value="">
+                  <p class="form-field__error" id="field-dueDate-4-error" data-error-for="dueDate" hidden="">
+                  </p>
+                </div>
+                <div class="form__actions">
+                  <button class="btn btn--primary btn--sm" type="submit" data-action="preview-task">Giao nhiệm vụ</button>
+                  <button class="btn btn--secondary btn--sm" type="button" data-action="reset-task">Hủy</button>
+                  <button class="btn btn--secondary btn--sm" type="button" data-action="new-task">Tạo mới</button>
+                </div>
+              </form>
+              <div class="mentor-tasks__preview" data-region="task-preview" aria-live="polite" hidden="">
+              </div>
+            </section>
+            <section class="card ai-panel">
+              <div class="ai-panel__header">
+                <h2 class="card__title">Gợi ý checklist AI</h2>
+                <p class="form-field__hint">Dữ liệu minh họa để duyệt checklist trước khi giao việc.</p>
+              </div>
+              <form class="form ai-panel__input" data-region="checklist-form" novalidate="">
+                <div class="form-field">
+                  <label class="form-field__label" for="field-newHireId-5">
+                    Mentee
+                    <span class="form-field__required" aria-hidden="true">*</span>
+                  </label>
+                  <select class="form-field__control" id="field-newHireId-5" name="newHireId" required="" aria-describedby="field-newHireId-5-error">
+                    <option value="" selected="">— Chọn mentee —</option>
+                    <option value="nh-001">Nguyễn Minh Anh</option>
+                    <option value="nh-002">Trần Thu Lan</option>
+                  </select>
+                  <p class="form-field__error" id="field-newHireId-5-error" data-error-for="newHireId" hidden="">
+                  </p>
+                </div>
+                <div class="form-field">
+                  <label class="form-field__label" for="field-goal-6">
+                    Mục tiêu hội nhập
+                    <span class="form-field__required" aria-hidden="true">*</span>
+                  </label>
+                  <textarea class="form-field__control" id="field-goal-6" name="goal" required="" aria-describedby="field-goal-6-error"></textarea>
+                  <p class="form-field__error" id="field-goal-6-error" data-error-for="goal" hidden="">
+                  </p>
+                </div>
+                <div class="form-field">
+                  <label class="form-field__label" for="field-dueDate-7">
+                    Hạn hoàn thành đề xuất
+                    <span class="form-field__required" aria-hidden="true">*</span>
+                  </label>
+                  <input type="date" class="form-field__control" id="field-dueDate-7" name="dueDate" required="" aria-describedby="field-dueDate-7-error" value="">
+                  <p class="form-field__error" id="field-dueDate-7-error" data-error-for="dueDate" hidden="">
+                  </p>
+                </div>
+                <button class="btn btn--primary btn--sm" type="submit" data-action="generate-checklist">Gợi ý checklist</button>
+              </form>
+              <div data-region="checklist-state" aria-live="polite" class="view-state view-state--empty" role="status" aria-busy="false">
+                <p class="view-state__message">Nhập mục tiêu và hạn đề xuất để xem checklist mẫu.</p>
+              </div>
+              <div data-region="checklist-result" hidden="">
+              </div>
+            </section>
+          </div>
+          <section class="card">
+            <div class="card__header">
+              <h2 class="card__title">Nhiệm vụ đã được giao</h2>
+              <span class="form-field__hint" data-region="task-count">9 / 9 nhiệm vụ</span>
+            </div>
+            <form class="toolbar" data-region="task-filters" role="search">
+              <div class="form-field toolbar__search">
+                <label class="form-field__label" for="task-search">Tìm nhiệm vụ</label>
+                <input class="form-field__control" type="search" id="task-search" name="search" value="">
+              </div>
+              <div class="form-field toolbar__filters">
+                <label class="form-field__label" for="task-mentee-filter">Mentee</label>
+                <select class="form-field__control" id="task-mentee-filter" name="newHireId">
+                  <option value="" selected="">Tất cả mentee</option>
+                  <option value="nh-001">Nguyễn Minh Anh</option>
+                  <option value="nh-002">Trần Thu Lan</option>
+                </select>
+              </div>
+              <div class="form-field toolbar__filters">
+                <label class="form-field__label" for="task-status-filter">Trạng thái</label>
+                <select class="form-field__control" id="task-status-filter" name="status">
+                  <option value="" selected="">Tất cả trạng thái</option>
+                  <option value="pending">Chưa bắt đầu</option>
+                  <option value="in_progress">Đang thực hiện</option>
+                  <option value="submitted">Chờ duyệt</option>
+                  <option value="changes_requested">Cần chỉnh sửa</option>
+                  <option value="completed">Hoàn thành</option>
+                  <option value="canceled">Đã hủy</option>
+                </select>
+              </div>
+            </form>
+            <div data-region="task-state" aria-live="polite" class="view-state" role="status" aria-busy="false" hidden="">
+            </div>
+            <div class="table-wrap" data-region="task-table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Nhiệm vụ</th>
+                    <th scope="col">Mentee</th>
+                    <th scope="col">Hạn hoàn thành</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody data-region="task-rows">
+                  <tr data-id="task-001">
+                    <td>
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="view-task" data-id="task-001">Hoàn thiện hồ sơ</button>
+                    </td>
+                    <td>Nguyễn Minh Anh</td>
+                    <td class="table__cell--nowrap">28/09/2026</td>
+                    <td>
+                      <span class="badge badge--success">Hoàn thành</span>
+                    </td>
+                    <td class="table__actions">
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-task" data-id="task-001">Sửa</button>
+                      <button class="btn btn--danger btn--sm" type="button" data-action="cancel-task" data-id="task-001" disabled="">Hủy nhiệm vụ</button>
+                    </td>
+                  </tr>
+                  <tr data-id="task-002">
+                    <td>
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="view-task" data-id="task-002">Đọc sổ tay nhân viên</button>
+                    </td>
+                    <td>Nguyễn Minh Anh</td>
+                    <td class="table__cell--nowrap">30/09/2026</td>
+                    <td>
+                      <span class="badge badge--success">Hoàn thành</span>
+                    </td>
+                    <td class="table__actions">
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-task" data-id="task-002">Sửa</button>
+                      <button class="btn btn--danger btn--sm" type="button" data-action="cancel-task" data-id="task-002" disabled="">Hủy nhiệm vụ</button>
+                    </td>
+                  </tr>
+                  <tr data-id="task-003">
+                    <td>
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="view-task" data-id="task-003">Đọc quy định bảo mật</button>
+                    </td>
+                    <td>Nguyễn Minh Anh</td>
+                    <td class="table__cell--nowrap">05/10/2026</td>
+                    <td>
+                      <span class="badge badge--info">Đang thực hiện</span>
+                    </td>
+                    <td class="table__actions">
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-task" data-id="task-003">Sửa</button>
+                      <button class="btn btn--danger btn--sm" type="button" data-action="cancel-task" data-id="task-003">Hủy nhiệm vụ</button>
+                    </td>
+                  </tr>
+                  <tr data-id="task-004">
+                    <td>
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="view-task" data-id="task-004">Gửi mục tiêu tuần đầu</button>
+                    </td>
+                    <td>Nguyễn Minh Anh</td>
+                    <td class="table__cell--nowrap">05/10/2026</td>
+                    <td>
+                      <span class="badge badge--info">Chờ duyệt</span>
+                    </td>
+                    <td class="table__actions">
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-task" data-id="task-004">Sửa</button>
+                      <button class="btn btn--danger btn--sm" type="button" data-action="cancel-task" data-id="task-004">Hủy nhiệm vụ</button>
+                    </td>
+                  </tr>
+                  <tr data-id="task-005">
+                    <td>
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="view-task" data-id="task-005">Check-in với mentor</button>
+                    </td>
+                    <td>Nguyễn Minh Anh</td>
+                    <td class="table__cell--nowrap">06/10/2026</td>
+                    <td>
+                      <span class="badge badge--neutral">Chưa bắt đầu</span>
+                    </td>
+                    <td class="table__actions">
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-task" data-id="task-005">Sửa</button>
+                      <button class="btn btn--danger btn--sm" type="button" data-action="cancel-task" data-id="task-005">Hủy nhiệm vụ</button>
+                    </td>
+                  </tr>
+                  <tr data-id="task-006">
+                    <td>
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="view-task" data-id="task-006">Hoàn thành khóa học nội bộ</button>
+                    </td>
+                    <td>Nguyễn Minh Anh</td>
+                    <td class="table__cell--nowrap">07/10/2026</td>
+                    <td>
+                      <span class="badge badge--warning">Cần chỉnh sửa</span>
+                    </td>
+                    <td class="table__actions">
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-task" data-id="task-006">Sửa</button>
+                      <button class="btn btn--danger btn--sm" type="button" data-action="cancel-task" data-id="task-006">Hủy nhiệm vụ</button>
+                    </td>
+                  </tr>
+                  <tr data-id="task-007">
+                    <td>
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="view-task" data-id="task-007">Kích hoạt tài khoản công ty</button>
+                    </td>
+                    <td>Nguyễn Minh Anh</td>
+                    <td class="table__cell--nowrap">01/10/2026</td>
+                    <td>
+                      <span class="badge badge--success">Hoàn thành</span>
+                    </td>
+                    <td class="table__actions">
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-task" data-id="task-007">Sửa</button>
+                      <button class="btn btn--danger btn--sm" type="button" data-action="cancel-task" data-id="task-007" disabled="">Hủy nhiệm vụ</button>
+                    </td>
+                  </tr>
+                  <tr data-id="task-008">
+                    <td>
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="view-task" data-id="task-008">Xác nhận bàn giao thiết bị</button>
+                    </td>
+                    <td>Nguyễn Minh Anh</td>
+                    <td class="table__cell--nowrap">08/10/2026</td>
+                    <td>
+                      <span class="badge badge--neutral">Chưa bắt đầu</span>
+                    </td>
+                    <td class="table__actions">
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-task" data-id="task-008">Sửa</button>
+                      <button class="btn btn--danger btn--sm" type="button" data-action="cancel-task" data-id="task-008">Hủy nhiệm vụ</button>
+                    </td>
+                  </tr>
+                  <tr data-id="task-009">
+                    <td>
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="view-task" data-id="task-009">Tìm hiểu sản phẩm</button>
+                    </td>
+                    <td>Trần Thu Lan</td>
+                    <td class="table__cell--nowrap">08/10/2026</td>
+                    <td>
+                      <span class="badge badge--neutral">Chưa bắt đầu</span>
+                    </td>
+                    <td class="table__actions">
+                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-task" data-id="task-009">Sửa</button>
+                      <button class="btn btn--danger btn--sm" type="button" data-action="cancel-task" data-id="task-009">Hủy nhiệm vụ</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <div id="modal-root">
+    </div>
+    <div id="toast-root" aria-live="polite">
+    </div>
+    <script type="module" src="../js/main.js">
+    </script>
+  </body>
 </html>

@@ -1,5 +1,11 @@
 # Field bổ sung cho giai đoạn giao diện
 
+> Trạng thái 15/10/2026: đây là hợp đồng **dự kiến cho giai đoạn dữ liệu**, không phải mã đang chạy. Hiện tại card/bảng/form hiển thị HTML tĩnh, không có seed, repository, phiên đăng nhập hoặc AI fixture. Các mô tả xác minh/lưu/preview dữ liệu bên dưới chỉ được triển khai khi nhóm bắt đầu nối dữ liệu. Form hiện tại chỉ validate và báo chưa kết nối, không xác minh tài khoản hoặc giả đặt lại mật khẩu thành công.
+
+## Khôi phục mật khẩu — UI-05 (08/10/2026)
+
+Login xác minh một tài khoản đang hoạt động bằng cặp `users.email` + `users.phone` đã có trong seed/repository. Email được chuẩn hóa không phân biệt hoa thường; số điện thoại chỉ so sánh chữ số sau khi loại khoảng trắng/ký hiệu. Khi khớp, UI chuyển sang form `newPassword`/`confirmPassword` và kiểm tra tối thiểu 8 ký tự, có chữ và số. Bản giao diện chỉ dựng preview thành công; không gửi email giả, không ghi mật khẩu vào seed và không gọi HR. Nút `contact-hr` vẫn là luồng hỗ trợ riêng cho trường hợp không xác minh được hoặc cần trợ giúp.
+
 ## Quản lý hệ thống — UI-17 (07/10/2026)
 
 Giữ bản ghi `settings.id = system`. Các field Admin được chuẩn bị sửa qua `getEditableFields`:

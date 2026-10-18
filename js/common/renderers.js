@@ -1,5 +1,3 @@
-import { STATUS_META } from '../config/statuses.js';
-import { formatDate, getTodayDate } from './format.js';
 import { isSafeUrl } from './validation.js';
 
 let fieldCounter = 0;
@@ -65,47 +63,4 @@ export function createField({ name, label, type = 'text', value = '', required =
     const help = document.createElement('p'); help.className = 'form-field__hint'; help.id = `${id}-hint`; help.textContent = hint; field.append(help);
   }
   return field;
-}
-
-export function createStatusBadge(entity, status) {
-  const meta = STATUS_META[entity]?.[status] || { label: 'Chưa xác định', tone: 'neutral' };
-  const badge = document.createElement('span'); badge.className = `badge badge--${meta.tone}`; badge.textContent = meta.label;
-  return badge;
-}
-
-export function createDocumentCard(record, { onOpen, compact = false } = {}) {
-  const card = document.createElement('article'); card.className = `card document-card${compact ? ' card--compact' : ''}`;
-  card.dataset.id = record.id;
-  const icon = document.createElement('span'); icon.className = 'document-card__icon'; icon.append(createIcon('file'));
-  const title = document.createElement('h3'); title.className = 'document-card__title'; title.textContent = record.title;
-  const category = document.createElement('span'); category.className = 'badge badge--info'; category.textContent = record.category;
-  const description = document.createElement('p'); description.className = 'document-card__meta';
-  description.textContent = record.description || String(record.content || '').split('\n')[0];
-  const actions = document.createElement('div'); actions.className = 'document-card__actions';
-  const date = document.createElement('span'); date.className = 'document-card__meta'; date.textContent = formatDate(record.updatedAt ? getTodayDate(record.updatedAt) : '');
-  const open = document.createElement(onOpen ? 'button' : 'a'); open.className = 'btn btn--secondary btn--sm';
-  open.textContent = 'Đọc tài liệu'; open.dataset.action = 'open-document'; open.dataset.id = record.id;
-  open.setAttribute('aria-label', `Đọc ${record.title}`);
-  if (onOpen) { open.type = 'button'; open.addEventListener('click', () => onOpen(record)); }
-  else open.href = `document-detail.html?${new URLSearchParams({ id: record.id })}`;
-  actions.append(date, open); card.append(icon, category, title, description, actions);
-  return card;
-}
-
-export function createTaskItem(task, { onOpen, showDueDate = true, showStatus = true } = {}) {
-  const item = document.createElement('div'); item.className = 'task-item'; item.dataset.id = task.id;
-  const icon = createIcon(task.status === 'completed' ? 'check' : 'clock', 'task-item__check');
-  const body = document.createElement('div'); body.className = 'task-item__body';
-  const title = document.createElement(onOpen ? 'button' : 'a');
-  title.className = onOpen ? 'btn btn--ghost btn--sm task-item__title' : 'task-item__title'; title.textContent = task.title;
-  title.dataset.action = 'open-task'; title.dataset.id = task.id;
-  if (onOpen) { title.type = 'button'; title.addEventListener('click', () => onOpen(task)); }
-  else title.href = `newhire-checklist.html?${new URLSearchParams({ id: task.id })}`;
-  const meta = document.createElement('p'); meta.className = 'task-item__meta'; meta.textContent = `Hạn: ${formatDate(task.dueDate)}`;
-  body.append(title);
-  if (showDueDate) body.append(meta);
-  const actions = document.createElement('div'); actions.className = 'task-item__actions'; actions.append(createStatusBadge('tasks', task.status));
-  item.append(icon, body);
-  if (showStatus) item.append(actions);
-  return item;
 }
