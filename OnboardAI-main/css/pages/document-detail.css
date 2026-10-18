@@ -1,0 +1,15 @@
+.page--document-detail .doc-detail__content {
+  display: grid;
+  gap: var(--space-5);
+  font-size: var(--font-size-small);
+  overflow-wrap: anywhere;
+}
+.page--document-detail .doc-detail__section {
+  display: grid;
+  gap: var(--space-2);
+  white-space: pre-line;
+  scroll-margin-top: var(--space-6);
+}
+.page--document-detail .doc-detail__heading { font-size: var(--font-size-body); }
+.page--document-detail .doc-detail__toc { align-self: start; }
+.page--document-detail .doc-detail__toc-links { display: grid; gap: var(--space-3); font-size: var(--font-size-small); }

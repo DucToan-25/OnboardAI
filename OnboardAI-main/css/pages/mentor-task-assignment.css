@@ -1,0 +1,12 @@
+.page--mentor-task-assignment .mentor-tasks__preview {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.page--mentor-task-assignment .mentor-tasks__description {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

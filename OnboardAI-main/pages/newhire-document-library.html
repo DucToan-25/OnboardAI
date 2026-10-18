@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Thư viện tài liệu | OnboardAI</title>
+    <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+  </head>
+  <body class="page page--newhire-document-library" data-page="newhire-document-library" data-display-name="Nguyễn Minh Anh" data-layout-role="newhire">
+    <div class="app-shell is-collapsed">
+      <header class="app-header" id="app-header">
+      </header>
+      <aside class="app-sidebar" id="app-sidebar">
+      </aside>
+      <main class="app-main" id="main-content">
+        <div class="page-header">
+          <h1 class="page-header__title">Thư viện tài liệu</h1>
+        </div>
+        <div class="page-body">
+          <form class="toolbar" data-region="document-filters" role="search">
+            <div class="form-field toolbar__search">
+              <label class="form-field__label" for="document-search">Tìm tài liệu</label>
+              <input class="form-field__control" type="search" id="document-search" name="search" placeholder="Nhập tên tài liệu…" value="">
+            </div>
+            <div class="form-field toolbar__filters">
+              <label class="form-field__label" for="document-category">Chủ đề</label>
+              <select class="form-field__control" id="document-category" name="category">
+                <option value="" selected="">Tất cả chủ đề</option>
+                <option value="Chính sách">Chính sách</option>
+                <option value="Hướng dẫn">Hướng dẫn</option>
+                <option value="Quy trình">Quy trình</option>
+                <option value="Biểu mẫu">Biểu mẫu</option>
+              </select>
+            </div>
+          </form>
+          <div data-region="library-state" aria-live="polite" class="view-state" role="status" aria-busy="false" hidden="">
+          </div>
+          <div class="content-grid content-grid--3" data-region="documents">
+            <article class="card document-card" data-id="doc-001">
+              <span class="document-card__icon">
+                <svg class="btn__icon" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <use href="../assets/icons/sprite.svg#file">
+                  </use>
+                </svg>
+              </span>
+              <span class="badge badge--info">Chính sách</span>
+              <h3 class="document-card__title">Sổ tay nhân viên</h3>
+              <p class="document-card__meta">Tổng quan về văn hóa, quy định và quyền lợi dành cho nhân viên mới.</p>
+              <div class="document-card__actions">
+                <span class="document-card__meta">28/09/2026</span>
+                <a class="btn btn--secondary btn--sm" data-action="open-document" data-id="doc-001" aria-label="Đọc Sổ tay nhân viên" href="document-detail.html?id=doc-001">Đọc tài liệu</a>
+              </div>
+            </article>
+            <article class="card document-card" data-id="doc-002">
+              <span class="document-card__icon">
+                <svg class="btn__icon" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <use href="../assets/icons/sprite.svg#file">
+                  </use>
+                </svg>
+              </span>
+              <span class="badge badge--info">Chính sách</span>
+              <h3 class="document-card__title">Quy định bảo mật</h3>
+              <p class="document-card__meta">Các bước bảo vệ thông tin trong công ty.</p>
+              <div class="document-card__actions">
+                <span class="document-card__meta">28/09/2026</span>
+                <a class="btn btn--secondary btn--sm" data-action="open-document" data-id="doc-002" aria-label="Đọc Quy định bảo mật" href="document-detail.html?id=doc-002">Đọc tài liệu</a>
+              </div>
+            </article>
+            <article class="card document-card" data-id="doc-003">
+              <span class="document-card__icon">
+                <svg class="btn__icon" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <use href="../assets/icons/sprite.svg#file">
+                  </use>
+                </svg>
+              </span>
+              <span class="badge badge--info">Hướng dẫn</span>
+              <h3 class="document-card__title">Hướng dẫn công cụ</h3>
+              <p class="document-card__meta">Hướng dẫn sử dụng các công cụ và kênh liên lạc nội bộ.</p>
+              <div class="document-card__actions">
+                <span class="document-card__meta">28/09/2026</span>
+                <a class="btn btn--secondary btn--sm" data-action="open-document" data-id="doc-003" aria-label="Đọc Hướng dẫn công cụ" href="document-detail.html?id=doc-003">Đọc tài liệu</a>
+              </div>
+            </article>
+            <article class="card document-card" data-id="doc-004">
+              <span class="document-card__icon">
+                <svg class="btn__icon" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <use href="../assets/icons/sprite.svg#file">
+                  </use>
+                </svg>
+              </span>
+              <span class="badge badge--info">Quy trình</span>
+              <h3 class="document-card__title">Quy trình làm việc</h3>
+              <p class="document-card__meta">Các bước tiếp nhận và hoàn thành công việc.</p>
+              <div class="document-card__actions">
+                <span class="document-card__meta">28/09/2026</span>
+                <a class="btn btn--secondary btn--sm" data-action="open-document" data-id="doc-004" aria-label="Đọc Quy trình làm việc" href="document-detail.html?id=doc-004">Đọc tài liệu</a>
+              </div>
+            </article>
+            <article class="card document-card" data-id="doc-005">
+              <span class="document-card__icon">
+                <svg class="btn__icon" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <use href="../assets/icons/sprite.svg#file">
+                  </use>
+                </svg>
+              </span>
+              <span class="badge badge--info">Biểu mẫu</span>
+              <h3 class="document-card__title">Mẫu mục tiêu tuần đầu</h3>
+              <p class="document-card__meta">Mẫu tham khảo để xác định mục tiêu hội nhập.</p>
+              <div class="document-card__actions">
+                <span class="document-card__meta">28/09/2026</span>
+                <a class="btn btn--secondary btn--sm" data-action="open-document" data-id="doc-005" aria-label="Đọc Mẫu mục tiêu tuần đầu" href="document-detail.html?id=doc-005">Đọc tài liệu</a>
+              </div>
+            </article>
+            <article class="card document-card" data-id="doc-006">
+              <span class="document-card__icon">
+                <svg class="btn__icon" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <use href="../assets/icons/sprite.svg#file">
+                  </use>
+                </svg>
+              </span>
+              <span class="badge badge--info">Hướng dẫn</span>
+              <h3 class="document-card__title">Hướng dẫn check-in</h3>
+              <p class="document-card__meta">Những điểm cần chuẩn bị cho buổi trao đổi với mentor.</p>
+              <div class="document-card__actions">
+                <span class="document-card__meta">28/09/2026</span>
+                <a class="btn btn--secondary btn--sm" data-action="open-document" data-id="doc-006" aria-label="Đọc Hướng dẫn check-in" href="document-detail.html?id=doc-006">Đọc tài liệu</a>
+              </div>
+            </article>
+            <article class="card document-card" data-id="doc-dev-only">
+              <span class="document-card__icon">
+                <svg class="btn__icon" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <use href="../assets/icons/sprite.svg#file">
+                  </use>
+                </svg>
+              </span>
+              <span class="badge badge--info">Quy trình</span>
+              <h3 class="document-card__title">Quy ước phát triển sản phẩm</h3>
+              <p class="document-card__meta">Tài liệu trong phạm vi phòng Phát triển sản phẩm.</p>
+              <div class="document-card__actions">
+                <span class="document-card__meta">28/09/2026</span>
+                <a class="btn btn--secondary btn--sm" data-action="open-document" data-id="doc-dev-only" aria-label="Đọc Quy ước phát triển sản phẩm" href="document-detail.html?id=doc-dev-only">Đọc tài liệu</a>
+              </div>
+            </article>
+          </div>
+          <p class="form-field__hint" data-region="document-count" aria-live="polite">7 tài liệu</p>
+        </div>
+      </main>
+    </div>
+    <div id="modal-root">
+    </div>
+    <div id="toast-root" aria-live="polite">
+    </div>
+    <script type="module" src="../js/main.js">
+    </script>
+  </body>
+</html>

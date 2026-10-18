@@ -1,0 +1,21 @@
+.page--admin-user-management .admin-users__summary {
+  margin-top: var(--space-3);
+}
+
+.page--admin-user-management .admin-users__preview {
+  color: var(--color-muted);
+  font-size: var(--font-size-caption);
+}
+
+.page--admin-user-management .admin-users__account {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 220px;
+}
+
+.page--admin-user-management .admin-users__meta {
+  color: var(--color-muted);
+  font-size: var(--font-size-caption);
+  overflow-wrap: anywhere;
+}

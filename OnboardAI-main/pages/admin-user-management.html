@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý tài khoản | OnboardAI</title>
+    <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages/admin-user-management.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+  </head>
+  <body class="page page--admin-user-management" data-page="admin-user-management" data-display-name="Quản trị viên" data-layout-role="admin">
+    <div class="app-shell is-collapsed">
+      <header class="app-header" id="app-header">
+      </header>
+      <aside class="app-sidebar" id="app-sidebar">
+      </aside>
+      <main class="app-main" id="main-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-header__title">Quản lý tài khoản</h1>
+            <p class="page-header__description">Tài khoản hệ thống, vai trò và phòng ban được phân công.</p>
+          </div>
+          <div class="page-header__actions">
+            <button class="btn btn--primary" type="button" data-action="open-user-form">Thêm tài khoản</button>
+          </div>
+        </div>
+        <div class="page-body">
+          <section class="card" aria-label="Danh sách tài khoản">
+            <form class="toolbar" data-region="user-filters" role="search">
+              <div class="toolbar__search form-field">
+                <label class="form-field__label" for="user-search">Tài khoản</label>
+                <input class="form-field__control" id="user-search" name="search" type="search" placeholder="Nhập tên hoặc email…" value="">
+              </div>
+              <div class="toolbar__filters form-field">
+                <label class="form-field__label" for="user-role">Vai trò</label>
+                <select class="form-field__control" id="user-role" name="role">
+                  <option value="" selected="">Tất cả vai trò</option>
+                  <option value="newhire">Nhân sự mới</option>
+                  <option value="mentor">Người hướng dẫn</option>
+                  <option value="hr">Nhân sự</option>
+                  <option value="admin">Quản trị viên</option>
+                </select>
+              </div>
+              <div class="toolbar__filters form-field">
+                <label class="form-field__label" for="user-status">Trạng thái</label>
+                <select class="form-field__control" id="user-status" name="status">
+                  <option value="" selected="">Tất cả</option>
+                  <option value="active">Hoạt động</option>
+                  <option value="disabled">Vô hiệu hóa</option>
+                </select>
+              </div>
+              <div class="toolbar__filters form-field">
+                <label class="form-field__label" for="user-department">Phòng ban</label>
+                <select class="form-field__control" id="user-department" name="departmentId">
+                  <option value="" selected="">Tất cả phòng ban</option>
+                  <option value="dep-dev">Phát triển sản phẩm</option>
+                  <option value="dep-sales">Kinh doanh</option>
+                  <option value="dep-hr">Nhân sự</option>
+                </select>
+              </div>
+            </form>
+            <div data-region="user-state" aria-live="polite" class="view-state" role="status" aria-busy="false" hidden="">
+            </div>
+            <div class="table-wrap" data-region="user-table">
+              <table class="table">
+                <caption class="sr-only">Danh sách tài khoản hệ thống</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Tài khoản</th>
+                    <th scope="col">Vai trò</th>
+                    <th scope="col">Phòng ban</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody data-region="user-rows">
+                  <tr data-id="usr-newhire-001">
+                    <td>
+                      <div class="admin-users__account">
+                        <span class="avatar avatar--sm" aria-label="Nguyễn Minh Anh">
+                          <span class="avatar__initials">MA</span>
+                        </span>
+                        <div>
+                          <strong>Nguyễn Minh Anh</strong>
+                          <p class="admin-users__meta">minhanh@example.com</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td>Nhân sự mới</td>
+                    <td>Phát triển sản phẩm</td>
+                    <td>
+                      <span class="badge badge--success">Hoạt động</span>
+                    </td>
+                    <td class="table__actions">
+                      <button type="button" class="btn btn--secondary btn--sm" data-action="edit-user" data-id="usr-newhire-001">Sửa</button>
+                      <button type="button" class="btn btn--danger btn--sm" data-action="disable-user" data-id="usr-newhire-001">Vô hiệu hóa</button>
+                    </td>
+                  </tr>
+                  <tr data-id="usr-newhire-002">
+                    <td>
+                      <div class="admin-users__account">
+                        <span class="avatar avatar--sm" aria-label="Trần Thu Lan">
+                          <span class="avatar__initials">TL</span>
+                        </span>
+                        <div>
+                          <strong>Trần Thu Lan</strong>
+                          <p class="admin-users__meta">thulan@example.com</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td>Nhân sự mới</td>
+                    <td>Kinh doanh</td>
+                    <td>
+                      <span class="badge badge--success">Hoạt động</span>
+                    </td>
+                    <td class="table__actions">
+                      <button type="button" class="btn btn--secondary btn--sm" data-action="edit-user" data-id="usr-newhire-002">Sửa</button>
+                      <button type="button" class="btn btn--danger btn--sm" data-action="disable-user" data-id="usr-newhire-002">Vô hiệu hóa</button>
+                    </td>
+                  </tr>
+                  <tr data-id="usr-mentor-001">
+                    <td>
+                      <div class="admin-users__account">
+                        <span class="avatar avatar--sm" aria-label="Trần Quang Huy">
+                          <span class="avatar__initials">QH</span>
+                        </span>
+                        <div>
+                          <strong>Trần Quang Huy</strong>
+                          <p class="admin-users__meta">mentor@example.com</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td>Người hướng dẫn</td>
+                    <td>Phát triển sản phẩm</td>
+                    <td>
+                      <span class="badge badge--success">Hoạt động</span>
+                    </td>
+                    <td class="table__actions">
+                      <button type="button" class="btn btn--secondary btn--sm" data-action="edit-user" data-id="usr-mentor-001">Sửa</button>
+                      <button type="button" class="btn btn--danger btn--sm" data-action="disable-user" data-id="usr-mentor-001">Vô hiệu hóa</button>
+                    </td>
+                  </tr>
+                  <tr data-id="usr-hr-001">
+                    <td>
+                      <div class="admin-users__account">
+                        <span class="avatar avatar--sm" aria-label="Nguyễn Thu Hà">
+                          <span class="avatar__initials">TH</span>
+                        </span>
+                        <div>
+                          <strong>Nguyễn Thu Hà</strong>
+                          <p class="admin-users__meta">hr@example.com</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td>Nhân sự</td>
+                    <td>Nhân sự</td>
+                    <td>
+                      <span class="badge badge--success">Hoạt động</span>
+                    </td>
+                    <td class="table__actions">
+                      <button type="button" class="btn btn--secondary btn--sm" data-action="edit-user" data-id="usr-hr-001">Sửa</button>
+                      <button type="button" class="btn btn--danger btn--sm" data-action="disable-user" data-id="usr-hr-001">Vô hiệu hóa</button>
+                    </td>
+                  </tr>
+                  <tr data-id="usr-admin-001">
+                    <td>
+                      <div class="admin-users__account">
+                        <span class="avatar avatar--sm" aria-label="Quản trị viên">
+                          <span class="avatar__initials">TV</span>
+                        </span>
+                        <div>
+                          <strong>Quản trị viên</strong>
+                          <p class="admin-users__meta">admin@example.com</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td>Quản trị viên</td>
+                    <td>—</td>
+                    <td>
+                      <span class="badge badge--success">Hoạt động</span>
+                    </td>
+                    <td class="table__actions">
+                      <button type="button" class="btn btn--secondary btn--sm" data-action="edit-user" data-id="usr-admin-001">Sửa</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="form-field__hint admin-users__summary" data-region="user-summary" aria-live="polite">5 / 5 tài khoản</p>
+          </section>
+        </div>
+      </main>
+    </div>
+    <template data-template="open-user-form" data-title="Thêm tài khoản">
+      <div>
+        <form class="form" novalidate="">
+          <div class="form__grid">
+            <div class="form-field">
+              <label class="form-field__label" for="field-fullName-1">
+                Họ và tên
+                <span class="form-field__required" aria-hidden="true">*</span>
+              </label>
+              <input type="text" class="form-field__control" id="field-fullName-1" name="fullName" required="" aria-describedby="field-fullName-1-error" value="">
+              <p class="form-field__error" id="field-fullName-1-error" data-error-for="fullName" hidden="">
+              </p>
+            </div>
+            <div class="form-field">
+              <label class="form-field__label" for="field-email-2">
+                Email
+                <span class="form-field__required" aria-hidden="true">*</span>
+              </label>
+              <input type="email" class="form-field__control" id="field-email-2" name="email" required="" aria-describedby="field-email-2-error" value="">
+              <p class="form-field__error" id="field-email-2-error" data-error-for="email" hidden="">
+              </p>
+            </div>
+            <div class="form-field">
+              <label class="form-field__label" for="field-phone-3">Số điện thoại</label>
+              <input type="tel" class="form-field__control" id="field-phone-3" name="phone" aria-describedby="field-phone-3-error" value="">
+              <p class="form-field__error" id="field-phone-3-error" data-error-for="phone" hidden="">
+              </p>
+            </div>
+            <div class="form-field">
+              <label class="form-field__label" for="field-role-4">
+                Vai trò
+                <span class="form-field__required" aria-hidden="true">*</span>
+              </label>
+              <select class="form-field__control" id="field-role-4" name="role" required="" aria-describedby="field-role-4-error">
+                <option value="newhire" selected="">Nhân sự mới</option>
+                <option value="mentor">Người hướng dẫn</option>
+                <option value="hr">Nhân sự</option>
+                <option value="admin">Quản trị viên</option>
+              </select>
+              <p class="form-field__error" id="field-role-4-error" data-error-for="role" hidden="">
+              </p>
+            </div>
+            <div class="form-field">
+              <label class="form-field__label" for="field-departmentId-5">Phòng ban</label>
+              <select class="form-field__control" id="field-departmentId-5" name="departmentId" aria-describedby="field-departmentId-5-error">
+                <option value="" selected="">— Chưa gán —</option>
+                <option value="dep-dev">Phát triển sản phẩm</option>
+                <option value="dep-sales">Kinh doanh</option>
+                <option value="dep-hr">Nhân sự</option>
+              </select>
+              <p class="form-field__error" id="field-departmentId-5-error" data-error-for="departmentId" hidden="">
+              </p>
+            </div>
+            <div class="form-field">
+              <label class="form-field__label" for="field-jobTitle-6">Chức danh</label>
+              <input type="text" class="form-field__control" id="field-jobTitle-6" name="jobTitle" aria-describedby="field-jobTitle-6-error" value="">
+              <p class="form-field__error" id="field-jobTitle-6-error" data-error-for="jobTitle" hidden="">
+              </p>
+            </div>
+            <div class="form-field">
+              <label class="form-field__label" for="field-status-7">Trạng thái</label>
+              <select class="form-field__control" id="field-status-7" name="status" aria-describedby="field-status-7-error">
+                <option value="active" selected="">Hoạt động</option>
+                <option value="disabled">Vô hiệu hóa</option>
+              </select>
+              <p class="form-field__error" id="field-status-7-error" data-error-for="status" hidden="">
+              </p>
+            </div>
+          </div>
+          <div class="alert alert--info" hidden="">
+            </div>
+          <div class="modal__footer">
+            <button type="button" class="btn btn--secondary">Hủy</button>
+            <button type="submit" class="btn btn--primary">Thêm tài khoản</button>
+          </div>
+        </form>
+      </div>
+    </template>
+    <div id="modal-root">
+    </div>
+    <div id="toast-root" aria-live="polite">
+    </div>
+    <script type="module" src="../js/main.js">
+    </script>
+  </body>
+</html>

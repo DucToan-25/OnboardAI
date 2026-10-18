@@ -1,0 +1,11 @@
+.page--mentor-mentee-list .mentor-mentees__name,
+.page--mentor-mentee-list .mentor-mentees__detail-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.page--mentor-mentee-list .mentor-mentees__detail {
+  display: grid;
+  gap: var(--space-5);
+}

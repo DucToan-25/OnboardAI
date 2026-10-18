@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ sơ cá nhân · OnboardAI</title>
+    <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages/profile.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+  </head>
+  <body class="page page--profile" data-page="profile" data-display-name="Nguyễn Minh Anh" data-layout-role="newhire">
+    <div class="app-shell is-collapsed">
+      <header class="app-header" id="app-header">
+      </header>
+      <aside class="app-sidebar" id="app-sidebar">
+      </aside>
+      <main class="app-main" id="main-content">
+        <div class="page-header">
+          <h1 class="page-header__title">Hồ sơ cá nhân</h1>
+        </div>
+        <div class="page-body">
+          <div data-region="profile-state" aria-live="polite" class="view-state" role="status" aria-busy="false" hidden="">
+          </div>
+          <div class="profile__layout" data-region="profile-layout">
+            <section class="card profile__summary" data-region="profile-summary" aria-label="Tóm tắt hồ sơ">
+              <div class="profile__identity">
+                <span class="avatar avatar--lg" aria-label="Nguyễn Minh Anh">
+                  <span class="avatar__initials">MA</span>
+                </span>
+                <p class="profile__name">Nguyễn Minh Anh</p>
+                <p class="profile__job">Nhân viên phát triển web</p>
+                <span class="badge badge--info">Nhân sự mới</span>
+              </div>
+              <dl class="profile__metadata">
+                <div class="profile__metadata-row">
+                  <dt class="profile__metadata-label">Mã nhân viên</dt>
+                  <dd class="profile__metadata-value">usr-newhire-001</dd>
+                </div>
+                <div class="profile__metadata-row">
+                  <dt class="profile__metadata-label">Phòng ban</dt>
+                  <dd class="profile__metadata-value">Phát triển sản phẩm</dd>
+                </div>
+                <div class="profile__metadata-row">
+                  <dt class="profile__metadata-label">Ngày bắt đầu</dt>
+                  <dd class="profile__metadata-value">28/09/2026</dd>
+                </div>
+                <div class="profile__metadata-row">
+                  <dt class="profile__metadata-label">Mentor</dt>
+                  <dd class="profile__metadata-value">Trần Quang Huy</dd>
+                </div>
+              </dl>
+            </section>
+            <section class="card profile__details" aria-labelledby="profile-form-heading">
+              <div class="card__header">
+                <h2 class="card__title" id="profile-form-heading">Thông tin cá nhân</h2>
+              </div>
+              <div class="card__body">
+                <form class="form form--two-columns" data-region="profile-form" novalidate="">
+                  <div class="form__grid" data-region="profile-fields">
+                    <div class="form-field form-field--full">
+                      <label class="form-field__label" for="field-fullName-1">
+                        Họ và tên
+                        <span class="form-field__required" aria-hidden="true">*</span>
+                      </label>
+                      <input type="text" class="form-field__control" id="field-fullName-1" name="fullName" required="" aria-describedby="field-fullName-1-error" autocomplete="name" value="Nguyễn Minh Anh">
+                      <p class="form-field__error" id="field-fullName-1-error" data-error-for="fullName" hidden="">
+                      </p>
+                    </div>
+                    <div class="form-field">
+                      <label class="form-field__label" for="field-email-2">Email</label>
+                      <input type="email" class="form-field__control" id="field-email-2" name="email" readonly="" aria-describedby="field-email-2-error field-email-2-hint" autocomplete="email" value="minhanh@example.com">
+                      <p class="form-field__error" id="field-email-2-error" data-error-for="email" hidden="">
+                      </p>
+                      <p class="form-field__hint" id="field-email-2-hint">Liên hệ HR để thay đổi email tài khoản.</p>
+                    </div>
+                    <div class="form-field">
+                      <label class="form-field__label" for="field-phone-3">Số điện thoại</label>
+                      <input type="tel" class="form-field__control" id="field-phone-3" name="phone" aria-describedby="field-phone-3-error" autocomplete="tel" value="0901234567">
+                      <p class="form-field__error" id="field-phone-3-error" data-error-for="phone" hidden="">
+                      </p>
+                    </div>
+                    <div class="form-field form-field--full">
+                      <label class="form-field__label" for="field-jobTitle-4">Chức danh</label>
+                      <input type="text" class="form-field__control" id="field-jobTitle-4" name="jobTitle" readonly="" aria-describedby="field-jobTitle-4-error" value="Nhân viên phát triển web">
+                      <p class="form-field__error" id="field-jobTitle-4-error" data-error-for="jobTitle" hidden="">
+                      </p>
+                    </div>
+                    <div class="form-field form-field--full">
+                      <label class="form-field__label" for="field-avatarUrl-5">Ảnh đại diện (URL)</label>
+                      <input type="text" class="form-field__control" id="field-avatarUrl-5" name="avatarUrl" aria-describedby="field-avatarUrl-5-error field-avatarUrl-5-hint" value="">
+                      <p class="form-field__error" id="field-avatarUrl-5-error" data-error-for="avatarUrl" hidden="">
+                      </p>
+                      <p class="form-field__hint" id="field-avatarUrl-5-hint">Không bắt buộc. Dùng đường dẫn ảnh hoặc URL bắt đầu bằng https://.</p>
+                    </div>
+                  </div>
+                  <div class="alert alert--info" data-region="profile-preview" role="status" hidden="">
+                    <p class="alert__title">Lưu thay đổi</p>
+                    <p class="alert__message">Thông tin chưa được lưu vào hồ sơ. Khôi phục để trở về dữ liệu ban đầu.</p>
+                  </div>
+                  <div class="form__actions">
+                    <button class="btn btn--primary" type="submit" data-action="save-profile">Lưu thay đổi</button>
+                    <button class="btn btn--secondary" type="button" data-action="reset-profile">Khôi phục</button>
+                  </div>
+                </form>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+    <div id="modal-root">
+    </div>
+    <div id="toast-root" aria-live="polite">
+    </div>
+    <script type="module" src="../js/main.js">
+    </script>
+  </body>
+</html>
