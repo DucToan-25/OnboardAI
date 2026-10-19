@@ -46,6 +46,7 @@ project/
 - **Figma**: *(https://www.figma.com/design/GPkcqM1oUPlitfbPCiOlx8/Untitled?node-id=5-7720&t=MzDEMYIJRj0bN2mQ-1)*
 - **Video**: *(https://youtu.be/NK94jCIRlyw)*
 - **GitHub**: *(https://github.com/tangphan/project_KTGK)*
+- **FIGMA NHÓM **:https://l.facebook.com/l.php?u=https%3A%2F%2Fwww.figma.com%2Fdesign%2FmcELQs0hmsyEf5GEvJb5ky%2FGiao-di%25E1%25BB%2587n-OnboardAI%3Fnode-id%3D0-1%26t%3DyybX5Dzz6lpnAqB8-1%26fbclid%3DIwZXh0bgNhZW0CMTAAcGRvZgVicmlkETFjeUxTU2JoR0dGaTRjaFFQc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHmkvhX-8BVfZo0ZrTPEOg-46EavW1ajSV4KxEcuVQIYPb4yb9nXKcm_IK213_aem_ah7cCT0Zcxzt6o3eg9XG0g&h=AUAt2trEvL6zA7BIxMJvUn4F3QbK5IbAe6vMuhXf4NxCduaCSKIRf6MQRf8cRNI_8uMO-9pmEi8b90SQO2VLL2-7EKuUdwl0ylUk_VycB4kEy9tL2ofO9bWtthJstBevaH7wAx3QbhfB2v60uOg6xw
 
 ## Cách chạy
 
