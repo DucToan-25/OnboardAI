@@ -1,5 +1,21 @@
 # OnboardAI – Phân công và quy tắc LocalStorage
 
+## Hợp đồng tích hợp cả ba thành viên — 19/10/2026
+
+Đã mở rộng phạm vi theo yêu cầu người dùng sang SV1/SV2/SV3. Mục này thay các mô tả “chưa triển khai” và chữ ký đề xuất khác mã runtime bên dưới. Schema JSON, quan hệ ID và bất nhất seed được giữ nguyên.
+
+- initStore() bất đồng bộ; sau khi hoàn tất, các dịch vụ đọc/ghi đồng bộ và ném lỗi khi validation/quyền/lưu trữ thất bại. main.js chờ initStore, kiểm tra phiên và route rồi mới gọi initPage. data/auth.js chỉ tái xuất common/auth.js, không có đăng nhập preview.
+- Nguồn khởi tạo duy nhất: 12 file JSON ở assets/data (kể cả aiHistory.json và settings.json); không có dữ liệu seed trong JS/HTML. 12 collection: users, newHires, tasks, departments, documents, checkins, journeys, companyInfo, news, aiMockData, aiHistory, settings. Cộng currentUser và schemaVersion là 14 khóa onboardai_* cố định. Reset xác thực đủ 12 JSON trước khi xóa danh sách khóa này, khôi phục dữ liệu trước đó nếu gặp lỗi ghi; logout chỉ xóa currentUser.
+- settings gồm một bản ghi system: organizationName (1–120 ký tự), supportEmail (trống hoặc email), supportPhone (null hoặc điện thoại), onboardingDays (số nguyên 1–365), reminderDays (số nguyên 0–30). Default: OnboardAI, email trống, phone null, 30, 2. Chỉ Admin sửa; HR đọc mặc định số ngày khi tạo journey. Không gửi thông báo tự động; không đổi hành trình đã có.
+- tasks quản lý tạo/sửa/trạng thái/lưu trữ và tiến độ; resources quản lý phòng ban/tài liệu/check-in. Checklist Personalizer tra aiMockData, chỉ apply sau duyệt; lần thử lại dùng cùng historyId và ID task. Draft đã áp dụng một phần không được sửa hoặc từ chối.
+- Mentor chỉ ghi check-in của mentee đang được phân công. HR/Admin chỉ đọc lịch không nhận nội dung note/nextAction và không tìm kiếm theo ghi chú riêng. NewHire không đọc check-in riêng.
+- people bổ sung getHireSummaries(), getAssignmentOptions(), createNewHireProfile(), updateUserAccount(id, patch, hirePatch); hàm sửa tài khoản/hồ sơ kiểm tra cả hai bản ghi trước khi ghi; HR/Admin gán mentor/journey và cập nhật hồ sơ. Thay department vẫn qua quy tắc đồng bộ users/newHires, không tạo tài khoản thứ hai.
+- organization quản lý journeys/companyInfo/news; công khai chỉ đọc company-001 và news published. settings không thay companyInfo. progress-risk dùng getProgress, trả unknown khi thiếu liên kết/dữ liệu cần thiết; người dùng quyết định lịch sử AI pending/accepted/rejected.
+- Document URL HTTP(S) được mở từ detail; đường dẫn assets/docs chưa có tệp được báo thiếu. Không upload hoặc bịa nội dung tài liệu. NewHire không có quyền tự tạo task; quên mật khẩu chỉ hướng dẫn liên hệ.
+- LocalStorage cùng origin cập nhật giữa các tab. Đổi tài khoản/role hoặc vô hiệu hóa tài khoản làm tải lại và bỏ draft. Không đồng bộ giữa máy của ba thành viên; Git chỉ đồng bộ mã/JSON.
+
+## Nội dung bàn giao và đề xuất trước ngày 19/10/2026
+
 ## Bổ sung triển khai SV1 — 18/10/2026
 
 Người dùng yêu cầu triển khai toàn bộ SV1 và sử dụng trường `password` đã bổ sung cho 97 tài khoản. Bộ JSON đã được chuyển nguyên nội dung từ `data-json/` sang `assets/data/`, không có bản sao seed thứ hai. Quy tắc này thay phần dữ liệu tĩnh/preview cũ trong AGENTS.md.

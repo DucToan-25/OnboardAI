@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/pages/mentor-mentee-list.css">
     <link rel="stylesheet" href="../css/responsive.css">
   </head>
-  <body class="page page--mentor-mentee-list" data-page="mentor-mentee-list" data-display-name="Trần Quang Huy" data-layout-role="mentor">
+  <body class="page page--mentor-mentee-list" data-page="mentor-mentee-list">
     <div class="app-shell is-collapsed">
       <header class="app-header" id="app-header">
       </header>
@@ -28,15 +28,15 @@
           <div class="stats-grid" data-region="mentee-stats" aria-label="Thống kê mentee">
             <article class="card stat-card">
               <p class="stat-card__label">Tổng mentee</p>
-              <p class="stat-card__value">2</p>
+              <p class="stat-card__value">—</p>
             </article>
             <article class="card stat-card">
               <p class="stat-card__label">Đang hội nhập</p>
-              <p class="stat-card__value">2</p>
+              <p class="stat-card__value">—</p>
             </article>
             <article class="card stat-card">
               <p class="stat-card__label">Cần hỗ trợ</p>
-              <p class="stat-card__value">2</p>
+              <p class="stat-card__value">—</p>
             </article>
           </div>
           <section class="card">
@@ -50,12 +50,7 @@
               </div>
               <div class="form-field toolbar__filters">
                 <label class="form-field__label" for="mentee-status">Trạng thái</label>
-                <select class="form-field__control" id="mentee-status" name="status">
-                  <option value="" selected="">Tất cả trạng thái</option>
-                  <option value="active">Đang hội nhập</option>
-                  <option value="completed">Hoàn thành</option>
-                  <option value="archived">Đã lưu trữ</option>
-                </select>
+                <select class="form-field__control" id="mentee-status" name="status"><option value="">Tất cả trạng thái</option></select>
               </div>
             </form>
             <div data-region="list-state" aria-live="polite" class="view-state" role="status" aria-busy="false" hidden="">
@@ -72,66 +67,7 @@
                     <th scope="col">Thao tác</th>
                   </tr>
                 </thead>
-                <tbody data-region="mentee-rows">
-                  <tr data-id="nh-001">
-                    <td>
-                      <div class="mentor-mentees__name">
-                        <span class="avatar avatar--sm" aria-label="Nguyễn Minh Anh">
-                          <span class="avatar__initials">MA</span>
-                        </span>
-                        <div>
-                          <strong>Nguyễn Minh Anh</strong>
-                          <p class="form-field__hint">minhanh@example.com</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td>Phát triển sản phẩm</td>
-                    <td class="table__cell--nowrap">28/09/2026</td>
-                    <td>
-                      <div class="progress">
-                        <progress class="progress__bar" max="100" value="38" aria-label="Tiến độ Nguyễn Minh Anh">
-                        </progress>
-                        <span class="progress__value">38%</span>
-                      </div>
-                    </td>
-                    <td>
-                      <span class="badge badge--info">Đang hội nhập</span>
-                    </td>
-                    <td class="table__actions">
-                      <button type="button" class="btn btn--ghost btn--sm" data-action="open-mentee" data-id="nh-001">Chi tiết</button>
-                      <a class="btn btn--secondary btn--sm" href="mentor-task-assignment.html?newHireId=nh-001">Giao việc</a>
-                    </td>
-                  </tr>
-                  <tr data-id="nh-002">
-                    <td>
-                      <div class="mentor-mentees__name">
-                        <span class="avatar avatar--sm" aria-label="Trần Thu Lan">
-                          <span class="avatar__initials">TL</span>
-                        </span>
-                        <div>
-                          <strong>Trần Thu Lan</strong>
-                          <p class="form-field__hint">thulan@example.com</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td>Kinh doanh</td>
-                    <td class="table__cell--nowrap">01/10/2026</td>
-                    <td>
-                      <div class="progress">
-                        <progress class="progress__bar" max="100" value="0" aria-label="Tiến độ Trần Thu Lan">
-                        </progress>
-                        <span class="progress__value">0%</span>
-                      </div>
-                    </td>
-                    <td>
-                      <span class="badge badge--info">Đang hội nhập</span>
-                    </td>
-                    <td class="table__actions">
-                      <button type="button" class="btn btn--ghost btn--sm" data-action="open-mentee" data-id="nh-002">Chi tiết</button>
-                      <a class="btn btn--secondary btn--sm" href="mentor-task-assignment.html?newHireId=nh-002">Giao việc</a>
-                    </td>
-                  </tr>
-                </tbody>
+                <tbody data-region="mentee-rows"></tbody>
               </table>
             </div>
           </section>

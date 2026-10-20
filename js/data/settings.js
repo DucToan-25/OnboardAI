@@ -1,50 +1,34 @@
-/*
- * settings.js — cấu hình hệ thống (khóa onboardai_settings, bản ghi "system").
- * OWNER: SV3. SV3 đề xuất cấu trúc theo hợp đồng mục 2.2: một bản ghi system,
- * chỉ các trường được phép sửa; không mật khẩu/API key/token.
- */
 import { requireRoles } from './auth.js';
 import { StoreError, getById, update } from './store.js';
-
-const SYSTEM_ID = 'system';
 const EDITABLE = ['organizationName', 'supportEmail', 'supportPhone', 'onboardingDays', 'reminderDays'];
-
-function clean(value) {
-  if (value === null || value === undefined) return null;
-  const text = String(value).trim();
-  return text || null;
-}
-
-/** Đọc bản ghi cấu hình hệ thống. */
-export async function getSystemSettings() {
-  const record = await getById('settings', SYSTEM_ID);
-  if (!record) throw new StoreError('NOT_FOUND', 'Chưa có bản ghi cấu hình hệ thống (settings/system).');
+export function getSystemSettings() {
+  requireRoles(['admin']);
+  const record = getById('settings', 'system');
+  if (!record) throw new StoreError('NOT_FOUND', 'Thiếu cấu hình hệ thống.');
   return record;
 }
-
-/** Cập nhật cấu hình hệ thống. Chỉ Admin; chỉ các trường trong danh sách được phép. */
-export async function updateSystemSettings(patch) {
-  await requireRoles(['admin']);
-  const record = await getById('settings', SYSTEM_ID);
-  if (!record) throw new StoreError('NOT_FOUND', 'Chưa có bản ghi cấu hình hệ thống (settings/system).');
-  const changes = {};
-  for (const field of EDITABLE) {
-    if (patch && Object.hasOwn(patch, field)) changes[field] = clean(patch[field]);
+export function getOnboardingDefaults() {
+  requireRoles(['hr', 'admin']);
+  const record = getById('settings', 'system');
+  if (!record) throw new StoreError('NOT_FOUND', 'Thiếu cấu hình hệ thống.');
+  return { onboardingDays: record.onboardingDays, reminderDays: record.reminderDays };
+}
+export function updateSystemSettings(patch) {
+  const previous = getSystemSettings();
+  if (!patch || typeof patch !== 'object' || Array.isArray(patch) || !Object.keys(patch).length || Object.keys(patch).some(key => !EDITABLE.includes(key))) throw new StoreError('VALIDATION_ERROR', 'Có trường cấu hình không hợp lệ.');
+  const next = { ...previous, ...patch };
+  for (const name of ['organizationName', 'supportEmail', 'supportPhone']) {
+    if (next[name] != null && typeof next[name] !== 'string') throw new StoreError('VALIDATION_ERROR', 'Thông tin tổ chức phải là văn bản.');
+    next[name] = (next[name] || '').trim();
   }
-  if (!Object.keys(changes).length) {
-    throw new StoreError('VALIDATION_ERROR', 'Không có trường hợp lệ nào để cập nhật cấu hình.');
+  if (!next.organizationName || next.organizationName.length > 120) throw new StoreError('VALIDATION_ERROR', 'Tên tổ chức cần từ 1 đến 120 ký tự.');
+  if (next.supportEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(next.supportEmail)) throw new StoreError('VALIDATION_ERROR', 'Email hỗ trợ không hợp lệ.');
+  if (next.supportPhone && !/^[+\d\s().-]{6,24}$/.test(next.supportPhone)) throw new StoreError('VALIDATION_ERROR', 'Số điện thoại hỗ trợ không hợp lệ.');
+  for (const [field, min, max] of [['onboardingDays', 1, 365], ['reminderDays', 0, 30]]) {
+    if (!['number', 'string'].includes(typeof next[field]) || String(next[field]).trim() === '') throw new StoreError('VALIDATION_ERROR', `${field}: cần số nguyên từ ${min} đến ${max}.`);
+    next[field] = Number(next[field]);
+    if (!Number.isInteger(next[field]) || next[field] < min || next[field] > max) throw new StoreError('VALIDATION_ERROR', `${field}: cần số nguyên từ ${min} đến ${max}.`);
   }
-  if (Object.hasOwn(changes, 'organizationName') && !changes.organizationName) {
-    throw new StoreError('VALIDATION_ERROR', 'settings: trường "organizationName" là bắt buộc.');
-  }
-  for (const [field, min] of [['onboardingDays', 1], ['reminderDays', 0]]) {
-    if (Object.hasOwn(changes, field)) {
-      const value = Number(changes[field]);
-      if (!Number.isInteger(value) || value < min) {
-        throw new StoreError('VALIDATION_ERROR', `settings: "${field}" phải là số nguyên từ ${min}.`);
-      }
-      changes[field] = value;
-    }
-  }
-  return update('settings', SYSTEM_ID, changes);
+  next.supportPhone ||= null;
+  return update('settings', 'system', Object.fromEntries(EDITABLE.map(key => [key, next[key]])));
 }

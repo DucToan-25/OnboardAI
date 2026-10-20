@@ -1,5 +1,19 @@
 # AGENTS.md — Quy tắc phát triển giao diện OnboardAI
 
+## Phạm vi hiện hành ngày 19/10/2026 — tích hợp cả SV1/SV2/SV3
+
+Theo yêu cầu trực tiếp “sửa tất cả cho cả ba thành viên”, nối nghiệp vụ LocalStorage trên toàn bộ 19 route. Mục này thay giới hạn chỉ SV1 và giao diện tĩnh trong các phần lịch sử phía dưới; giữ phân công owner, token, registry CSS, tên trang và ES modules.
+
+- Một store tại js/data/store.js; 12 JSON canonical ở assets/data, gồm aiHistory.json rỗng và settings.json. Tổng 14 khóa đã đăng ký, schemaVersion 1. Không dùng seed.json, import/ hoặc local-store/mock-repository song song.
+- SV1: auth/people/ai-history và sáu trang; SV2: tasks/resources, mentor, thư viện/detail và Checklist Personalizer; SV3: organization/progress-risk/settings, HR/Admin và tích hợp shell. Trang gọi dịch vụ; chỉ store truy cập LocalStorage.
+- CRUD đã nối theo quyền. Check-in chỉ Mentor ghi cho mentee hiện tại; HR/Admin đọc metadata không có note/nextAction. Profile chỉ sửa fullName/email. Query không cấp quyền.
+- Checklist dùng aiMockData, duyệt rồi tạo task với ID ổn định để thử lại; Progress Risk dùng dữ liệu và công thức tiến độ chung. Cả ba chức năng AI là mô phỏng, không gọi AI bên ngoài.
+- HR quản lý gán hồ sơ/hành trình; Admin quản lý tài khoản/phòng ban/cấu hình. Thông tin công ty và tin tức dùng UI chung trên HR dashboard và Admin system settings, không tạo route mới.
+- Giữ nguyên bất nhất seed, không đổi/gộp ID khi chưa có quyết định của người dùng. Người dùng đang tự xử lý ID trùng trong users.json. Seed thay đổi chỉ được nạp sau reset có xác nhận; không ghi đè dữ liệu trình duyệt khi F5.
+- Duy trì scripts/test-integration.mjs làm kiểm tra hồi quy (npm test), scripts/check-project.mjs kiểm tra nguồn dữ liệu/import/route (npm run check). Reset kiểm tra đủ JSON trước khi xóa; dữ liệu seed ngoài assets/data và bản ghi minh họa trong HTML đã bỏ. Script thử trình duyệt, ảnh và profile kiểm thử tạm đặt ngoài repo. Owner review và OBS vẫn do nhóm thực hiện.
+
+## Các quy tắc và phạm vi lịch sử
+
 ## Phạm vi hiện hành ngày 18/10/2026 — tích hợp LocalStorage SV1
 
 Theo yêu cầu trực tiếp của người dùng, thực hiện toàn bộ phần SV1 trong [quy tắc LocalStorage](OnboardAI_QuyTac_LocalStorage.md), gồm mật khẩu đã có trong users.json. Phần này thay thế các chỉ dẫn giao diện tĩnh/contract dữ liệu cũ bên dưới khi có mâu thuẫn; token, registry CSS, tên trang và phân công UI vẫn giữ nguyên.

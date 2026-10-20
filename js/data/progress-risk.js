@@ -8,10 +8,12 @@
  *   trả level = 'unknown' kèm giải thích; KHÔNG BAO GIỜ coi thiếu dữ liệu là rủi ro thấp.
  * - Kết quả/đề xuất được lưu vào aiHistory qua ai-history.js (SV1) khi người dùng chọn Lưu.
  */
-import { createAiHistory, listAiHistory } from './ai-history.js';
+import { createHistory, listMyHistory } from './ai-history.js';
 import { requireRoles } from './auth.js';
 import { StoreError, getAll, getById } from './store.js';
-import { getProgress } from './tasks.js';
+import { getProgress, getTasksForHire } from './tasks.js';
+import { listCheckins } from './resources.js';
+import { getTodayDate } from '../common/format.js';
 
 const HR_ROLES = ['hr', 'admin'];
 const LEVEL_ORDER = { low: 0, medium: 1, high: 2 };
@@ -23,35 +25,54 @@ export const RISK_LEVEL_LABELS = Object.freeze({
   unknown: { label: 'Chưa đủ dữ liệu', tone: 'neutral' },
 });
 
-function todayString() {
-  return new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit',
-  }).format(new Date());
-}
+function todayString() { return getTodayDate(); }
 
 function bump(level, target) {
   return LEVEL_ORDER[target] > LEVEL_ORDER[level] ? target : level;
 }
 
+function linkIndex() {
+  return {
+    users: new Map(getAll('users').map(user => [user.id, user])),
+    journeys: new Map(getAll('journeys').map(journey => [journey.id, journey])),
+  };
+}
+
+function getLinks(hire, index) {
+  const user = index.users.get(hire.userId);
+  const mentor = index.users.get(hire.mentorId);
+  const journey = index.journeys.get(hire.journeyId);
+  return {
+    user,
+    mentor,
+    hasUser: user?.role === 'newHire',
+    hasMentor: mentor?.role === 'mentor' && mentor.status === 'active',
+    // Inactive journeys keep their existing assignments and history.
+    hasJourney: Boolean(journey),
+  };
+}
+
 /** Danh sách nhân sự mới cho bảng dashboard và select rủi ro (join user + phòng ban). */
 export async function listHires() {
   await requireRoles(HR_ROLES);
-  const [hires, users, departments] = await Promise.all([
-    getAll('newHires'), getAll('users'), getAll('departments'),
+  const [hires, departments] = await Promise.all([
+    getAll('newHires'), getAll('departments'),
   ]);
+  const index = linkIndex();
   return hires.map((hire) => {
-    const user = users.find((item) => item.id === hire.userId) ?? null;
-    const mentor = users.find((item) => item.id === hire.mentorId) ?? null;
+    const { user, mentor, hasUser, hasMentor, hasJourney } = getLinks(hire, index);
     const department = departments.find((item) => item.id === hire.departmentId) ?? null;
     return {
       hireId: hire.id,
       userId: hire.userId,
       fullName: user?.fullName ?? null,
       email: user?.email ?? null,
+      departmentId: hire.departmentId,
       departmentName: department?.name ?? hire.departmentId ?? null,
       mentorName: mentor?.fullName ?? null,
-      hasMentor: Boolean(hire.mentorId),
-      hasJourney: Boolean(hire.journeyId),
+      hasUser,
+      hasMentor,
+      hasJourney,
       status: hire.status,
       startDate: hire.startDate ?? null,
     };
@@ -65,12 +86,11 @@ export async function listHires() {
  */
 export async function analyzeRisk(hireId) {
   await requireRoles(HR_ROLES);
-  const [hireRecord, tasks, checkins] = await Promise.all([
-    getById('newHires', hireId), getAll('tasks'), getAll('checkins'),
-  ]);
+  const hireRecord = getById('newHires', hireId);
   if (!hireRecord) throw new StoreError('NOT_FOUND', `Không tìm thấy hồ sơ nhân sự ${hireId}.`);
+  const { hasUser, hasMentor, hasJourney } = getLinks(hireRecord, linkIndex());
 
-  const ownTasks = tasks.filter((task) => task.newHireId === hireId && task.status !== 'archived');
+  const ownTasks = getTasksForHire(hireId).filter(task => task.status !== 'archived');
   const today = todayString();
   const overdue = ownTasks.filter((task) => task.status !== 'completed'
     && typeof task.dueDate === 'string' && task.dueDate && task.dueDate < today).length;
@@ -79,14 +99,16 @@ export async function analyzeRisk(hireId) {
     totalTasks: ownTasks.length,
     overdueTasks: overdue,
     blockedTasks: blocked,
-    hasMentor: Boolean(hireRecord.mentorId),
-    hasJourney: Boolean(hireRecord.journeyId),
-    checkins: checkins.filter((item) => item.newHireId === hireId).length,
+    hasUser,
+    hasMentor,
+    hasJourney,
+    checkins: listCheckins({ newHireId: hireId }).filter(item => item.status !== 'cancelled').length,
   };
 
   const missing = [];
-  if (!hireRecord.mentorId) missing.push('chưa gán người hướng dẫn');
-  if (!hireRecord.journeyId) missing.push('chưa gán hành trình');
+  if (!hasUser) missing.push('thiếu tài khoản nhân sự mới hợp lệ');
+  if (!hasMentor) missing.push('chưa có người hướng dẫn đang hoạt động');
+  if (!hasJourney) missing.push('thiếu hành trình hợp lệ');
 
   let progress = null;
   let progressError = null;
@@ -97,9 +119,7 @@ export async function analyzeRisk(hireId) {
   }
 
   if (!progress) {
-    const detail = progressError?.code === 'MODULE_NOT_READY'
-      ? 'tasks.js (SV2) chưa triển khai nên chưa đọc được getProgress().'
-      : `Không lấy được tiến độ: ${progressError?.message ?? 'lỗi không rõ'}.`;
+    const detail = `Không lấy được tiến độ: ${progressError?.message ?? 'lỗi không rõ'}.`;
     return {
       hireId,
       level: 'unknown',
@@ -107,8 +127,7 @@ export async function analyzeRisk(hireId) {
       summary: 'Chưa đủ dữ liệu để đánh giá rủi ro tiến độ.',
       reason: `${detail} Hệ thống không suy đoán rủi ro thấp khi thiếu số liệu.${missing.length ? ` Ngoài ra hồ sơ ${missing.join(', ')}.` : ''}`,
       recommendations: [
-        'Hoàn thiện tasks.js (SV2) để đọc getProgress() và tiến độ nhiệm vụ.',
-        'Kiểm tra hồ sơ nhân sự: liên kết userId, mentor và hành trình.',
+        'Kiểm tra dữ liệu nhiệm vụ và liên kết hồ sơ nhân sự.',
         ...(missing.length ? [`Bổ sung thông tin còn thiếu: ${missing.join(', ')}.`] : []),
       ],
       progress: null,
@@ -116,15 +135,15 @@ export async function analyzeRisk(hireId) {
     };
   }
 
-  if (progress.total === 0) {
+  if (progress.total === 0 || missing.length) {
     return {
       hireId,
       level: 'unknown',
       tone: RISK_LEVEL_LABELS.unknown.tone,
-      summary: 'Chưa có nhiệm vụ để đánh giá tiến độ.',
-      reason: 'Nhân sự chưa có nhiệm vụ nào (không tính archived). Thiếu dữ liệu không đồng nghĩa với rủi ro thấp.',
+      summary: 'Chưa đủ dữ liệu để đánh giá tiến độ.',
+      reason: [progress.total === 0 ? 'Nhân sự chưa có nhiệm vụ nào (không tính archived).' : '', missing.length ? `Hồ sơ ${missing.join(', ')}.` : '', 'Thiếu dữ liệu không đồng nghĩa với rủi ro thấp.'].filter(Boolean).join(' '),
       recommendations: [
-        'Giao nhiệm vụ đầu tiên cho nhân sự để có dữ liệu tiến độ.',
+        ...(progress.total === 0 ? ['Giao nhiệm vụ đầu tiên cho nhân sự để có dữ liệu tiến độ.'] : []),
         ...(missing.length ? [`Bổ sung thông tin còn thiếu: ${missing.join(', ')}.`] : []),
       ],
       progress,
@@ -167,7 +186,7 @@ export async function saveRiskEvaluation(analysis, note = '') {
   if (!analysis || typeof analysis !== 'object' || !analysis.hireId) {
     throw new StoreError('VALIDATION_ERROR', 'saveRiskEvaluation cần kết quả analyzeRisk().');
   }
-  return createAiHistory({
+  return createHistory({
     featureType: 'progressRisk',
     newHireId: analysis.hireId,
     input: `Đánh giá rủi ro tiến độ ${analysis.hireId}`,
@@ -183,6 +202,5 @@ export async function saveRiskEvaluation(analysis, note = '') {
 /** Các đánh giá đã lưu của người đang đăng nhập (HR/Admin). */
 export async function listSavedEvaluations() {
   await requireRoles(HR_ROLES);
-  return listAiHistory({ featureType: 'progressRisk' });
+  return listMyHistory('progressRisk');
 }
-

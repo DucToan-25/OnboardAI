@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
  * organization.js — hành trình (journeys), thông tin công ty (companyInfo), tin tức (news).
  * OWNER: SV3. Hợp đồng OnboardAI_QuyTac_LocalStorage.md mục 5.
@@ -11,6 +10,7 @@
  * - Journey chỉ có active/inactive; không có hàm xóa, tham chiếu thì vô hiệu hóa.
  */
 import { requireRoles } from './auth.js';
+import { STATUS_META } from '../config/statuses.js';
 import {
   StoreError, create, createId, getAll, getById, parseSeedDate, update,
 } from './store.js';
@@ -20,16 +20,8 @@ const COMPANY_ID = 'company-001';
 const NEWS_STATUSES = ['draft', 'published', 'archived'];
 const JOURNEY_STATUSES = ['active', 'inactive'];
 
-export const NEWS_STATUS_LABELS = Object.freeze({
-  draft: { label: 'Bản nháp', tone: 'neutral' },
-  published: { label: 'Đã xuất bản', tone: 'success' },
-  archived: { label: 'Đã lưu trữ', tone: 'warning' },
-});
-
-export const JOURNEY_STATUS_LABELS = Object.freeze({
-  active: { label: 'Đang áp dụng', tone: 'success' },
-  inactive: { label: 'Ngừng áp dụng', tone: 'neutral' },
-});
+export const NEWS_STATUS_LABELS = STATUS_META.news;
+export const JOURNEY_STATUS_LABELS = STATUS_META.journeys;
 
 function now() {
   return new Date().toISOString();
@@ -45,19 +37,28 @@ function requireFields(input, fields, entity) {
 }
 
 function cleanText(value, fallback = null) {
-  if (typeof value !== 'string') return fallback;
+  if (value == null) return fallback;
+  if (typeof value !== 'string') throw new StoreError('VALIDATION_ERROR', 'Nội dung phải là văn bản.');
   const trimmed = value.trim();
   return trimmed || fallback;
 }
+function assertDepartment(id, previousId) {
+  if (id === null) return;
+  const department = getById('departments', id);
+  if (!department || (id !== previousId && department.status !== 'active')) throw new StoreError('VALIDATION_ERROR', 'Phòng ban không tồn tại hoặc chưa hoạt động.');
+}
+function assertFields(input, allowed) {
+  if (!input || typeof input !== 'object' || Array.isArray(input) || Object.keys(input).some(key => !allowed.includes(key))) throw new StoreError('VALIDATION_ERROR', 'Có trường không được phép thay đổi.');
+}
 
-async function getNewsRecord(id) {
-  const record = await getById('news', id);
+function getNewsRecord(id) {
+  const record = getById('news', id);
   if (!record) throw new StoreError('NOT_FOUND', `Không tìm thấy tin tức ${id}.`);
   return record;
 }
 
-async function getJourneyRecord(id) {
-  const record = await getById('journeys', id);
+function getJourneyRecord(id) {
+  const record = getById('journeys', id);
   if (!record) throw new StoreError('NOT_FOUND', `Không tìm thấy hành trình ${id}.`);
   return record;
 }
@@ -70,6 +71,7 @@ function assertNewsStatus(status) {
 
 /** durationDays phải là số nguyên dương (mục 5.2). */
 export function validateDurationDays(value) {
+  if (!['number', 'string'].includes(typeof value) || String(value).trim() === '') throw new StoreError('VALIDATION_ERROR', 'durationDays phải là số nguyên dương.');
   const duration = typeof value === 'number' ? value : Number(value);
   if (!Number.isInteger(duration) || duration <= 0) {
     throw new StoreError('VALIDATION_ERROR', 'durationDays phải là số nguyên dương.');
@@ -79,17 +81,20 @@ export function validateDurationDays(value) {
 
 // ===== Thông tin công ty =====
 
-/** Bản ghi công ty dùng chung (company-001). Trả null nếu thiếu cấu hình để trang hiển thị báo lỗi. */
-export async function getCompanyInfo(id = COMPANY_ID) {
-  return getById('companyInfo', id);
+/** Bản ghi công ty dùng chung (company-001); báo lỗi rõ ràng khi thiếu. */
+export function getCompanyInfo() {
+  const company = getById('companyInfo', COMPANY_ID);
+  if (!company) throw new StoreError('NOT_FOUND', 'Thiếu cấu hình công ty company-001.');
+  return company;
 }
 
 /** Sửa thông tin công ty. Chỉ HR/Admin. companyInfo không có trạng thái archive. */
-export async function updateCompanyInfo(patch, id = COMPANY_ID) {
-  await requireRoles(WRITE_ROLES);
-  const record = await getById('companyInfo', id);
+export function updateCompanyInfo(patch, id = COMPANY_ID) {
+  const actor = requireRoles(WRITE_ROLES);
+  const record = getById('companyInfo', id);
   if (!record) throw new StoreError('NOT_FOUND', `Không tìm thấy thông tin công ty ${id}.`);
   const allowed = ['companyName', 'tagline', 'mission', 'vision', 'coreValues', 'about', 'logoUrl'];
+  assertFields(patch, allowed);
   const changes = {};
   for (const field of allowed) {
     if (patch && Object.hasOwn(patch, field)) changes[field] = cleanText(patch[field]);
@@ -100,14 +105,14 @@ export async function updateCompanyInfo(patch, id = COMPANY_ID) {
   if (Object.hasOwn(changes, 'companyName') && !changes.companyName) {
     throw new StoreError('VALIDATION_ERROR', 'companyInfo: trường "companyName" là bắt buộc.');
   }
-  return update('companyInfo', id, { ...changes, updatedAt: now() });
+  return update('companyInfo', id, { ...changes, updatedAt: now(), updatedBy: actor.id });
 }
 
 // ===== Tin tức =====
 
 /** Tin đã xuất bản cho trang công khai/nhân viên; sắp xếp theo publishedAt giảm dần, thiếu ngày xếp sau cùng. */
-export async function getPublishedNews() {
-  const news = await getAll('news');
+export function getPublishedNews() {
+  const news = getAll('news');
   return news
     .filter((item) => item.status === 'published')
     .map((item) => ({ ...item, publishedAtMs: parseSeedDate(item.publishedAt) }))
@@ -116,9 +121,9 @@ export async function getPublishedNews() {
 }
 
 /** Toàn bộ tin để HR/Admin quản lý, mới nhất trước. */
-export async function listNews() {
-  await requireRoles(WRITE_ROLES);
-  const news = await getAll('news');
+export function listNews() {
+  requireRoles(WRITE_ROLES);
+  const news = getAll('news');
   return news
     .map((item) => ({ ...item, updatedAtMs: parseSeedDate(item.updatedAt) ?? 0 }))
     .sort((a, b) => b.updatedAtMs - a.updatedAtMs)
@@ -126,9 +131,11 @@ export async function listNews() {
 }
 
 /** Tạo tin nháp. Chỉ HR/Admin; mặc định status = draft, chưa công khai. */
-export async function createNews(input) {
-  const user = await requireRoles(WRITE_ROLES);
+export function createNews(input) {
+  const user = requireRoles(WRITE_ROLES);
+  assertFields(input, ['title', 'summary', 'content', 'category', 'isFeatured', 'status']);
   requireFields(input, ['title', 'content'], 'news');
+  if (Object.hasOwn(input, 'isFeatured') && typeof input.isFeatured !== 'boolean') throw new StoreError('VALIDATION_ERROR', 'isFeatured phải là giá trị boolean.');
   const status = input.status ?? 'draft';
   assertNewsStatus(status);
   if (status !== 'draft') {
@@ -152,9 +159,11 @@ export async function createNews(input) {
 }
 
 /** Sửa trường nội dung của tin (title, summary, content, category, isFeatured). Không đổi trạng thái ở đây. */
-export async function updateNews(id, patch) {
-  await requireRoles(WRITE_ROLES);
-  const record = await getNewsRecord(id);
+export function updateNews(id, patch) {
+  requireRoles(WRITE_ROLES);
+  assertFields(patch, ['title', 'summary', 'content', 'category', 'isFeatured']);
+  if (Object.hasOwn(patch, 'isFeatured') && typeof patch.isFeatured !== 'boolean') throw new StoreError('VALIDATION_ERROR', 'isFeatured phải là giá trị boolean.');
+  const record = getNewsRecord(id);
   const changes = {};
   if (patch && Object.hasOwn(patch, 'title')) { requireFields(patch, ['title'], 'news'); changes.title = patch.title.trim(); }
   if (patch && Object.hasOwn(patch, 'summary')) changes.summary = cleanText(patch.summary);
@@ -168,9 +177,9 @@ export async function updateNews(id, patch) {
 }
 
 /** Xuất bản tin: draft → published, đặt publishedAt. Tin đã archived phải khôi phục trước. */
-export async function publishNews(id) {
-  await requireRoles(WRITE_ROLES);
-  const record = await getNewsRecord(id);
+export function publishNews(id) {
+  requireRoles(WRITE_ROLES);
+  const record = getNewsRecord(id);
   if (record.status === 'published') return record;
   if (record.status === 'archived') {
     throw new StoreError('VALIDATION_ERROR', 'Tin đã lưu trữ. Hãy khôi phục về draft trước khi xuất bản.');
@@ -181,9 +190,9 @@ export async function publishNews(id) {
 }
 
 /** Lưu trữ tin: draft hoặc published → archived, đặt archivedAt, bỏ khỏi trang công khai. */
-export async function archiveNews(id) {
-  await requireRoles(WRITE_ROLES);
-  const record = await getNewsRecord(id);
+export function archiveNews(id) {
+  requireRoles(WRITE_ROLES);
+  const record = getNewsRecord(id);
   if (record.status === 'archived') return record;
   return update('news', record.id, {
     status: 'archived', archivedAt: now(), updatedAt: now(),
@@ -191,10 +200,11 @@ export async function archiveNews(id) {
 }
 
 /** Khôi phục tin đã lưu trữ về draft: xóa archivedAt, giữ publishedAt làm lịch sử. */
-export async function restoreNews(id) {
-  await requireRoles(WRITE_ROLES);
-  const record = await getNewsRecord(id);
+export function restoreNews(id) {
+  requireRoles(WRITE_ROLES);
+  const record = getNewsRecord(id);
   if (record.status === 'draft') return record;
+  if (record.status !== 'archived') throw new StoreError('VALIDATION_ERROR', 'Chỉ khôi phục tin đã lưu trữ về bản nháp.');
   return update('news', record.id, {
     status: 'draft', archivedAt: null, updatedAt: now(),
   });
@@ -203,9 +213,10 @@ export async function restoreNews(id) {
 
 // ===== Hành trình (journeys) =====
 
-/** Danh sách hành trình; filter theo status/title. Người dùng đã đăng nhập đều đọc được. */
-export async function listJourneys({ status, title } = {}) {
-  let journeys = await getAll('journeys');
+/** Danh sách hành trình cho HR/Admin; filter theo status/title. */
+export function listJourneys({ status, title } = {}) {
+  requireRoles(WRITE_ROLES);
+  let journeys = getAll('journeys');
   if (status) {
     if (!JOURNEY_STATUSES.includes(status)) {
       throw new StoreError('VALIDATION_ERROR', `Trạng thái hành trình không hợp lệ: ${status}.`);
@@ -219,13 +230,15 @@ export async function listJourneys({ status, title } = {}) {
   return journeys;
 }
 
-export async function getJourney(id) {
+export function getJourney(id) {
+  requireRoles(WRITE_ROLES);
   return getJourneyRecord(id);
 }
 
 /** Số nhân sự/task đang tham chiếu một hành trình. Dùng trước khi vô hiệu hóa. */
-export async function getJourneyReferences(journeyId) {
-  const [hires, tasks] = await Promise.all([getAll('newHires'), getAll('tasks')]);
+export function getJourneyReferences(journeyId) {
+  requireRoles(WRITE_ROLES);
+  const [hires, tasks] = [getAll('newHires'), getAll('tasks')];
   return {
     newHires: hires.filter((item) => item.journeyId === journeyId).length,
     tasks: tasks.filter((item) => item.journeyId === journeyId).length,
@@ -236,8 +249,8 @@ export async function getJourneyReferences(journeyId) {
  * Cho phép gán nhân sự/task vào hành trình không? Gọi từ module gán việc
  * (people/tasks) trước khi ghi. inactive → FORBIDDEN.
  */
-export async function assertJourneyAssignable(journeyId) {
-  const journey = await getJourneyRecord(journeyId);
+export function assertJourneyAssignable(journeyId) {
+  const journey = getJourneyRecord(journeyId);
   if (journey.status !== 'active') {
     throw new StoreError('FORBIDDEN', `Hành trình "${journey.title}" đang ngừng áp dụng, không nhận gán mới.`);
   }
@@ -245,8 +258,10 @@ export async function assertJourneyAssignable(journeyId) {
 }
 
 /** Tạo mẫu hành trình. Chỉ HR/Admin; durationDays là số nguyên dương. */
-export async function createJourney(input) {
-  const user = await requireRoles(WRITE_ROLES);
+export function createJourney(input) {
+  const user = requireRoles(WRITE_ROLES);
+  assertFields(input, ['title', 'description', 'targetRole', 'departmentId', 'durationDays', 'status']);
+  assertDepartment(input.departmentId ?? null);
   requireFields(input, ['title'], 'journeys');
   const durationDays = validateDurationDays(input?.durationDays);
   const status = input.status ?? 'active';
@@ -269,9 +284,11 @@ export async function createJourney(input) {
 }
 
 /** Sửa trường của hành trình; durationDays (nếu có) phải là số nguyên dương. Không đổi trạng thái ở đây. */
-export async function updateJourney(id, patch) {
-  await requireRoles(WRITE_ROLES);
-  const record = await getJourneyRecord(id);
+export function updateJourney(id, patch) {
+  requireRoles(WRITE_ROLES);
+  const record = getJourneyRecord(id);
+  assertFields(patch, ['title', 'description', 'targetRole', 'departmentId', 'durationDays']);
+  if (Object.hasOwn(patch, 'departmentId')) assertDepartment(patch.departmentId, record.departmentId);
   const changes = {};
   if (patch && Object.hasOwn(patch, 'title')) { requireFields(patch, ['title'], 'journeys'); changes.title = patch.title.trim(); }
   if (patch && Object.hasOwn(patch, 'description')) changes.description = cleanText(patch.description);
@@ -288,28 +305,12 @@ export async function updateJourney(id, patch) {
  * Bật/tắt hành trình (active ↔ inactive). Chỉ HR/Admin.
  * Journey có nhân sự/task tham chiếu thì dùng cách này thay vì xóa để không mất liên kết.
  */
-export async function setJourneyStatus(id, status) {
-  await requireRoles(WRITE_ROLES);
-  const record = await getJourneyRecord(id);
+export function setJourneyStatus(id, status) {
+  requireRoles(WRITE_ROLES);
+  const record = getJourneyRecord(id);
   if (!JOURNEY_STATUSES.includes(status)) {
     throw new StoreError('VALIDATION_ERROR', `Trạng thái hành trình không hợp lệ: ${status}.`);
   }
   if (record.status === status) return record;
   return update('journeys', record.id, { status, updatedAt: now() });
 }
-
-=======
-// SV3 public read contract. Company identity is explicit, never the first record.
-import { getAll, getById } from './store.js';
-import { parseStoredDate } from '../common/format.js';
-
-export function getCompanyInfo() {
-  const company = getById('companyInfo', 'company-001');
-  if (!company) throw new Error('Thiếu cấu hình công ty company-001.');
-  return company;
-}
-export function getPublishedNews() {
-  return getAll('news').filter(item => item.status === 'published')
-    .sort((a, b) => (parseStoredDate(b.publishedAt)?.getTime() || 0) - (parseStoredDate(a.publishedAt)?.getTime() || 0));
-}
->>>>>>> 906d77f (Update localstorage sv1)

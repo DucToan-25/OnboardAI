@@ -1,6 +1,7 @@
 import { ROUTES } from './config/routes.js';
 import { renderLayout, refreshLayoutUser } from './common/layout.js';
 import { getCurrentUser, logout } from './common/auth.js';
+import { canOpenPage } from './common/permissions.js';
 import { initStore, subscribe, resetDemoData } from './data/store.js';
 import * as ui from './common/ui.js';
 
@@ -15,7 +16,7 @@ async function bootstrap() {
     await initStore();
     const currentUser = getCurrentUser();
     if (!route.public && !currentUser) { location.replace(pageUrl('login')); return; }
-    if (!route.public && !route.allowedRoles.includes(currentUser.role)) { location.replace(pageUrl('403')); return; }
+    if (!canOpenPage(currentUser, pageId)) { location.replace(pageUrl('403')); return; }
     renderLayout({ currentUser, pageId });
     function checkSession() {
       try {

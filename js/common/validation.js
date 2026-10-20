@@ -1,3 +1,5 @@
+import { fromDateTimeInput } from './format.js';
+
 function validDate(value) {
   const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!match) return false;
@@ -65,4 +67,3 @@ export function applyFormErrors(form, errors = {}) {
   const firstInvalid = form.querySelector('[aria-invalid="true"]');
   if (firstInvalid) firstInvalid.focus();
 }
-import { fromDateTimeInput } from './format.js';

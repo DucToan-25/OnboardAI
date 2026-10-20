@@ -1,5 +1,5 @@
 import { isSafeUrl } from './validation.js';
-import { TASK_STATUSES } from '../config/statuses.js';
+import { TASK_STATUSES, STATUS_META } from '../config/statuses.js';
 import { formatDate } from './format.js';
 
 let fieldCounter = 0;
@@ -19,6 +19,16 @@ export function createTaskBadge(status) {
   const entry = TASK_STATUSES[status] || { label: status, tone: 'neutral' };
   return element('span', `badge badge--${entry.tone}`, entry.label);
 }
+export function createStatusBadge(entity, status) {
+  const entry = STATUS_META[entity]?.[status] || { label: status, tone: 'neutral' };
+  return element('span', `badge badge--${entry.tone}`, entry.label);
+}
+export function fillSelect(select, options, placeholder = 'Tất cả') {
+  if (!select) return;
+  const value = select.value;
+  select.replaceChildren(new Option(placeholder, ''), ...options.map(option => new Option(option.label, option.value)));
+  select.value = [...select.options].some(option => option.value === value) ? value : '';
+}
 export function createTaskItem(task, { link = true } = {}) {
   const item = element('div', 'task-item'); item.dataset.id = task.id;
   const content = element('div', 'task-item__body');
@@ -26,11 +36,21 @@ export function createTaskItem(task, { link = true } = {}) {
   title.classList.add('task-item__title');
   if (link) title.href = `newhire-checklist.html?${new URLSearchParams({ id: task.id })}`;
   content.append(title, element('p', 'task-item__meta', `${task.category || 'Nhiệm vụ'} · Hạn ${formatDate(task.dueDate)}`));
+  if (task.linkIssue) content.append(element('p', 'form-field__hint', task.linkIssue));
   item.append(createIcon(task.status === 'completed' ? 'check' : 'clock', 'task-item__check'), content);
   if (link) {
     const actions = element('div', 'task-item__actions'); actions.append(createTaskBadge(task.status)); item.append(actions);
   }
   return item;
+}
+export function createTaskResult(task) {
+  const section = element('section');
+  section.append(element('h3', '', 'Kết quả của nhân sự'), element('p', '', task.result?.note || 'Chưa có kết quả.'));
+  if (task.result?.url && isSafeUrl(task.result.url) && /^https?:\/\//i.test(task.result.url)) {
+    const link = element('a', 'btn btn--ghost', 'Mở liên kết kết quả');
+    link.href = task.result.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; section.append(link);
+  }
+  return section;
 }
 export function createDocumentCard(document) {
   const card = element('article', 'card document-card'); card.dataset.id = document.id;

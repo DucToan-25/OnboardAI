@@ -2,7 +2,6 @@ import { getCompanyInfo, getPublishedNews } from '../data/organization.js';
 import { watchData } from '../common/data-ui.js';
 import { formatDateTime } from '../common/format.js';
 const INFO = {
-  about: ['Về Onvera', 'Cổng thông tin Onvera kết nối tin tức, thông báo và hoạt động dành cho hành trình hội nhập của bạn.'],
   contact: ['Liên hệ Phòng Nhân sự', 'Nếu chưa có tài khoản hoặc cần hỗ trợ truy cập, hãy liên hệ cán bộ Nhân sự phụ trách tiếp nhận bạn qua kênh liên lạc đã được cung cấp. Thông tin liên hệ chính thức sẽ được cập nhật tại đây.'],
   faq: ['Câu hỏi thường gặp', 'Làm sao để đăng nhập?\nChọn Đăng nhập để mở trang đăng nhập chung. Dùng email và mật khẩu của tài khoản được cấp.\n\nChưa có tài khoản?\nLiên hệ cán bộ Nhân sự phụ trách tiếp nhận.\n\nTại sao một số nội dung cần đăng nhập?\nĐó là nội dung dành cho nhân viên. Phần chi tiết và đăng ký sự kiện sẽ được kết nối trong đợt nghiệp vụ.'],
   privacy: ['Chính sách bảo mật', 'Chính sách bảo mật chính thức chưa được cung cấp. Nội dung sẽ được cập nhật sau khi đơn vị phụ trách phê duyệt.'],
@@ -67,9 +66,10 @@ export async function initPage({ ui }) {
   initSectionNavigation();
   const region = name => document.querySelector('[data-region="' + name + '"]');
   const search = document.querySelector('#news-search'); const sort = document.querySelector('#news-sort');
-  const articleTemplate = region('news').querySelector('article').cloneNode(true);
-  const noticeTemplate = region('notices').querySelector('article').cloneNode(true);
-  const eventTemplate = region('events').querySelector('article').cloneNode(true);
+  const template = name => document.querySelector(`template[data-template="${name}-card"]`).content.firstElementChild;
+  const articleTemplate = template('news');
+  const noticeTemplate = template('notice');
+  const eventTemplate = template('event');
   const filters = document.querySelector('.index__filters') || document.querySelector('[data-action="filter"]').parentElement;
   let category = ''; let page = 1; const pageSize = 6;
   function article(post, template) {
@@ -138,6 +138,12 @@ export async function initPage({ ui }) {
     const button = event.target.closest('button'); if (!button) return;
     if (button.dataset.info && INFO[button.dataset.info]) {
       const [title, text] = INFO[button.dataset.info]; ui.openModal({ title, content: element('p', 'index__detail', text) });
+    }
+    if (button.dataset.info === 'about') {
+      try {
+        const company = getCompanyInfo();
+        ui.openModal({ title: `Về ${company.companyName}`, content: element('p', 'index__detail', company.about || company.mission || 'Chưa cập nhật nội dung giới thiệu.') });
+      } catch (error) { ui.showToast({ message: error.message, type: 'error' }); }
     }
     const action = button.dataset.action;
     if (action === 'filter') { category = button.dataset.category; page = 1; refresh(); }

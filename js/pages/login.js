@@ -5,15 +5,19 @@ import { ROLE_HOME } from '../config/roles.js';
 export async function initPage({ ui }) {
   const root = document.querySelector('#main-content');
   const form = root.querySelector('[data-region="login-form"]');
+  const state = root.querySelector('[data-region="login-state"]');
   form.addEventListener('submit', event => {
     event.preventDefault(); if (!validateFields(form)) return;
     const button = form.querySelector('[type="submit"]'); button.disabled = true;
+    ui.setViewState(state, { status: 'ready' });
+    delete state.dataset.errorCode;
     try {
       const user = login(form.elements.email.value, form.elements.password.value);
       form.elements.password.value = '';
       location.assign(ROLE_HOME[user.role]);
     } catch (error) {
-      ui.setViewState(root.querySelector('[data-region="login-state"]'), { status: 'error', message: error.message });
+      state.dataset.errorCode = error.code || 'LOGIN_FAILED';
+      ui.setViewState(state, { status: 'error', message: error.message });
     } finally { button.disabled = false; }
   });
   root.addEventListener('click', event => {

@@ -1,5 +1,9 @@
 # Quy tắc Codex cho SV2 — Mentor, tài liệu chung và tương tác JavaScript
 
+> **Rà soát nguồn dữ liệu 19/10/2026:** Các vùng render và template không còn bản ghi tài liệu/check-in/mentee mẫu. Task không có hạn dùng null; bộ lọc lấy từ documents; form bỏ draft khi mất phân công.
+
+> **Hiện hành 19/10/2026:** yêu cầu người dùng mở rộng tích hợp cả ba thành viên. Tasks/resources, mentee/task/check-in, thư viện/detail và Checklist Personalizer đã nối. Mentor ghi check-in đúng scope; HR/Admin chỉ đọc metadata. Không tạo store hoặc auth khác. Áp dụng phần mới nhất của [AGENTS.md](../../AGENTS.md) và [quy tắc LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md). Các giới hạn tĩnh/preview/SV1-only dưới đây là lịch sử. Owner review và OBS vẫn cần nhóm thực hiện.
+
 > **Điểm nối hiện hành 18/10/2026:** theo [quy tắc LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md), store/auth/people/ai-history do SV1 cung cấp. `js/data/tasks.js` đã có getTasksForHire/getProgress/updateTaskStatus; `resources.js` có getReadableDocuments/getDocument; document-detail đã đọc đúng ID và quyền. SV2 tiếp tục bổ sung CRUD/tasks/checkins/resources và applyChecklist trong chính các module này. Các màn hình mentor/thư viện quản lý vẫn tĩnh. Role tài khoản dùng newHire; nguồn dữ liệu assets/data; không dùng lại repository/seed/status cũ bên dưới.
 
 

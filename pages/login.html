@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/pages/login.css">
     <link rel="stylesheet" href="../css/responsive.css">
   </head>
-  <body class="page page--login" data-page="login" data-display-name="Nguyễn Minh Anh" data-layout-role="newhire">
+  <body class="page page--login" data-page="login">
     <div class="simple-layout">
       <main class="simple-layout__content login__layout" id="main-content">
         <section class="card" aria-labelledby="login-heading">
@@ -19,15 +19,16 @@
             <img class="login__brand" src="../assets/images/logo.svg" alt="OnboardAI" width="152" height="32">
             <h1 class="page-header__title" id="login-heading">Đăng nhập</h1>
             <p class="page-header__description">Truy cập hành trình hội nhập của bạn.</p>
+            <p class="form-field__hint">Tài khoản cần được quản trị viên kích hoạt trước khi đăng nhập.</p>
           </div>
           <form class="form" data-region="login-form" novalidate="">
             <div data-region="login-fields" class="form__grid">
               <div class="form-field">
                 <label class="form-field__label" for="field-email-1">
-                  Email
+                  Email hoặc mã tài khoản
                   <span class="form-field__required" aria-hidden="true">*</span>
                 </label>
-                <input type="email" class="form-field__control" id="field-email-1" name="email" required="" aria-describedby="field-email-1-error" autocomplete="username" placeholder="Nhập email của bạn" value="">
+                <input type="text" class="form-field__control" id="field-email-1" name="email" required="" aria-describedby="field-email-1-error" autocomplete="username" placeholder="Nhập email hoặc mã tài khoản" value="">
                 <p class="form-field__error" id="field-email-1-error" data-error-for="email" hidden="">
                 </p>
               </div>

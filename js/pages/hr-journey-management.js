@@ -1,13 +1,21 @@
+import { getOnboardingDefaults } from '../data/settings.js';
 import { showToast, openModal, confirmAction, setViewState } from '../common/ui.js';
-import { validateFields } from '../common/page-ui.js';
 import { formatDate } from '../common/format.js';
 import * as organization from '../data/organization.js';
-import { ensurePreviewSession } from '../data/auth.js';
+import { listDepartments } from '../data/resources.js';
+import { fillSelect } from '../common/renderers.js';
+import { watchData } from '../common/data-ui.js';
+import { bindForm } from '../common/page-ui.js';
+import { initHireManagement } from '../common/hire-ui.js';
 
 const root = () => document.querySelector('#main-content');
 const region = (name) => root().querySelector(`[data-region="${name}"]`);
 
-const state = { items: [], error: null };
+const state = { items: [], departments: [], error: null };
+
+function departmentName(id) {
+  return state.departments.find(item => item.id === id)?.name || id || 'Mọi phòng ban';
+}
 
 function showError(error) {
   console.error(error);
@@ -36,7 +44,7 @@ function renderRow(journey) {
     nameCell.append(p);
   }
   const deptCell = document.createElement('td');
-  deptCell.textContent = journey.departmentId ?? '—';
+  deptCell.textContent = departmentName(journey.departmentId);
   const daysCell = document.createElement('td');
   daysCell.className = 'table__cell--numeric';
   daysCell.textContent = String(journey.durationDays ?? '—');
@@ -77,6 +85,7 @@ async function load() {
     const search = region('journey-filters')?.elements?.search?.value?.trim() ?? '';
     const status = region('journey-filters')?.elements?.status?.value ?? '';
     state.items = await organization.listJourneys({ title: search || undefined, status: status || undefined });
+    state.departments = listDepartments();
     state.error = null;
     render();
   } catch (error) {
@@ -108,20 +117,24 @@ function journeyForm(journey) {
   const content = document.createElement('div');
   content.append(template.content.cloneNode(true));
   const form = content.querySelector('form');
+  fillSelect(form.elements.departmentId, listDepartments().filter(item => item.status === 'active' || item.id === journey?.departmentId).map(item => ({ value: item.id, label: item.name })), 'Mọi phòng ban');
+  if (!journey) {
+    form.elements.durationDays.value = getOnboardingDefaults().onboardingDays;
+    form.elements.targetRole.value = 'all';
+  }
   if (journey) {
-    form.elements.namedItem('name').value = journey.title ?? '';
+    form.elements.namedItem('title').value = journey.title ?? '';
     form.elements.namedItem('departmentId').value = journey.departmentId ?? '';
     form.elements.namedItem('durationDays').value = journey.durationDays ?? '';
-    form.elements.namedItem('status').value = journey.status ?? 'active';
+    form.elements.namedItem('targetRole').value = journey.targetRole ?? 'all';
     form.elements.namedItem('description').value = journey.description ?? '';
   }
   const submit = form.querySelector('button[type="submit"]');
   if (submit) submit.textContent = journey ? 'Lưu thay đổi' : 'Tạo hành trình';
   const modal = openModal({ title: journey ? 'Chỉnh sửa hành trình' : (template.dataset.title || 'Tạo mẫu hành trình'), content });
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    if (!validateFields(form)) return;
+  bindForm(form, async () => {
     const values = Object.fromEntries(new FormData(form).entries());
+    values.departmentId ||= null;
     try {
       if (journey) await organization.updateJourney(journey.id, values);
       else await organization.createJourney(values);
@@ -149,12 +162,12 @@ async function viewJourney(id) {
       ['Tên hành trình', journey.title],
       ['Mô tả', journey.description ?? '—'],
       ['Vai trò mục tiêu', journey.targetRole ?? 'all'],
-      ['Phòng ban', journey.departmentId ?? '—'],
+      ['Phòng ban', departmentName(journey.departmentId)],
       ['Thời lượng (ngày)', String(journey.durationDays ?? '—')],
       ['Trạng thái', organization.JOURNEY_STATUS_LABELS[journey.status]?.label ?? journey.status],
       ['Nhân sự đang gán', String(references.newHires)],
       ['Nhiệm vụ tham chiếu', String(references.tasks)],
-      ['Ngày tạo', formatDate(journey.createdAt)],
+      ['Ngày tạo', formatDate(journey.createdAt?.slice(0, 10))],
     ];
     for (const [term, value] of rows) {
       const dt = document.createElement('dt');
@@ -193,16 +206,11 @@ async function toggleJourney(id, target) {
   }
 }
 
-export async function initPage({ currentUser }) {
-  try {
-    await ensurePreviewSession(currentUser?.role ?? 'hr');
-  } catch (error) {
-    showError(error);
-    return;
-  }
+export async function initPage() {
+  initHireManagement();
   const filters = region('journey-filters');
   filters?.addEventListener('submit', (event) => { event.preventDefault(); load(); });
-  filters?.addEventListener('change', () => load());
+  filters?.addEventListener('input', () => load());
   root().addEventListener('click', async (event) => {
     const button = event.target.closest('button[data-action]');
     if (!button || button.type === 'submit') return;
@@ -214,6 +222,5 @@ export async function initPage({ currentUser }) {
     else if (action === 'deactivate-journey') await toggleJourney(id, 'inactive');
     else if (action === 'activate-journey') await toggleJourney(id, 'active');
   });
-  await load();
+  watchData(['journeys', 'departments'], load, region('journey-state'));
 }
-

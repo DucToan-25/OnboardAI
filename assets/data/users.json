@@ -1051,19 +1051,19 @@
     "role": "newHire",
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên vận hành nhân sự",
-    "status": "invited",
+    "status": "active",
     "createdAt": "2026-10-11",
     "password": "QuocHung2026"
   },
   {
-    "id": "user-097",
-    "fullName": "Đinh Bảo Vy",
-    "email": "dinh.bao.vy.097@onboardai.example",
+    "id": "user-ư097",
+    "fullName": "Nguyễn Đức Toàn",
+    "email": "ndt03012007@gmail.com",
     "role": "newHire",
     "departmentId": "dept-engineering",
-    "jobTitle": "Kỹ sư kiểm thử phần mềm",
-    "status": "invited",
-    "createdAt": "2026-10-10",
-    "password": "BaoVy2026"
+    "jobTitle": "Lập trình viên",
+    "status": "active",
+    "createdAt": "2026-10-02",
+    "password": "@Toan200779"
   }
 ]

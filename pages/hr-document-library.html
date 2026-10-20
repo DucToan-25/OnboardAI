@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/pages/hr-document-library.css">
     <link rel="stylesheet" href="../css/responsive.css">
   </head>
-  <body class="page page--hr-document-library" data-page="hr-document-library" data-display-name="Nguyễn Thu Hà" data-layout-role="hr">
+  <body class="page page--hr-document-library" data-page="hr-document-library">
     <div class="app-shell is-collapsed">
       <header class="app-header" id="app-header">
       </header>
@@ -31,7 +31,7 @@
           <section class="card">
             <div class="card__header">
               <h2 class="card__title">Danh sách tài liệu</h2>
-              <span class="form-field__hint" data-region="document-count">8 / 8 tài liệu</span>
+              <span class="form-field__hint" data-region="document-count">—</span>
             </div>
             <form class="toolbar" data-region="document-filters" role="search">
               <div class="form-field toolbar__search">
@@ -40,20 +40,14 @@
               </div>
               <div class="form-field toolbar__filters">
                 <label class="form-field__label" for="document-category">Chủ đề</label>
-                <select class="form-field__control" id="document-category" name="category">
-                  <option value="" selected="">Tất cả chủ đề</option>
-                  <option value="Biểu mẫu">Biểu mẫu</option>
-                  <option value="Chính sách">Chính sách</option>
-                  <option value="Hướng dẫn">Hướng dẫn</option>
-                  <option value="Quy trình">Quy trình</option>
-                </select>
+                <select class="form-field__control" id="document-category" name="category"><option value="">Tất cả chủ đề</option></select>
               </div>
               <div class="form-field toolbar__filters">
                 <label class="form-field__label" for="document-status">Trạng thái</label>
                 <select class="form-field__control" id="document-status" name="status">
                   <option value="" selected="">Tất cả trạng thái</option>
                   <option value="draft">Bản nháp</option>
-                  <option value="published">Đã phát hành</option>
+                  <option value="active">Đã phát hành</option>
                   <option value="archived">Đã lưu trữ</option>
                 </select>
               </div>
@@ -71,193 +65,14 @@
                     <th scope="col">Thao tác</th>
                   </tr>
                 </thead>
-                <tbody data-region="document-rows">
-                  <tr data-id="doc-001">
-                    <td>
-                      <a href="document-detail.html?id=doc-001">Sổ tay nhân viên</a>
-                    </td>
-                    <td>Chính sách</td>
-                    <td>
-                      <span class="badge badge--success">Đã phát hành</span>
-                    </td>
-                    <td class="table__cell--nowrap">15:00 28/09/2026</td>
-                    <td class="table__actions">
-                      <a class="btn btn--secondary btn--sm" href="document-detail.html?id=doc-001">Đọc</a>
-                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-document" data-id="doc-001">Sửa</button>
-                      <button class="btn btn--danger btn--sm" type="button" data-action="archive-document" data-id="doc-001">Lưu trữ</button>
-                    </td>
-                  </tr>
-                  <tr data-id="doc-002">
-                    <td>
-                      <a href="document-detail.html?id=doc-002">Quy định bảo mật</a>
-                    </td>
-                    <td>Chính sách</td>
-                    <td>
-                      <span class="badge badge--success">Đã phát hành</span>
-                    </td>
-                    <td class="table__cell--nowrap">15:00 28/09/2026</td>
-                    <td class="table__actions">
-                      <a class="btn btn--secondary btn--sm" href="document-detail.html?id=doc-002">Đọc</a>
-                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-document" data-id="doc-002">Sửa</button>
-                      <button class="btn btn--danger btn--sm" type="button" data-action="archive-document" data-id="doc-002">Lưu trữ</button>
-                    </td>
-                  </tr>
-                  <tr data-id="doc-003">
-                    <td>
-                      <a href="document-detail.html?id=doc-003">Hướng dẫn công cụ</a>
-                    </td>
-                    <td>Hướng dẫn</td>
-                    <td>
-                      <span class="badge badge--success">Đã phát hành</span>
-                    </td>
-                    <td class="table__cell--nowrap">15:00 28/09/2026</td>
-                    <td class="table__actions">
-                      <a class="btn btn--secondary btn--sm" href="document-detail.html?id=doc-003">Đọc</a>
-                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-document" data-id="doc-003">Sửa</button>
-                      <button class="btn btn--danger btn--sm" type="button" data-action="archive-document" data-id="doc-003">Lưu trữ</button>
-                    </td>
-                  </tr>
-                  <tr data-id="doc-004">
-                    <td>
-                      <a href="document-detail.html?id=doc-004">Quy trình làm việc</a>
-                    </td>
-                    <td>Quy trình</td>
-                    <td>
-                      <span class="badge badge--success">Đã phát hành</span>
-                    </td>
-                    <td class="table__cell--nowrap">15:00 28/09/2026</td>
-                    <td class="table__actions">
-                      <a class="btn btn--secondary btn--sm" href="document-detail.html?id=doc-004">Đọc</a>
-                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-document" data-id="doc-004">Sửa</button>
-                      <button class="btn btn--danger btn--sm" type="button" data-action="archive-document" data-id="doc-004">Lưu trữ</button>
-                    </td>
-                  </tr>
-                  <tr data-id="doc-005">
-                    <td>
-                      <a href="document-detail.html?id=doc-005">Mẫu mục tiêu tuần đầu</a>
-                    </td>
-                    <td>Biểu mẫu</td>
-                    <td>
-                      <span class="badge badge--success">Đã phát hành</span>
-                    </td>
-                    <td class="table__cell--nowrap">15:00 28/09/2026</td>
-                    <td class="table__actions">
-                      <a class="btn btn--secondary btn--sm" href="document-detail.html?id=doc-005">Đọc</a>
-                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-document" data-id="doc-005">Sửa</button>
-                      <button class="btn btn--danger btn--sm" type="button" data-action="archive-document" data-id="doc-005">Lưu trữ</button>
-                    </td>
-                  </tr>
-                  <tr data-id="doc-006">
-                    <td>
-                      <a href="document-detail.html?id=doc-006">Hướng dẫn check-in</a>
-                    </td>
-                    <td>Hướng dẫn</td>
-                    <td>
-                      <span class="badge badge--success">Đã phát hành</span>
-                    </td>
-                    <td class="table__cell--nowrap">15:00 28/09/2026</td>
-                    <td class="table__actions">
-                      <a class="btn btn--secondary btn--sm" href="document-detail.html?id=doc-006">Đọc</a>
-                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-document" data-id="doc-006">Sửa</button>
-                      <button class="btn btn--danger btn--sm" type="button" data-action="archive-document" data-id="doc-006">Lưu trữ</button>
-                    </td>
-                  </tr>
-                  <tr data-id="doc-draft">
-                    <td>
-                      <a href="document-detail.html?id=doc-draft">Chính sách đang soạn</a>
-                    </td>
-                    <td>Chính sách</td>
-                    <td>
-                      <span class="badge badge--neutral">Bản nháp</span>
-                    </td>
-                    <td class="table__cell--nowrap">15:00 28/09/2026</td>
-                    <td class="table__actions">
-                      <a class="btn btn--secondary btn--sm" href="document-detail.html?id=doc-draft">Đọc</a>
-                      <button class="btn btn--ghost btn--sm" type="button" data-action="edit-document" data-id="doc-draft">Sửa</button>
-                      <button class="btn btn--primary btn--sm" type="button" data-action="publish-document" data-id="doc-draft">Phát hành</button>
-                      <button class="btn btn--danger btn--sm" type="button" data-action="archive-document" data-id="doc-draft">Lưu trữ</button>
-                    </td>
-                  </tr>
-                </tbody>
+                <tbody data-region="document-rows"></tbody>
               </table>
             </div>
-          </section>
-          <section class="card" data-region="document-preview" aria-live="polite" hidden="">
           </section>
         </div>
       </main>
     </div>
-    <template data-template="open-document-form" data-title="Thêm tài liệu">
-      <form class="form" novalidate="">
-        <div class="form-field">
-          <label class="form-field__label" for="field-title-1">
-            Tiêu đề
-            <span class="form-field__required" aria-hidden="true">*</span>
-          </label>
-          <input type="text" class="form-field__control" id="field-title-1" name="title" required="" aria-describedby="field-title-1-error" value="">
-          <p class="form-field__error" id="field-title-1-error" data-error-for="title" hidden="">
-          </p>
-        </div>
-        <div class="form-field">
-          <label class="form-field__label" for="field-category-2">
-            Chủ đề
-            <span class="form-field__required" aria-hidden="true">*</span>
-          </label>
-          <input type="text" class="form-field__control" id="field-category-2" name="category" required="" aria-describedby="field-category-2-error" value="">
-          <p class="form-field__error" id="field-category-2-error" data-error-for="category" hidden="">
-          </p>
-        </div>
-        <div class="form-field">
-          <label class="form-field__label" for="field-status-3">Trạng thái</label>
-          <select class="form-field__control" id="field-status-3" name="status" aria-describedby="field-status-3-error">
-            <option value="draft" selected="">Bản nháp</option>
-            <option value="published">Đã phát hành</option>
-            <option value="archived">Đã lưu trữ</option>
-          </select>
-          <p class="form-field__error" id="field-status-3-error" data-error-for="status" hidden="">
-          </p>
-        </div>
-        <div class="form-field">
-          <label class="form-field__label" for="field-audienceRoles-4">
-            Vai trò được đọc
-            <span class="form-field__required" aria-hidden="true">*</span>
-          </label>
-          <select class="form-field__control" id="field-audienceRoles-4" name="audienceRoles" required="" aria-describedby="field-audienceRoles-4-error field-audienceRoles-4-hint" multiple="">
-            <option value="newhire" selected="">Nhân sự mới</option>
-            <option value="mentor" selected="">Người hướng dẫn</option>
-            <option value="hr" selected="">Nhân sự</option>
-            <option value="admin" selected="">Quản trị viên</option>
-          </select>
-          <p class="form-field__error" id="field-audienceRoles-4-error" data-error-for="audienceRoles" hidden="">
-          </p>
-          <p class="form-field__hint" id="field-audienceRoles-4-hint">Chọn một hoặc nhiều vai trò (Ctrl/Cmd khi dùng chuột).</p>
-        </div>
-        <div class="form-field">
-          <label class="form-field__label" for="field-departmentIds-5">Phạm vi phòng ban</label>
-          <select class="form-field__control" id="field-departmentIds-5" name="departmentIds" aria-describedby="field-departmentIds-5-error field-departmentIds-5-hint" multiple="">
-            <option value="dep-dev">Phát triển sản phẩm</option>
-            <option value="dep-sales">Kinh doanh</option>
-            <option value="dep-hr">Nhân sự</option>
-          </select>
-          <p class="form-field__error" id="field-departmentIds-5-error" data-error-for="departmentIds" hidden="">
-          </p>
-          <p class="form-field__hint" id="field-departmentIds-5-hint">Để trống để áp dụng mọi phòng ban. Ctrl/Cmd để chọn nhiều.</p>
-        </div>
-        <div class="form-field">
-          <label class="form-field__label" for="field-content-6">
-            Nội dung
-            <span class="form-field__required" aria-hidden="true">*</span>
-          </label>
-          <textarea class="form-field__control" id="field-content-6" name="content" required="" aria-describedby="field-content-6-error"></textarea>
-          <p class="form-field__error" id="field-content-6-error" data-error-for="content" hidden="">
-          </p>
-        </div>
-        <div class="modal__footer">
-          <button class="btn btn--secondary btn--sm" type="button" data-action="cancel-document-form">Hủy</button>
-          <button class="btn btn--primary btn--sm" type="submit" data-action="preview-document">Lưu tài liệu</button>
-        </div>
-      </form>
-    </template>
+    <template data-template="open-document-form" data-title="Tài liệu"><form class="form" novalidate><div class="form__grid"><div class="form-field"><label class="form-field__label" for="edit-title">Tiêu đề</label><input class="form-field__control" id="edit-title" name="title" type="text" value="" required  ><p class="form-field__error" data-error-for="title" hidden></p></div><div class="form-field"><label class="form-field__label" for="edit-category">Chủ đề</label><input class="form-field__control" id="edit-category" name="category" type="text" value="" required  ><p class="form-field__error" data-error-for="category" hidden></p></div><div class="form-field"><label class="form-field__label" for="edit-description">Mô tả</label><textarea class="form-field__control" id="edit-description" name="description" ></textarea><p class="form-field__error" data-error-for="description" hidden></p></div><div class="form-field"><label class="form-field__label" for="edit-fileUrl">Đường dẫn tệp HTTP(S) hoặc assets/docs/</label><input class="form-field__control" id="edit-fileUrl" name="fileUrl" type="text" value=""   ><p class="form-field__error" data-error-for="fileUrl" hidden></p></div><div class="form-field"><label class="form-field__label" for="edit-departmentId">Phòng ban</label><select class="form-field__control" id="edit-departmentId" name="departmentId" ></select><p class="form-field__error" data-error-for="departmentId" hidden></p></div><div class="form-field"><label class="form-field__label" for="edit-targetRole">Đối tượng</label><select class="form-field__control" id="edit-targetRole" name="targetRole" ><option value="all">Toàn công ty</option><option value="newhire">Nhân sự mới</option><option value="engineer">Kỹ sư</option><option value="mentor">Mentor</option><option value="hr">HR</option><option value="admin">Admin</option></select><p class="form-field__error" data-error-for="targetRole" hidden></p></div></div><div class="form__actions"><button type="button" class="btn btn--secondary">Hủy</button><button type="submit" class="btn btn--primary">Lưu</button></div></form></template>
     <div id="modal-root">
     </div>
     <div id="toast-root" aria-live="polite">

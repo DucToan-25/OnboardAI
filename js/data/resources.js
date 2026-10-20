@@ -1,409 +1,164 @@
-<<<<<<< HEAD
-/*
- * resources.js — phòng ban, tài liệu, check-in.
- * OWNER: SV2. Hợp đồng OnboardAI_QuyTac_LocalStorage.md mục 4.5–4.8.
- *
- * - Phòng ban: chỉ Admin tạo/sửa/vô hiệu hóa; không xóa khi còn tham chiếu.
- * - Tài liệu: HR/Admin ghi; mentor/newHire đọc theo trạng thái và đối tượng.
- * - Check-in: mentor giao dịch; chặn trùng (newHireId + mentorId + scheduledAt)
- *   với lịch chưa cancelled; khi cập nhật loại trừ chính ID đang sửa.
- */
-import { requireRoles } from './auth.js';
-import {
-  StoreError, create, createId, getAll, getById, update,
-} from './store.js';
-
-const DEPT_STATUSES = Object.freeze(['active', 'inactive']);
-const DOC_STATUSES = Object.freeze(['draft', 'active', 'archived']);
-const CHECKIN_STATUSES = Object.freeze(['scheduled', 'completed', 'cancelled']);
-const ADMIN_ROLES = Object.freeze(['admin']);
-const DOC_WRITE_ROLES = Object.freeze(['hr', 'admin']);
-const MENTOR_ROLES = Object.freeze(['mentor', 'hr', 'admin']);
-
-function now() {
-  return new Date().toISOString();
-}
-
-function cleanText(value, fallback = null) {
-  if (typeof value !== 'string') return fallback;
-  const trimmed = value.trim();
-  return trimmed || fallback;
-}
-
-function requireFields(input, fields, entity) {
-  for (const field of fields) {
-    const value = input?.[field];
-    if (typeof value !== 'string' || !value.trim()) {
-      throw new StoreError('VALIDATION_ERROR', `${entity}: trường "${field}" là bắt buộc.`);
-    }
-  }
-}
-
-function assertDeptStatus(status) {
-  if (!DEPT_STATUSES.includes(status)) {
-    throw new StoreError('VALIDATION_ERROR', `Trạng thái phòng ban không hợp lệ: ${status}.`);
-  }
-}
-
-function assertDocStatus(status) {
-  if (!DOC_STATUSES.includes(status)) {
-    throw new StoreError('VALIDATION_ERROR', `Trạng thái tài liệu không hợp lệ: ${status}.`);
-  }
-}
-
-function assertCheckinStatus(status) {
-  if (!CHECKIN_STATUSES.includes(status)) {
-    throw new StoreError('VALIDATION_ERROR', `Trạng thái check-in không hợp lệ: ${status}.`);
-  }
-}
-
-// ===== Phòng ban (Admin) =====
-
-export async function listDepartments(query = {}) {
-  const user = await requireRoles([]);
-  let items = await getAll('departments');
-
-  if (user.role !== 'admin') {
-    items = items.filter((d) => d.status === 'active');
-  } else if (query.status) {
-    assertDeptStatus(query.status);
-    items = items.filter((d) => d.status === query.status);
-  }
-
-  if (query.search && typeof query.search === 'string') {
-    const q = query.search.trim().toLowerCase();
-    if (q) {
-      items = items.filter(
-        (d) => (d.name || '').toLowerCase().includes(q)
-          || (d.description || '').toLowerCase().includes(q),
-      );
-    }
-  }
-
-  return items.slice().sort((a, b) => (a.name || '').localeCompare(b.name || '', 'vi'));
-}
-
-export async function createDepartment(input = {}) {
-  await requireRoles(ADMIN_ROLES);
-  requireFields(input, ['name'], 'department');
-  const status = input.status ?? 'active';
-  assertDeptStatus(status);
-  const timestamp = now();
-  return create('departments', {
-    id: createId('departments'),
-    name: input.name.trim(),
-    description: cleanText(input.description),
-    managerId: cleanText(input.managerId),
-    status,
-    createdAt: timestamp,
-    updatedAt: timestamp,
-  });
-}
-
-export async function updateDepartment(id, patch = {}) {
-  await requireRoles(ADMIN_ROLES);
-  const record = await getById('departments', id);
-  if (!record) throw new StoreError('NOT_FOUND', `Không tìm thấy phòng ban ${id}.`);
-
-  const changes = {};
-  if (Object.hasOwn(patch, 'name')) {
-    requireFields(patch, ['name'], 'department');
-    changes.name = patch.name.trim();
-  }
-  if (Object.hasOwn(patch, 'description')) changes.description = cleanText(patch.description);
-  if (Object.hasOwn(patch, 'managerId')) changes.managerId = cleanText(patch.managerId);
-  if (Object.hasOwn(patch, 'status')) {
-    assertDeptStatus(patch.status);
-    changes.status = patch.status;
-  }
-  if (!Object.keys(changes).length) {
-    throw new StoreError('VALIDATION_ERROR', 'Không có trường hợp lệ nào để cập nhật phòng ban.');
-  }
-  return update('departments', id, { ...changes, updatedAt: now() });
-}
-
-/** Vô hiệu hóa phòng ban (giữ liên kết, không xóa vật lý). */
-export async function archiveDepartment(id) {
-  await requireRoles(ADMIN_ROLES);
-  const record = await getById('departments', id);
-  if (!record) throw new StoreError('NOT_FOUND', `Không tìm thấy phòng ban ${id}.`);
-  if (record.status === 'inactive') return record;
-  return update('departments', id, { status: 'inactive', updatedAt: now() });
-}
-
-/** Số bản ghi đang tham chiếu phòng ban (users/newHires/journeys/documents). */
-export async function getDepartmentReferences(departmentId) {
-  if (typeof departmentId !== 'string' || !departmentId) {
-    throw new StoreError('VALIDATION_ERROR', 'departmentId phải là chuỗi khác rỗng.');
-  }
-  const [users, newHires, journeys, documents] = await Promise.all([
-    getAll('users'),
-    getAll('newHires'),
-    getAll('journeys'),
-    getAll('documents'),
-  ]);
-  return {
-    users: users.filter((u) => u.departmentId === departmentId).length,
-    newHires: newHires.filter((h) => h.departmentId === departmentId).length,
-    journeys: journeys.filter((j) => j.departmentId === departmentId).length,
-    documents: documents.filter((d) => d.departmentId === departmentId).length,
-  };
-}
-
-// ===== Tài liệu =====
-
-export async function listDocuments(query = {}) {
-  const user = await requireRoles([]);
-  let items = await getAll('documents');
-
-  if (DOC_WRITE_ROLES.includes(user.role)) {
-    if (query.status) {
-      assertDocStatus(query.status);
-      items = items.filter((d) => d.status === query.status);
-    }
-  } else {
-    items = items.filter((d) => d.status === 'active');
-    items = items.filter((d) => {
-      const target = d.targetRole || 'all';
-      return target === 'all' || target === user.role;
-    });
-  }
-
-  if (query.category && typeof query.category === 'string') {
-    const cat = query.category.trim().toLowerCase();
-    if (cat) items = items.filter((d) => (d.category || '').toLowerCase() === cat);
-  }
-  if (query.departmentId) {
-    items = items.filter((d) => d.departmentId === query.departmentId);
-  }
-  if (query.search && typeof query.search === 'string') {
-    const q = query.search.trim().toLowerCase();
-    if (q) {
-      items = items.filter(
-        (d) => (d.title || '').toLowerCase().includes(q)
-          || (d.description || '').toLowerCase().includes(q),
-      );
-    }
-  }
-  return items.slice().sort((a, b) => (a.title || '').localeCompare(b.title || '', 'vi'));
-}
-
-export async function getDocument(id) {
-  const user = await requireRoles([]);
-  const doc = await getById('documents', id);
-  if (!doc) throw new StoreError('NOT_FOUND', `Không tìm thấy tài liệu ${id}.`);
-
-  if (!DOC_WRITE_ROLES.includes(user.role)) {
-    if (doc.status !== 'active') {
-      throw new StoreError('FORBIDDEN', 'Tài liệu chưa được công bố hoặc đã lưu trữ.');
-    }
-    const target = doc.targetRole || 'all';
-    if (target !== 'all' && target !== user.role) {
-      throw new StoreError('FORBIDDEN', 'Bạn không thuộc đối tượng được xem tài liệu này.');
-    }
-  }
-  return doc;
-}
-
-export async function createDocument(input = {}) {
-  const user = await requireRoles(DOC_WRITE_ROLES);
-  requireFields(input, ['title'], 'document');
-  const status = input.status ?? 'draft';
-  assertDocStatus(status);
-  const timestamp = now();
-  return create('documents', {
-    id: createId('documents'),
-    title: input.title.trim(),
-    category: cleanText(input.category) ?? 'Chung',
-    description: cleanText(input.description),
-    fileUrl: cleanText(input.fileUrl),
-    departmentId: cleanText(input.departmentId),
-    targetRole: cleanText(input.targetRole) ?? 'all',
-    status,
-    createdBy: user.id,
-    createdAt: timestamp,
-    updatedAt: timestamp,
-  });
-}
-
-export async function updateDocument(id, patch = {}) {
-  await requireRoles(DOC_WRITE_ROLES);
-  const record = await getById('documents', id);
-  if (!record) throw new StoreError('NOT_FOUND', `Không tìm thấy tài liệu ${id}.`);
-
-  const changes = {};
-  if (Object.hasOwn(patch, 'title')) {
-    requireFields(patch, ['title'], 'document');
-    changes.title = patch.title.trim();
-  }
-  if (Object.hasOwn(patch, 'category')) changes.category = cleanText(patch.category) ?? 'Chung';
-  if (Object.hasOwn(patch, 'description')) changes.description = cleanText(patch.description);
-  if (Object.hasOwn(patch, 'fileUrl')) changes.fileUrl = cleanText(patch.fileUrl);
-  if (Object.hasOwn(patch, 'departmentId')) changes.departmentId = cleanText(patch.departmentId);
-  if (Object.hasOwn(patch, 'targetRole')) changes.targetRole = cleanText(patch.targetRole) ?? 'all';
-  if (Object.hasOwn(patch, 'status')) {
-    assertDocStatus(patch.status);
-    changes.status = patch.status;
-  }
-  if (!Object.keys(changes).length) {
-    throw new StoreError('VALIDATION_ERROR', 'Không có trường hợp lệ nào để cập nhật tài liệu.');
-  }
-  return update('documents', id, { ...changes, updatedAt: now() });
-}
-
-export async function archiveDocument(id) {
-  await requireRoles(DOC_WRITE_ROLES);
-  const record = await getById('documents', id);
-  if (!record) throw new StoreError('NOT_FOUND', `Không tìm thấy tài liệu ${id}.`);
-  if (record.status === 'archived') return record;
-  return update('documents', id, { status: 'archived', updatedAt: now() });
-}
-
-// ===== Check-in =====
-
-export async function listCheckins(query = {}) {
-  const user = await requireRoles([]);
-  let items = await getAll('checkins');
-
-  if (user.role === 'mentor') {
-    items = items.filter((c) => c.mentorId === user.id);
-  } else if (user.role === 'newHire') {
-    const hires = await getAll('newHires');
-    const myHire = hires.find((h) => h.userId === user.id);
-    if (!myHire) return [];
-    items = items.filter((c) => c.newHireId === myHire.id);
-  } else if (!DOC_WRITE_ROLES.includes(user.role)) {
-    throw new StoreError('FORBIDDEN', `Vai trò "${user.role}" không được xem check-in.`);
-  }
-
-  if (query.newHireId) items = items.filter((c) => c.newHireId === query.newHireId);
-  if (query.mentorId) items = items.filter((c) => c.mentorId === query.mentorId);
-  if (query.status) {
-    assertCheckinStatus(query.status);
-    items = items.filter((c) => c.status === query.status);
-  }
-
-  return items.slice().sort((a, b) => {
-    const ta = a.scheduledAt || a.createdAt || '';
-    const tb = b.scheduledAt || b.createdAt || '';
-    return tb.localeCompare(ta);
-  });
-}
-
-export async function createCheckin(input = {}) {
-  const user = await requireRoles(MENTOR_ROLES);
-  requireFields(input, ['newHireId', 'scheduledAt'], 'checkin');
-
-  const hire = await getById('newHires', input.newHireId);
-  if (!hire) throw new StoreError('NOT_FOUND', `Không tìm thấy hồ sơ nhân sự ${input.newHireId}.`);
-
-  let mentorId = user.id;
-  if (user.role === 'mentor') {
-    if (hire.mentorId !== user.id) {
-      throw new StoreError('FORBIDDEN', 'Mentor chỉ tạo check-in cho mentee của mình.');
-    }
-  } else {
-    mentorId = cleanText(input.mentorId) || hire.mentorId || user.id;
-  }
-
-  const scheduledAt = input.scheduledAt.trim();
-  const status = input.status ?? 'scheduled';
-  assertCheckinStatus(status);
-
-  const existing = await getAll('checkins');
-  const duplicate = existing.find(
-    (c) => c.newHireId === hire.id
-      && c.mentorId === mentorId
-      && c.scheduledAt === scheduledAt
-      && c.status !== 'cancelled',
-  );
-  if (duplicate) {
-    throw new StoreError(
-      'DUPLICATE_ID',
-      `Đã có lịch check-in ${duplicate.id} cùng thời điểm ${scheduledAt} (trạng thái ${duplicate.status}). Hiển thị lịch cũ thay vì tạo trùng.`,
-    );
-  }
-
-  const timestamp = now();
-  return create('checkins', {
-    id: createId('checkins'),
-    newHireId: hire.id,
-    mentorId,
-    scheduledAt,
-    status,
-    note: cleanText(input.note),
-    nextAction: cleanText(input.nextAction),
-    createdAt: timestamp,
-    updatedAt: timestamp,
-  });
-}
-
-export async function updateCheckin(id, patch = {}) {
-  const user = await requireRoles(MENTOR_ROLES);
-  const record = await getById('checkins', id);
-  if (!record) throw new StoreError('NOT_FOUND', `Không tìm thấy check-in ${id}.`);
-
-  if (user.role === 'mentor' && record.mentorId !== user.id) {
-    throw new StoreError('FORBIDDEN', 'Mentor chỉ sửa check-in của chính mình.');
-  }
-
-  const changes = {};
-  if (Object.hasOwn(patch, 'scheduledAt')) {
-    requireFields(patch, ['scheduledAt'], 'checkin');
-    changes.scheduledAt = patch.scheduledAt.trim();
-  }
-  if (Object.hasOwn(patch, 'note')) changes.note = cleanText(patch.note);
-  if (Object.hasOwn(patch, 'nextAction')) changes.nextAction = cleanText(patch.nextAction);
-  if (Object.hasOwn(patch, 'status')) {
-    assertCheckinStatus(patch.status);
-    changes.status = patch.status;
-  }
-  if (!Object.keys(changes).length) {
-    throw new StoreError('VALIDATION_ERROR', 'Không có trường hợp lệ nào để cập nhật check-in.');
-  }
-
-  const nextScheduled = changes.scheduledAt ?? record.scheduledAt;
-  const nextStatus = changes.status ?? record.status;
-  if (nextStatus !== 'cancelled') {
-    const existing = await getAll('checkins');
-    const duplicate = existing.find(
-      (c) => c.id !== id
-        && c.newHireId === record.newHireId
-        && c.mentorId === record.mentorId
-        && c.scheduledAt === nextScheduled
-        && c.status !== 'cancelled',
-    );
-    if (duplicate) {
-      throw new StoreError(
-        'DUPLICATE_ID',
-        `Đã có lịch check-in ${duplicate.id} cùng thời điểm ${nextScheduled}.`,
-      );
-    }
-  }
-
-  return update('checkins', id, { ...changes, updatedAt: now() });
-=======
-// SV2 read contract shared by SV1's library and Policy Q&A.
-import { getAll, getById } from './store.js';
+import { getAll, getById, create, update, createId, StoreError } from './store.js';
 import { requireRoles } from '../common/auth.js';
+import { parseStoredDate } from '../common/format.js';
+import { can } from '../common/permissions.js';
 
-function canRead(document, user) {
-  if (['hr', 'admin'].includes(user.role)) return true;
-  if (document.status !== 'active') return false;
-  // Seed's targetRole is an audience: "newhire" maps to the account role newHire.
-  // "all" is company-wide; engineer additionally requires the engineering department.
-  if (document.targetRole === 'all') return true;
-  const role = document.targetRole === 'newhire' ? 'newHire' : document.targetRole;
-  const audience = role === user.role || (role === 'engineer' && user.departmentId === 'dept-engineering');
-  return audience && (document.departmentId === null || document.departmentId === user.departmentId);
+function fail(message, code = 'VALIDATION_ERROR') { throw new StoreError(code, message); }
+function record(collection, id) {
+  const item = getById(collection, id);
+  if (!item) fail('Không tìm thấy bản ghi.', 'NOT_FOUND');
+  return item;
+}
+function fields(patch, allowed) {
+  if (!patch || typeof patch !== 'object' || Array.isArray(patch) || Object.keys(patch).some(key => !allowed.includes(key))) fail('Có trường không được phép thay đổi.');
+}
+function required(value, label) {
+  if (typeof value !== 'string' || !value.trim()) fail(`${label} không được để trống.`);
+  return value.trim();
+}
+function department(id, previous) {
+  if (id === null) return;
+  const item = record('departments', id);
+  if (id !== previous && item.status !== 'active') fail('Phòng ban đã ngừng hoạt động.');
+}
+function text(value) {
+  if (value != null && typeof value !== 'string') fail('Nội dung phải là văn bản.');
+  return value?.trim() || null;
+}
+function filter(items, query, searchable) {
+  const search = String(query.search || '').trim().toLocaleLowerCase('vi');
+  return items.filter(item => (!query.status || item.status === query.status)
+    && (!query.departmentId || item.departmentId === query.departmentId)
+    && (!query.category || item.category === query.category)
+    && (!search || searchable.map(key => item[key] || '').join(' ').toLocaleLowerCase('vi').includes(search)));
+}
+export function listDepartments(query = {}) {
+  requireRoles();
+  // Inactive references remain visible with their status; forms exclude new assignments.
+  return filter(getAll('departments'), query, ['name', 'description']);
+}
+function validateDepartment(input) {
+  const name = required(input.name, 'Tên phòng ban');
+  if (!['active', 'inactive'].includes(input.status)) fail('Trạng thái phòng ban không hợp lệ.');
+  if (input.managerId !== null) {
+    const manager = record('users', input.managerId);
+    if (manager.status !== 'active') fail('Người quản lý phải đang hoạt động.');
+  }
+  return { name, description: text(input.description), managerId: input.managerId, status: input.status };
+}
+export function createDepartment(input) {
+  requireRoles(['admin']); fields(input, ['name', 'description', 'managerId', 'status']);
+  const values = validateDepartment({ description: null, managerId: null, status: 'active', ...input });
+  const now = new Date().toISOString();
+  return create('departments', { ...values, id: createId('departments'), createdAt: now, updatedAt: now });
+}
+export function updateDepartment(id, patch) {
+  requireRoles(['admin']); fields(patch, ['name', 'description', 'managerId', 'status']);
+  const previous = record('departments', id);
+  return update('departments', id, { ...validateDepartment({ ...previous, ...patch }), updatedAt: new Date().toISOString() });
+}
+export function archiveDepartment(id) { return updateDepartment(id, { status: 'inactive' }); }
+export function getDepartmentReferences(id) {
+  requireRoles(['admin']); record('departments', id);
+  return Object.fromEntries(['users', 'newHires', 'journeys', 'documents'].map(name => [name, getAll(name).filter(item => item.departmentId === id).length]));
 }
 export function getReadableDocuments() {
-  const user = requireRoles();
-  return getAll('documents').filter(item => canRead(item, user));
+  const actor = requireRoles();
+  return getAll('documents').filter(item => can(actor, 'documents:read', item));
 }
+export function listDocuments(query = {}) { return filter(getReadableDocuments(), query, ['title', 'description', 'category']); }
 export function getDocument(id) {
-  const user = requireRoles(); const item = getById('documents', id);
-  if (!item || !canRead(item, user)) throw new Error('Tài liệu không tồn tại hoặc bạn không có quyền đọc.');
+  const actor = requireRoles(); const item = getById('documents', id);
+  if (!item || !can(actor, 'documents:read', item)) fail('Tài liệu không tồn tại hoặc bạn không có quyền đọc.', 'FORBIDDEN');
   return item;
->>>>>>> 906d77f (Update localstorage sv1)
+}
+function validateDocument(input, previous = {}) {
+  const title = required(input.title, 'Tiêu đề');
+  if (!['draft', 'active', 'archived'].includes(input.status)) fail('Trạng thái tài liệu không hợp lệ.');
+  if (!['all', 'newhire', 'newHire', 'mentor', 'hr', 'admin', 'engineer'].includes(input.targetRole)) fail('Đối tượng tài liệu không hợp lệ.');
+  department(input.departmentId, previous.departmentId);
+  const fileUrl = text(input.fileUrl);
+  if (fileUrl) {
+    if (/^https?:\/\//i.test(fileUrl)) {
+      try { new URL(fileUrl); } catch { fail('URL tài liệu không hợp lệ.'); }
+    } else {
+      let path;
+      try { path = decodeURIComponent(fileUrl); } catch { fail('Đường dẫn tệp không hợp lệ.'); }
+      if (!/^assets\/docs\/[^?#]+$/i.test(path) || path.includes('\\') || path.split('/').some(part => !part || part === '.' || part === '..')) fail('Đường dẫn tệp cần là HTTP(S) hoặc assets/docs/ hợp lệ.');
+    }
+  }
+  return { title, category: text(input.category) || 'Chung', description: text(input.description), fileUrl, departmentId: input.departmentId, targetRole: input.targetRole, status: input.status };
+}
+const DOC_FIELDS = ['title', 'category', 'description', 'fileUrl', 'departmentId', 'targetRole', 'status'];
+export function createDocument(input) {
+  const actor = requireRoles(['hr', 'admin']); fields(input, DOC_FIELDS);
+  const values = validateDocument({ category: 'Chung', description: null, fileUrl: null, departmentId: null, targetRole: 'all', status: 'draft', ...input });
+  if (values.status !== 'draft') fail('Tài liệu mới phải là bản nháp; phát hành bằng thao tác riêng.');
+  const now = new Date().toISOString();
+  return create('documents', { ...values, id: createId('documents'), createdBy: actor.id, createdAt: now, updatedAt: now });
+}
+export function updateDocument(id, patch) {
+  requireRoles(['hr', 'admin']); fields(patch, DOC_FIELDS);
+  const previous = record('documents', id);
+  return update('documents', id, { ...validateDocument({ ...previous, ...patch }, previous), updatedAt: new Date().toISOString() });
+}
+export function archiveDocument(id) { return updateDocument(id, { status: 'archived' }); }
+function checkinScope(hireId, mentorId) {
+  const actor = requireRoles(['mentor', 'hr', 'admin']);
+  const hire = record('newHires', hireId);
+  if (actor.role === 'mentor' && (hire.mentorId !== actor.id || mentorId !== actor.id)) fail('Chỉ quản lý check-in của mentee đang được phân công.', 'FORBIDDEN');
+  return { actor, hire };
+}
+export function listCheckins(query = {}) {
+  const actor = requireRoles(['mentor', 'hr', 'admin']);
+  const hires = getAll('newHires');
+  let items = getAll('checkins').filter(item => actor.role !== 'mentor' || (item.mentorId === actor.id && hires.some(hire => hire.id === item.newHireId && hire.mentorId === actor.id)));
+  if (query.newHireId) items = items.filter(item => item.newHireId === query.newHireId);
+  if (query.mentorId) items = items.filter(item => item.mentorId === query.mentorId);
+  // HR/Admin only receive schedule metadata; private mentor notes stay private.
+  items = items.map(item => actor.role === 'mentor' ? item : { ...item, note: null, nextAction: null });
+  items = items.map(item => ({ ...item, conflictingIds: item.status === 'cancelled' ? [] : items.filter(other =>
+    other.id !== item.id && other.status !== 'cancelled' && other.newHireId === item.newHireId
+    && other.mentorId === item.mentorId && parseStoredDate(other.scheduledAt)?.getTime() === parseStoredDate(item.scheduledAt)?.getTime()).map(other => other.id) }));
+  return filter(items, query, ['note', 'nextAction'])
+    .sort((a, b) => (parseStoredDate(b.scheduledAt)?.getTime() || 0) - (parseStoredDate(a.scheduledAt)?.getTime() || 0));
+}
+function validateCheckin(input, id = null) {
+  const { hire } = checkinScope(input.newHireId, input.mentorId);
+  if (hire.status === 'archived') fail('Hồ sơ đã lưu trữ.');
+  const mentor = record('users', input.mentorId);
+  if (mentor.role !== 'mentor' || mentor.status !== 'active' || hire.mentorId !== mentor.id) fail('Mentor phải đang hoạt động và được phân công cho nhân sự.');
+  if (!['scheduled', 'completed', 'cancelled'].includes(input.status)) fail('Trạng thái lịch hẹn không hợp lệ.');
+  const date = typeof input.scheduledAt === 'string' ? parseStoredDate(input.scheduledAt) : null;
+  if (!date) fail('Ngày giờ check-in không hợp lệ.');
+  const previous = id ? getById('checkins', id) : null;
+  // Preserve legacy duplicates and allow note corrections without silently merging them.
+  const sameAppointment = previous && previous.status !== 'cancelled' && parseStoredDate(previous.scheduledAt)?.getTime() === date.getTime();
+  if (input.status !== 'cancelled' && !sameAppointment) {
+    const duplicate = getAll('checkins').find(item => item.id !== id && item.newHireId === input.newHireId && item.mentorId === input.mentorId && item.status !== 'cancelled' && parseStoredDate(item.scheduledAt)?.getTime() === date.getTime());
+    if (duplicate) {
+      const error = new StoreError('DUPLICATE_ID', `Đã có lịch ${duplicate.id} cùng thời điểm. Hãy mở lịch hiện có.`);
+      error.existingId = duplicate.id; throw error;
+    }
+  }
+  return { ...input, scheduledAt: date.toISOString(), note: text(input.note), nextAction: text(input.nextAction) };
+}
+export function createCheckin(input) {
+  const actor = requireRoles(['mentor']);
+  fields(input, ['newHireId', 'mentorId', 'scheduledAt', 'status', 'note', 'nextAction']);
+  if (actor.role !== 'mentor' && (input.note || input.nextAction)) fail('Ghi chú riêng do mentor quản lý.', 'FORBIDDEN');
+  const hire = record('newHires', input.newHireId);
+  const values = validateCheckin({ status: 'scheduled', note: null, nextAction: null, ...input, mentorId: actor.role === 'mentor' ? actor.id : (input.mentorId || hire.mentorId) });
+  const now = new Date().toISOString();
+  return create('checkins', { ...values, id: createId('checkins'), createdAt: now, updatedAt: now });
+}
+export function updateCheckin(id, patch) {
+  requireRoles(['mentor']);
+  fields(patch, ['scheduledAt', 'status', 'note', 'nextAction']);
+  const previous = record('checkins', id);
+  const { actor } = checkinScope(previous.newHireId, previous.mentorId);
+  if (actor.role !== 'mentor' && ('note' in patch || 'nextAction' in patch)) fail('Ghi chú riêng do mentor quản lý.', 'FORBIDDEN');
+  const values = validateCheckin({ ...previous, ...patch }, id);
+  if (parseStoredDate(previous.createdAt)?.getTime() > Date.now()) fail('Ngày tạo lịch nằm trong tương lai. Cần kiểm tra dữ liệu.');
+  return update('checkins', id, { ...values, updatedAt: new Date().toISOString() });
 }

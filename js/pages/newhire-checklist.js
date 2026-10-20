@@ -1,10 +1,10 @@
 import { getMyHire } from '../data/people.js';
-import { getTasksForHire, getProgress, updateTaskStatus } from '../data/tasks.js';
+import { getTasksForHire, getProgress, updateTaskStatus, saveTaskResult } from '../data/tasks.js';
 import { TASK_STATUSES } from '../config/statuses.js';
 import { createTaskItem, createTaskBadge, createField, element, actionButton } from '../common/renderers.js';
 import { formatDate } from '../common/format.js';
 import { watchData, showError } from '../common/data-ui.js';
-import { notifyUnavailable, openFormTemplate, validateFields } from '../common/page-ui.js';
+import { validateFields, bindForm } from '../common/page-ui.js';
 
 export async function initPage({ ui }) {
   const root = document.querySelector('#main-content');
@@ -27,7 +27,6 @@ export async function initPage({ ui }) {
       const actions = element('td', 'table__actions'); actions.append(actionButton('Xem', 'open-task', task.id, 'ghost'));
       row.append(title, element('td', '', formatDate(task.dueDate)), state, actions); return row;
     }));
-    region('personal-tasks').replaceChildren();
     region('task-summary').textContent = `${visible.length} / ${tasks.length} nhiệm vụ`;
     ui.setViewState(region('task-state'), { status: visible.length ? 'ready' : 'empty', message: !hire ? 'Chưa có hồ sơ hội nhập. Vui lòng liên hệ HR.' : !tasks.length ? 'Chưa có nhiệm vụ.' : 'Không có nhiệm vụ phù hợp bộ lọc.' });
   }
@@ -48,7 +47,19 @@ export async function initPage({ ui }) {
     form.querySelector('[data-region="result-fields"]').previousElementSibling.textContent = 'Tiến độ của bạn';
     const submit = form.querySelector('[type="submit"]'); submit.hidden = false; submit.textContent = 'Lưu trạng thái';
     const wrapper = element('div'); wrapper.append(content);
+    const resultForm = element('form', 'form'); resultForm.dataset.region = 'task-result-form'; resultForm.noValidate = true;
+    resultForm.append(element('h3', '', 'Ghi chú / kết quả của bạn'),
+      createField({ name: 'note', label: 'Ghi chú kết quả', type: 'textarea', value: task.result?.note, required: true }),
+      createField({ name: 'url', label: 'Liên kết kết quả (không bắt buộc)', type: 'url', value: task.result?.url }));
+    resultForm.elements.note.maxLength = 4000;
+    const saveResult = actionButton(task.result ? 'Lưu kết quả' : 'Tạo kết quả', 'save-task-result', id, 'primary');
+    saveResult.type = 'submit'; resultForm.append(saveResult); wrapper.append(resultForm);
     const modal = ui.openModal({ title: 'Chi tiết nhiệm vụ', content: wrapper });
+    bindForm(resultForm, () => {
+      saveTaskResult(id, { note: resultForm.elements.note.value, url: resultForm.elements.url.value });
+      saveResult.textContent = 'Lưu kết quả';
+      ui.showToast({ message: 'Đã lưu kết quả. Mentor có thể xem trong chi tiết nhiệm vụ.', type: 'success' });
+    });
     wrapper.querySelector('[data-action="cancel-task-result"]').addEventListener('click', () => modal.close());
     form.addEventListener('submit', async event => {
       event.preventDefault(); if (!validateFields(form)) return;
@@ -64,10 +75,6 @@ export async function initPage({ ui }) {
     const button = event.target.closest('button[data-action]'); if (!button) return;
     try {
       if (button.dataset.action === 'open-task') openTask(button.dataset.id);
-      if (button.dataset.action === 'add-personal-task') {
-        const modal = openFormTemplate('add-personal-task');
-        if (!modal) notifyUnavailable();
-      }
     } catch (error) { showError(error); }
   });
   const id = new URLSearchParams(location.search).get('id');

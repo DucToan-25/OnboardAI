@@ -1,5 +1,9 @@
 # Quy tắc Codex cho SV1 — Nhân sự mới và giao diện dùng chung
 
+> **Rà soát nguồn dữ liệu 19/10/2026:** Store đọc toàn bộ 12 JSON từ assets/data, không giữ seed trong JS/HTML; reset preflight bảo toàn dữ liệu khi nguồn sai. Login nhận email/ID; updateUserAccount kiểm tra user/hire trước khi ghi.
+
+> **Hiện hành 19/10/2026:** yêu cầu người dùng mở rộng tích hợp cả ba thành viên. Auth/people/ai-history, sáu trang nhân sự mới và profile dùng chung đã nối; tiếp tục giữ token/component và API dùng chung cho SV2/SV3. Áp dụng phần mới nhất của [AGENTS.md](../../AGENTS.md) và [quy tắc LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md). Các giới hạn tĩnh/preview/SV1-only dưới đây là lịch sử. Owner review và OBS vẫn cần nhóm thực hiện.
+
 > **Hiện hành 18/10/2026:** đã chuyển sang phần SV1 của [quy tắc LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md). Các chỉ dẫn preview/seed cũ phía dưới chỉ là lịch sử nếu khác hợp đồng mới. SV1 phụ trách `js/data/store.js`, `js/common/auth.js`, `js/data/people.js`, `js/data/ai-history.js`, sáu trang và nối trang chủ. Login dùng password của users.json; profile sửa fullName/email; task ghi qua tasks.updateTaskStatus. UI giữ token/component chung. Không dựng lại repository cũ, không triển khai phần CRUD của SV2/SV3.
 
 

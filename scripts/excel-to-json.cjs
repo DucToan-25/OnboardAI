@@ -4,30 +4,30 @@
 //
 // Cách dùng:
 //   node scripts/excel-to-json.cjs <duong-dan.xlsx>              # chỉ kiểm tra và in báo cáo
-//   node scripts/excel-to-json.cjs <duong-dan.xlsx> --write      # ghi JSON vào assets/data/import/
-//   node scripts/excel-to-json.cjs <duong-dan.xlsx> --apply      # ghi JSON và nhập thêm bản ghi mới vào seed.json
+//   node scripts/excel-to-json.cjs <duong-dan.xlsx> --write      # ghi JSON vào assets/data/
+//   node scripts/excel-to-json.cjs <duong-dan.xlsx> --apply      # tương đương --write, chỉ thêm ID mới
 //   Tùy chọn: --skip-ids=id1,id2   bỏ các dòng mẫu (theo ID) khỏi dữ liệu xuất ra
 //
 // Quy tắc an toàn:
-// - Không bao giờ xóa hoặc ghi đè bản ghi đã có trong seed.json (--apply chỉ thêm ID mới).
+// - Không bao giờ xóa hoặc ghi đè bản ghi đã có trong JSON chuẩn (--apply chỉ thêm ID mới).
 // - In rõ số dòng hợp lệ / không hợp lệ / bị bỏ qua và lý do từng dòng.
 const fs = require('node:fs');
 const path = require('node:path');
 const zlib = require('node:zlib');
+const { randomUUID } = require('node:crypto');
 
 const root = path.resolve(__dirname, '..');
-const SEED_PATH = path.join(root, 'assets', 'data', 'seed.json');
-const OUT_DIR = path.join(root, 'assets', 'data', 'import');
+const DATA_DIR = path.join(root, 'assets', 'data');
+
 const SHEETS = ['journeys', 'companyInfo', 'news'];
-const OUTPUT_NAMES = { journeys: 'journeys.json', companyInfo: 'company-info.json', news: 'news.json' };
-// Ánh xạ ID trong Excel sang ID thật của dự án (seed.json). Excel dùng hệ ID mẫu riêng.
-const DEPARTMENT_ID_MAP = { 'dept-people': 'dep-hr', 'dept-engineering': 'dep-dev', 'dept-product': 'dep-sales' };
-const USER_ID_MAP = { 'user-004': 'usr-hr-001', 'user-005': 'usr-admin-001' };
-const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
-const DATE_TIME = /^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2})(?::\d{2})?$/;
+const OUTPUT_NAMES = { journeys: 'journeys.json', companyInfo: 'companyInfo.json', news: 'news.json' };
+// Preserve IDs from the source; references are validated against the canonical JSON files.
+const DATE_ONLY = /^(\d{4})-(\d{2})-(\d{2})$/;
+const DATE_TIME = /^(\d{4}-\d{2}-\d{2})[ T](\d{2}):(\d{2})(?::(\d{2})(\.\d{1,3})?)?(Z|[+-]\d{2}:\d{2})?$/;
 
 // Đọc bảng phân vùng trung tâm của file ZIP rồi trả về danh sách phần tử.
 function readZip(buffer) {
+  if (buffer.length < 22) throw new Error('File không phải .xlsx/ZIP hợp lệ.');
   let eocd = -1;
   for (let index = buffer.length - 22; index >= Math.max(0, buffer.length - 65558); index -= 1) {
     if (buffer.readUInt32LE(index) === 0x06054b50) { eocd = index; break; }
@@ -35,17 +35,23 @@ function readZip(buffer) {
   if (eocd < 0) throw new Error('Không đọc được cấu trúc .xlsx (thiếu bản ghi kết thúc ZIP).');
   const count = buffer.readUInt16LE(eocd + 10);
   let offset = buffer.readUInt32LE(eocd + 16);
+  if (count === 0xffff || offset === 0xffffffff) throw new Error('Chưa hỗ trợ file ZIP64.');
   const entries = new Map();
   for (let index = 0; index < count; index += 1) {
-    if (buffer.readUInt32LE(offset) !== 0x02014b50) break;
+    if (offset + 46 > eocd || buffer.readUInt32LE(offset) !== 0x02014b50) throw new Error('Bảng mục lục ZIP bị lỗi.');
+    if (buffer.readUInt16LE(offset + 8) & 1) throw new Error('Không hỗ trợ file Excel được mã hóa.');
     const method = buffer.readUInt16LE(offset + 10);
     const compressedSize = buffer.readUInt32LE(offset + 20);
+    const uncompressedSize = buffer.readUInt32LE(offset + 24);
     const nameLength = buffer.readUInt16LE(offset + 28);
     const extraLength = buffer.readUInt16LE(offset + 30);
     const commentLength = buffer.readUInt16LE(offset + 32);
     const localOffset = buffer.readUInt32LE(offset + 42);
+    if (offset + 46 + nameLength + extraLength + commentLength > eocd) throw new Error('Phần tử ZIP bị cắt ngắn.');
     const name = buffer.toString('utf8', offset + 46, offset + 46 + nameLength);
-    entries.set(name, { method, compressedSize, localOffset });
+    if (entries.has(name)) throw new Error(`Phần tử ZIP bị trùng: ${name}.`);
+    if (![0, 8].includes(method)) throw new Error(`Không hỗ trợ kiểu nén ZIP ${method}.`);
+    entries.set(name, { method, compressedSize, uncompressedSize, localOffset });
     offset += 46 + nameLength + extraLength + commentLength;
   }
   return entries;
@@ -53,63 +59,117 @@ function readZip(buffer) {
 
 function readEntry(buffer, entry) {
   const local = entry.localOffset;
+  if (local + 30 > buffer.length || buffer.readUInt32LE(local) !== 0x04034b50) throw new Error('Header phần tử ZIP bị lỗi.');
   const nameLength = buffer.readUInt16LE(local + 26);
   const extraLength = buffer.readUInt16LE(local + 28);
   const start = local + 30 + nameLength + extraLength;
+  if (start + entry.compressedSize > buffer.length) throw new Error('Dữ liệu phần tử ZIP bị cắt ngắn.');
   const data = buffer.subarray(start, start + entry.compressedSize);
-  return entry.method === 8 ? zlib.inflateRawSync(data) : Buffer.from(data);
+  const output = entry.method === 8 ? zlib.inflateRawSync(data, { maxOutputLength: 64 * 1024 * 1024 }) : Buffer.from(data);
+  if (output.length !== entry.uncompressedSize) throw new Error('Kích thước phần tử ZIP không khớp.');
+  return output;
 }
 
-function parseSharedStrings(xml) {
-  return [...xml.matchAll(/<si>([\s\S]*?)<\/si>/g)]
-    .map((match) => [...match[1].matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map((text) => text[1]).join(''));
+function decodeXml(value) {
+  const entities = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
+  return String(value).replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (entity, key) => {
+    if (Object.hasOwn(entities, key)) return entities[key];
+    if (key.startsWith('#')) {
+      const codePoint = key[1].toLowerCase() === 'x' ? parseInt(key.slice(2), 16) : Number(key.slice(1));
+      if (codePoint > 0 && codePoint <= 0x10ffff && !(codePoint >= 0xd800 && codePoint <= 0xdfff)) return String.fromCodePoint(codePoint);
+    }
+    throw new Error(`XML chứa entity không hợp lệ: ${entity}.`);
+  });
 }
 
+function elements(xml, tag) {
+  const pattern = new RegExp(`<(?:[\\w.-]+:)?${tag}\\b([^>]*?)(?:\\/>|>([\\s\\S]*?)<\\/(?:[\\w.-]+:)?${tag}\\s*>)`, 'g');
+  return [...xml.matchAll(pattern)].map(match => ({ attributes: match[1], body: match[2] || '' }));
+}
+function attributes(text) {
+  return Object.fromEntries([...text.matchAll(/([\w:.-]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g)].map(match => [match[1], decodeXml(match[2] ?? match[3])]));
+}
+function textContent(xml) {
+  return elements(xml.replace(/<(?:[\w.-]+:)?rPh\b[^>]*>[\s\S]*?<\/(?:[\w.-]+:)?rPh\s*>/g, ''), 't').map(item => decodeXml(item.body)).join('');
+}
+function parseSharedStrings(xml) { return elements(xml, 'si').map(item => textContent(item.body)); }
 
 function cellValue(cell, type, shared) {
-  const raw = cell.match(/<v>([\s\S]*?)<\/v>/)?.[1] ?? '';
-  if (type === 's') return shared[Number(raw)] ?? '';
-  if (type === 'inlineStr') return cell.match(/<t[^>]*>([\s\S]*?)<\/t>/)?.[1] ?? '';
-  if (type === 'b') return raw === '1';
+  const raw = decodeXml(elements(cell, 'v')[0]?.body ?? '');
+  if (type === 's') {
+    if (!/^\d+$/.test(raw) || !Object.hasOwn(shared, Number(raw))) throw new Error('Ô chuỗi tham chiếu sharedStrings không tồn tại.');
+    return shared[Number(raw)];
+  }
+  if (type === 'inlineStr') return textContent(cell);
+  if (type === 'b') {
+    if (!['0', '1'].includes(raw)) throw new Error('Ô Boolean của Excel không hợp lệ.');
+    return raw === '1';
+  }
+  if (type === 'e') throw new Error('Excel chứa ô lỗi; sửa công thức trước khi nhập.');
   return raw;
 }
 
 // Đọc một sheet thành mảng object theo hàng đầu tiên (tên trường camelCase).
 function parseSheet(xml, shared) {
   const rows = [];
-  for (const rowMatch of xml.matchAll(/<row[^>]*>([\s\S]*?)<\/row>/g)) {
+  for (const row of elements(xml, 'row')) {
     const cells = {};
-    for (const cellMatch of rowMatch[1].matchAll(/<c r="([A-Z]+)\d+"(?:[^>]*t="([^"]*)")?[^>]*>([\s\S]*?)<\/c>/g)) {
-      cells[cellMatch[1]] = { type: cellMatch[2] || '', body: cellMatch[3] };
+    for (const cell of elements(row.body, 'c')) {
+      const properties = attributes(cell.attributes);
+      const reference = properties.r?.match(/^([A-Z]+)\d+$/);
+      if (!reference) throw new Error('Ô Excel thiếu địa chỉ cột/hàng hợp lệ.');
+      cells[reference[1]] = { type: properties.t || '', body: cell.body };
     }
-    rows.push(cells);
+    rows.push({ cells, rowNumber: Number(attributes(row.attributes).r) || rows.length + 1 });
   }
   if (rows.length < 2) return [];
-  const header = rows[0];
+  const header = rows[0].cells;
   const columns = Object.keys(header).sort((a, b) => a.length - b.length || a.localeCompare(b));
+  const fields = columns.map(column => String(cellValue(header[column].body, header[column].type, shared)).trim());
+  const namedFields = fields.filter(Boolean);
+  if (new Set(namedFields).size !== namedFields.length) throw new Error('Tiêu đề Excel chứa tên trường trùng nhau.');
   return rows.slice(1)
-    .map((row) => {
+    .map(({ cells: row, rowNumber }) => {
       const record = {};
-      for (const column of columns) {
-        const field = String(cellValue(header[column].body, header[column].type, shared)).trim();
+      for (let index = 0; index < columns.length; index++) {
+        const column = columns[index];
+        const field = fields[index];
         if (!field) continue;
         record[field] = cellValue(row[column]?.body || '', row[column]?.type || '', shared);
       }
+      Object.defineProperty(record, '__rowNumber', { value: rowNumber });
       return record;
     })
     .filter((record) => Object.values(record).some((value) => value !== '' && value !== false));
 }
 
-function normalizeDate(value) {
+function validDateOnly(text) {
+  const match = text.match(DATE_ONLY);
+  if (!match) return false;
+  const [, year, month, day] = match.map(Number);
+  const date = new Date(`${text}T00:00:00Z`);
+  return Number.isFinite(+date) && date.getUTCFullYear() === year && date.getUTCMonth() + 1 === month && date.getUTCDate() === day;
+}
+function normalizeDate(value, date1904 = false) {
   const text = String(value ?? '').trim();
   if (!text) return { value: null };
-  if (DATE_ONLY.test(text)) return { value: text };
+  if (DATE_ONLY.test(text)) return validDateOnly(text) ? { value: text } : { value: null, invalid: true };
   const dateTime = text.match(DATE_TIME);
-  if (dateTime) return { value: `${dateTime[1]}T${dateTime[2]}:00` };
-  if (/^\d{5}$/.test(text)) {
-    // Ô ngày của Excel lưu dạng số đếm; đổi về YYYY-MM-DD (mốc 1899-12-30).
-    const date = new Date(Date.UTC(1899, 11, 30) + Number(text) * 86400000);
-    return { value: date.toISOString().slice(0, 10) };
+  if (dateTime) {
+    const [, date, hour, minute, second = '00', fraction = '', zone = '+07:00'] = dateTime;
+    if (!validDateOnly(date) || Number(hour) > 23 || Number(minute) > 59 || Number(second) > 59) return { value: null, invalid: true };
+    const normalized = `${date}T${hour}:${minute}:${second}${fraction}${zone}`;
+    return Number.isFinite(Date.parse(normalized)) ? { value: normalized } : { value: null, invalid: true };
+  }
+  if (/^\d+(?:\.\d+)?$/.test(text)) {
+    const serial = Number(text);
+    // Excel's 1900 system includes the fictitious 1900-02-29 (serial 60).
+    if (!Number.isFinite(serial) || serial > 2958465 || (!date1904 && Math.floor(serial) === 60)) return { value: null, invalid: true };
+    const epoch = date1904 ? Date.UTC(1904, 0, 1) : Date.UTC(1899, 11, 31);
+    const date = new Date(epoch + Math.round((serial - (!date1904 && serial >= 60 ? 1 : 0)) * 86400000));
+    if (date.getUTCFullYear() > 9999) return { value: null, invalid: true };
+    const formatted = date.toISOString();
+    return { value: Number.isInteger(serial) ? formatted.slice(0, 10) : `${formatted.slice(0, -1)}+07:00` };
   }
   return { value: null, invalid: true };
 }
@@ -123,58 +183,60 @@ function toBoolean(value) {
 function mapUserId(value) {
   const id = String(value ?? '').trim();
   if (!id) return { value: null };
-  return { value: USER_ID_MAP[id] || id, unmapped: Boolean(!USER_ID_MAP[id] && !String(id).startsWith('usr-')) };
+  return { value: id };
 }
 
 function mapDepartmentId(value) {
   const id = String(value ?? '').trim();
   if (!id) return { value: null };
-  return { value: DEPARTMENT_ID_MAP[id] || id, unmapped: Boolean(!DEPARTMENT_ID_MAP[id] && !String(id).startsWith('dep-')) };
+  return { value: id };
 }
 
 // Chuyển một dòng Excel thành bản ghi theo schema web; trả về { record, warnings } hoặc { error }.
-function convertRow(sheet, row, index) {
-  const rowName = `dòng ${index + 2}`;
+function convertRow(sheet, row, index, date1904 = false) {
+  const rowName = `dòng ${row.__rowNumber ?? index + 2}`;
+  const dates = {};
+  for (const field of ({ journeys: ['createdAt', 'updatedAt'], companyInfo: ['updatedAt'], news: ['createdAt', 'updatedAt', 'publishedAt', 'archivedAt'] })[sheet]) {
+    dates[field] = normalizeDate(row[field], date1904);
+    if (dates[field].invalid) return { error: `${rowName}: ${field} không phải ngày hợp lệ.` };
+  }
   if (sheet === 'journeys') {
     const department = mapDepartmentId(row.departmentId);
     const creator = mapUserId(row.createdBy);
     const duration = Number(String(row.durationDays ?? '').trim());
     const status = String(row.status ?? '').trim();
     if (!String(row.title ?? '').trim()) return { error: `${rowName}: thiếu tên hành trình (title).` };
-    if (!['draft', 'active', 'archived'].includes(status)) {
-      return { error: `${rowName}: trạng thái “${status}” không có trong dự án (chỉ draft/active/archived).` };
+    if (!['active', 'inactive'].includes(status)) {
+      return { error: `${rowName}: trạng thái “${status}” không có trong dự án (chỉ active/inactive).` };
     }
     if (!Number.isInteger(duration) || duration < 1 || duration > 365) {
       return { error: `${rowName}: durationDays phải là số nguyên 1–365 (đang là “${row.durationDays}”).` };
     }
-    const created = normalizeDate(row.createdAt);
-    const updated = normalizeDate(row.updatedAt);
+    const created = dates.createdAt;
+    const updated = dates.updatedAt;
     return {
       record: {
         id: String(row.id ?? '').trim(),
-        name: String(row.title ?? '').trim(),
+        title: String(row.title ?? '').trim(),
         description: String(row.description ?? '').trim(),
         targetRole: String(row.targetRole ?? '').trim(),
         departmentId: department.value,
         durationDays: duration,
         status,
-        steps: [],
         createdBy: creator.value,
         createdAt: created.value,
         updatedAt: updated.value,
       },
-      warnings: [
-        department.unmapped ? `${rowName}: phòng ban “${row.departmentId}” không có trong seed, giữ nguyên ID.` : null,
-        creator.unmapped ? `${rowName}: người tạo “${row.createdBy}” không có trong danh sách user đã map.` : null,
-      ].filter(Boolean),
+      warnings: [],
     };
   }
   if (sheet === 'companyInfo') {
+    if (!String(row.companyName ?? '').trim()) return { error: `${rowName}: thiếu tên công ty (companyName).` };
     const updater = mapUserId(row.updatedBy);
-    const updated = normalizeDate(row.updatedAt);
+    const updated = dates.updatedAt;
     return {
       record: {
-        id: String(row.id ?? '').trim() || 'company-main',
+        id: String(row.id ?? '').trim() || 'company-001',
         companyName: String(row.companyName ?? '').trim(),
         tagline: String(row.tagline ?? '').trim(),
         mission: String(row.mission ?? '').trim(),
@@ -198,11 +260,11 @@ function convertRow(sheet, row, index) {
   const featured = toBoolean(row.isFeatured);
   if (featured === null) return { error: `${rowName}: isFeatured phải là TRUE/FALSE (đang là “${row.isFeatured}”).` };
   const author = mapUserId(row.authorId);
-  const created = normalizeDate(row.createdAt);
-  const updated = normalizeDate(row.updatedAt);
-  const published = normalizeDate(row.publishedAt);
-  if (published.invalid && status === 'published') return { error: `${rowName}: bản tin đã xuất bản phải có publishedAt hợp lệ (đang là “${row.publishedAt}”).` };
-  const archived = normalizeDate(row.archivedAt);
+  const created = dates.createdAt;
+  const updated = dates.updatedAt;
+  const published = dates.publishedAt;
+  if (!published.value && status === 'published') return { error: `${rowName}: bản tin đã xuất bản phải có publishedAt hợp lệ.` };
+  const archived = dates.archivedAt;
   return {
     record: {
       id: String(row.id ?? '').trim(),
@@ -218,19 +280,68 @@ function convertRow(sheet, row, index) {
       updatedAt: updated.value,
       archivedAt: status === 'archived' ? (archived.value || updated.value || null) : null,
     },
-    warnings: [
-      author.unmapped ? `${rowName}: tác giả “${row.authorId}” không có trong danh sách user đã map.` : null,
-      published.invalid ? `${rowName}: bỏ publishedAt “${row.publishedAt}” vì giá trị không phải ngày hợp lệ.` : null,
-    ].filter(Boolean),
+    warnings: [],
   };
 }
 
+
+function workbookSheets(workbook, relationships) {
+  const targets = new Map();
+  for (const item of elements(relationships, 'Relationship')) {
+    const properties = attributes(item.attributes);
+    if (!properties.Type?.endsWith('/worksheet')) continue;
+    if (!properties.Id || !properties.Target || targets.has(properties.Id)) throw new Error('Quan hệ worksheet thiếu hoặc trùng ID.');
+    if (properties.TargetMode === 'External') throw new Error('Không nhập worksheet từ liên kết ngoài.');
+    let target;
+    try { target = decodeURIComponent(properties.Target); } catch { throw new Error('Đường dẫn worksheet bị lỗi mã hóa.'); }
+    if (/^[a-z][a-z\d+.-]*:/i.test(target) || target.includes('\\')) throw new Error('Đường dẫn worksheet không hợp lệ.');
+    target = path.posix.normalize(target.startsWith('/') ? target.slice(1) : path.posix.join('xl', target));
+    if (target === '..' || target.startsWith('../')) throw new Error('Đường dẫn worksheet nằm ngoài gói Excel.');
+    targets.set(properties.Id, target);
+  }
+  const sheets = new Map();
+  for (const item of elements(workbook, 'sheet')) {
+    const properties = attributes(item.attributes);
+    const relationId = Object.entries(properties).find(([name]) => name.endsWith(':id'))?.[1];
+    if (!properties.name || sheets.has(properties.name)) throw new Error('Tên worksheet thiếu hoặc bị trùng.');
+    sheets.set(properties.name, targets.get(relationId));
+  }
+  return sheets;
+}
+
+function appendCollections(seed, rawSeed, exported) {
+  // Check again before staging so an open editor cannot be silently overwritten.
+  for (const [name, content] of Object.entries(rawSeed)) {
+    if (fs.readFileSync(path.join(DATA_DIR, `${name}.json`), 'utf8') !== content) throw new Error(`${name}.json vừa thay đổi; chạy lại lệnh nhập.`);
+  }
+  const plans = SHEETS.filter(sheet => exported[sheet]?.length).map(sheet => {
+    const file = path.join(DATA_DIR, OUTPUT_NAMES[sheet]);
+    return { sheet, file, stage: `${file}.import-${randomUUID()}.tmp`, content: JSON.stringify([...seed[sheet], ...exported[sheet]], null, 2) + '\n' };
+  });
+  const committed = [];
+  try {
+    for (const plan of plans) fs.writeFileSync(plan.stage, plan.content, { encoding: 'utf8', flag: 'wx' });
+    for (const plan of plans) {
+      fs.renameSync(plan.stage, plan.file);
+      committed.push(plan);
+    }
+  } catch (error) {
+    let rollbackFailed = false;
+    for (const plan of committed.reverse()) {
+      try { fs.writeFileSync(plan.file, rawSeed[plan.sheet], 'utf8'); } catch { rollbackFailed = true; }
+    }
+    if (rollbackFailed) throw new Error('Lỗi ghi và khôi phục JSON. Kiểm tra các collection trước khi nhập lại.');
+    throw new Error(`Không ghi được JSON; đã khôi phục các collection đã ghi. ${error.code || ''}`);
+  } finally {
+    for (const plan of plans) if (fs.existsSync(plan.stage)) fs.unlinkSync(plan.stage);
+  }
+  for (const plan of plans) console.log(`Added ${exported[plan.sheet].length} records to ${path.relative(root, plan.file)}`);
+}
 
 function main() {
   const args = process.argv.slice(2);
   const input = args.find((arg) => !arg.startsWith('--'));
   const write = args.includes('--write') || args.includes('--apply');
-  const apply = args.includes('--apply');
   const skipList = args.find((arg) => arg.startsWith('--skip-ids='))?.slice('--skip-ids='.length) || '';
   const skipIds = new Set(skipList.split(',').map((id) => id.trim()).filter(Boolean));
   if (!input) {
@@ -245,20 +356,29 @@ function main() {
     if (!entry) throw new Error(`Thiếu phần tử ${name} trong file .xlsx.`);
     return readEntry(buffer, entry).toString('utf8');
   };
-  const shared = parseSharedStrings(read('xl/sharedStrings.xml'));
-  const sheetFileByIndex = [...entries.keys()]
-    .filter((name) => /^xl\/worksheets\/sheet\d+\.xml$/.test(name))
-    .sort((a, b) => Number(a.match(/\d+/)[0]) - Number(b.match(/\d+/)[0]));
+  const shared = entries.has('xl/sharedStrings.xml') ? parseSharedStrings(read('xl/sharedStrings.xml')) : [];
   const workbook = read('xl/workbook.xml');
-  const sheetNames = [...workbook.matchAll(/<sheet [^>]*name="([^"]+)"/g)].map((match) => match[1]);
-  const seed = JSON.parse(fs.readFileSync(SEED_PATH, 'utf8'));
+  const sheets = workbookSheets(workbook, read('xl/_rels/workbook.xml.rels'));
+  const date1904 = ['1', 'true'].includes(attributes(elements(workbook, 'workbookPr')[0]?.attributes || '').date1904);
+  const seed = {};
+  const rawSeed = {};
+  for (const name of [...SHEETS, 'users', 'departments']) {
+    rawSeed[name] = fs.readFileSync(path.join(DATA_DIR, `${name}.json`), 'utf8');
+    try { seed[name] = JSON.parse(rawSeed[name].replace(/^\uFEFF/, '')); } catch { throw new Error(`${name}.json không phải JSON hợp lệ; chưa nhập dữ liệu.`); }
+    if (!Array.isArray(seed[name])) throw new Error(`${name}.json phải là mảng.`);
+    const ids = new Set();
+    for (const item of seed[name]) {
+      if (!item || typeof item.id !== 'string' || !item.id.trim() || ids.has(item.id)) throw new Error(`${name}.json có ID thiếu hoặc trùng; sửa JSON trước khi nhập.`);
+      ids.add(item.id);
+    }
+  }
   const exported = {};
   let hasError = false;
 
   for (const sheet of SHEETS) {
-    const position = sheetNames.indexOf(sheet);
-    if (position < 0) { console.error(`✗ Không tìm thấy sheet “${sheet}”.`); hasError = true; continue; }
-    const rows = parseSheet(read(sheetFileByIndex[position]), shared);
+    const sheetFile = sheets.get(sheet);
+    if (!sheetFile) { console.error(`✗ Không tìm thấy worksheet hợp lệ “${sheet}”.`); hasError = true; continue; }
+    const rows = parseSheet(read(sheetFile), shared);
     const valid = [];
     const seenIds = new Set();
     const existingIds = new Set((seed[sheet] || []).map((record) => record.id));
@@ -267,10 +387,14 @@ function main() {
     rows.forEach((row, index) => {
       const id = String(row.id ?? '').trim();
       if (skipIds.has(id)) { skipped += 1; console.log(`- BỎ (chọn không dùng): ${id || `dòng ${index + 2}`}`); return; }
-      if (!id) { hasError = true; console.error(`- LỖI: dòng ${index + 2} thiếu ID.`); return; }
+      if (!id) { hasError = true; console.error(`- LỖI: dòng ${row.__rowNumber ?? index + 2} thiếu ID.`); return; }
       if (seenIds.has(id)) { hasError = true; console.error(`- LỖI: ID “${id}” trùng trong sheet.`); return; }
-      const result = convertRow(sheet, row, index);
+      const result = convertRow(sheet, row, index, date1904);
       if (result.error) { hasError = true; console.error(`- LỖI: ${result.error}`); return; }
+      for (const [field, collection] of [['departmentId', 'departments'], ['createdBy', 'users'], ['updatedBy', 'users'], ['authorId', 'users']]) {
+        const id = result.record[field];
+        if (id && !seed[collection].some(item => item.id === id)) { hasError = true; console.error(`- LỖI: ${field} không tồn tại: ${id}`); return; }
+      }
       if (existingIds.has(id)) { skipped += 1; console.log(`- BỎ (đã tồn tại trong seed): ${id}`); seenIds.add(id); return; }
       seenIds.add(id);
       valid.push(result.record);
@@ -281,34 +405,17 @@ function main() {
   }
 
   if (!write) {
-    console.log('\nChưa ghi file. Chạy lại với --write để xuất JSON hoặc --apply để xuất và nhập vào seed.json.');
+    console.log('\nChưa ghi file. Chạy lại với --write hoặc --apply để thêm ID mới vào JSON chuẩn.');
     if (hasError) { console.error('Có dòng không hợp lệ ở trên; sửa Excel rồi chạy lại.'); process.exitCode = 1; }
     return;
   }
-  fs.mkdirSync(OUT_DIR, { recursive: true });
-  for (const sheet of SHEETS) {
-    if (!exported[sheet]) continue;
-    const file = path.join(OUT_DIR, OUTPUT_NAMES[sheet]);
-    fs.writeFileSync(file, `${JSON.stringify(exported[sheet], null, 2)}\n`, 'utf8');
-    console.log(`✓ Đã ghi ${path.relative(root, file)} (${exported[sheet].length} bản ghi).`);
-  }
-  if (apply) {
-    for (const sheet of SHEETS) {
-      for (const record of exported[sheet] || []) {
-        if ((seed[sheet] || []).some((item) => item.id === record.id)) continue;
-        seed[sheet] = seed[sheet] || [];
-        seed[sheet].push(record);
-        console.log(`✓ Nhập vào seed.${sheet}: ${record.id}`);
-      }
-    }
-    fs.writeFileSync(SEED_PATH, `${JSON.stringify(seed, null, 2)}\n`, 'utf8');
-    console.log(`✓ Đã ghi ${path.relative(root, SEED_PATH)} (chỉ thêm bản ghi mới, không xóa bản ghi cũ).`);
-  }
   if (hasError) {
-    console.error('\nCó dòng không hợp lệ ở trên. Sửa Excel rồi chạy lại; các dòng lỗi chưa được nhập.');
+    console.error('Có dữ liệu không hợp lệ. Không ghi bất kỳ collection nào.');
     process.exitCode = 1;
+    return;
   }
+  // Both write modes append only new IDs to the canonical collections.
+  appendCollections(seed, rawSeed, exported);
 }
 
-main();
-
+try { main(); } catch (error) { console.error(`Không thể nhập Excel: ${error.message}`); process.exitCode = 1; }

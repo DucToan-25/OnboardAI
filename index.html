@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/pages/index.css">
     <link rel="stylesheet" href="css/responsive.css">
   </head>
-  <body class="page page--index" data-page="index" data-display-name="Nguyễn Minh Anh" data-layout-role="newhire">
+  <body class="page page--index" data-page="index">
     <header class="index__header" id="app-header">
       <div class="index__container index__header-row">
         <a class="index__brand" href="index.html" aria-label="Onvera — Trang chủ">
@@ -66,7 +66,7 @@
             </span>
             <div>
               <p class="stat-card__label">Thông báo mới</p>
-              <strong class="stat-card__value" data-region="notice-count">3 bài</strong>
+              <strong class="stat-card__value" data-region="notice-count"></strong>
             </div>
           </div>
           <div class="card stat-card index__stat">
@@ -77,8 +77,8 @@
               </svg>
             </span>
             <div>
-              <p class="stat-card__label">Sự kiện sắp tới</p>
-              <strong class="stat-card__value" data-region="event-count">1 sự kiện</strong>
+              <p class="stat-card__label">Bài viết sự kiện</p>
+              <strong class="stat-card__value" data-region="event-count"></strong>
             </div>
           </div>
         </div>
@@ -89,59 +89,14 @@
             <h2 id="announcements-title">Thông báo quan trọng</h2>
             <button class="btn btn--ghost btn--sm" type="button" data-action="all-notices">Xem tất cả</button>
           </div>
-          <div class="card" data-region="notices">
-            <article class="index__notice">
-              <div class="index__notice-meta">
-                <span class="badge badge--warning">Quan trọng</span>
-                <time class="index__muted index__caption" datetime="2026-10-06">06/10/2026</time>
-              </div>
-              <h3>
-                <button class="index__text-action index__notice-title" type="button" data-action="open-post" data-id="notice-001">Bảo trì hệ thống vào tối 10/10</button>
-              </h3>
-              <p class="index__muted index__caption">Phòng Công nghệ thông tin</p>
-            </article>
-            <article class="index__notice">
-              <div class="index__notice-meta">
-                <span class="badge badge--info">Nhân sự</span>
-                <time class="index__muted index__caption" datetime="2026-10-05">05/10/2026</time>
-              </div>
-              <h3>
-                <button class="index__text-action index__notice-title" type="button" data-action="open-post" data-id="notice-002">Lịch nghỉ và làm việc quý IV/2026</button>
-              </h3>
-              <p class="index__muted index__caption">Phòng Nhân sự</p>
-            </article>
-            <article class="index__notice">
-              <div class="index__notice-meta">
-                <span class="badge badge--info">Nội bộ</span>
-                <time class="index__muted index__caption" datetime="2026-10-04">04/10/2026</time>
-              </div>
-              <h3>
-                <button class="index__text-action index__notice-title" type="button" data-action="open-post" data-id="notice-003">Cập nhật chính sách phúc lợi</button>
-              </h3>
-              <a class="index__gate" href="pages/login.html">Đăng nhập để xem chi tiết và hoạt động nội bộ →</a>
-            </article>
-          </div>
+          <div class="card" data-region="notices"></div>
         </section>
         <section id="events" aria-labelledby="events-title">
           <div class="index__section-heading">
             <h2 id="events-title">Sự kiện nội bộ</h2>
             <button class="btn btn--ghost btn--sm" type="button" data-action="calendar">Xem lịch</button>
           </div>
-          <div class="card" data-region="events">
-            <article class="index__event">
-              <time class="index__event-date" datetime="2026-10-18">
-                <strong>18</strong>
-                <span>THÁNG 10</span>
-              </time>
-              <div>
-                <h3>
-                  <button class="index__text-action index__event-title" type="button" data-action="open-post" data-id="event-002">Kết nối cùng lãnh đạo</button>
-                </h3>
-                <p class="index__muted index__caption">14:00 18/10/2026 · Trực tuyến</p>
-              </div>
-            </article>
-            <a class="index__gate" href="pages/login.html">Đăng nhập để xem chi tiết và hoạt động nội bộ →</a>
-          </div>
+          <div class="card" data-region="events"></div>
         </section>
       </div>
       <section id="news" aria-labelledby="news-title">
@@ -154,12 +109,7 @@
             <label class="sr-only" for="news-search">Tìm tin tức</label>
             <input class="form-field__control" id="news-search" name="search" type="search" placeholder="Tìm tin tức…" value="">
           </div>
-          <div class="toolbar__actions" role="group" aria-label="Danh mục tin tức">
-            <button class="btn btn--primary btn--sm is-active" type="button" data-action="filter" data-category="all" aria-pressed="true">Tất cả</button>
-            <button class="btn btn--secondary btn--sm" type="button" data-action="filter" data-category="company" aria-pressed="false">Doanh nghiệp</button>
-            <button class="btn btn--secondary btn--sm" type="button" data-action="filter" data-category="internal" aria-pressed="false">Nội bộ</button>
-            <button class="btn btn--secondary btn--sm" type="button" data-action="filter" data-category="event" aria-pressed="false">Sự kiện</button>
-          </div>
+          <div class="toolbar__actions index__filters" role="group" aria-label="Danh mục tin tức"></div>
           <div>
             <label class="sr-only" for="news-sort">Sắp xếp tin tức</label>
             <select class="form-field__control" id="news-sort" name="sort">
@@ -168,79 +118,10 @@
             </select>
           </div>
         </div>
-        <div class="card" data-region="news">
-          <article class="index__article" data-id="news-001" data-category="company">
-            <div class="index__thumbnail" aria-hidden="true">
-              <svg class="btn__icon" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                <use href="assets/icons/sprite.svg#folder">
-                </use>
-              </svg>
-            </div>
-            <div class="index__article-body">
-              <span class="index__eyebrow">Doanh nghiệp</span>
-              <h3>
-                <button class="index__text-action index__article-title" type="button" data-action="open-post" data-id="news-001">Onvera mở rộng chương trình hỗ trợ nhân sự mới</button>
-              </h3>
-              <p class="index__muted">Hành trình hội nhập sẽ được bổ sung thêm các buổi check-in định kỳ và tài liệu hướng dẫn mới.</p>
-              <span class="index__caption index__muted">06/10/2026 · 4 phút đọc</span>
-            </div>
-            <button class="btn btn--ghost btn--icon" type="button" aria-label="Đọc Onvera mở rộng chương trình hỗ trợ nhân sự mới" data-action="open-post" data-id="news-001">
-              <svg class="btn__icon" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                <use href="assets/icons/sprite.svg#arrow-right">
-                </use>
-              </svg>
-            </button>
-          </article>
-          <article class="index__article" data-id="news-002" data-category="internal">
-            <div class="index__thumbnail" aria-hidden="true">
-              <svg class="btn__icon" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                <use href="assets/icons/sprite.svg#folder">
-                </use>
-              </svg>
-            </div>
-            <div class="index__article-body">
-              <span class="index__eyebrow">Nội bộ</span>
-              <h3>
-                <button class="index__text-action index__article-title" type="button" data-action="open-post" data-id="news-002">Văn phòng mới: không gian làm việc mở và kết nối</button>
-              </h3>
-              <p class="index__muted">Không gian làm việc mới được thiết kế để tăng cường giao tiếp, sáng tạo và trải nghiệm làm việc của đội ngũ.</p>
-              <span class="index__caption index__muted">03/10/2026 · 4 phút đọc</span>
-            </div>
-            <button class="btn btn--ghost btn--icon" type="button" aria-label="Đọc Văn phòng mới: không gian làm việc mở và kết nối" data-action="open-post" data-id="news-002">
-              <svg class="btn__icon" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                <use href="assets/icons/sprite.svg#arrow-right">
-                </use>
-              </svg>
-            </button>
-          </article>
-          <article class="index__article" data-id="news-003" data-category="event">
-            <div class="index__thumbnail" aria-hidden="true">
-              <svg class="btn__icon" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                <use href="assets/icons/sprite.svg#folder">
-                </use>
-              </svg>
-            </div>
-            <div class="index__article-body">
-              <span class="index__eyebrow">Sự kiện</span>
-              <h3>
-                <button class="index__text-action index__article-title" type="button" data-action="open-post" data-id="news-003">Chương trình phát triển năng lực quý IV đã sẵn sàng</button>
-              </h3>
-              <p class="index__muted">Khám phá các khóa học mới và lộ trình phát triển dành cho đội ngũ Onvera.</p>
-              <span class="index__caption index__muted">02/10/2026 · 4 phút đọc · Chi tiết dành cho nhân viên</span>
-            </div>
-            <button class="btn btn--ghost btn--icon" type="button" aria-label="Đọc Chương trình phát triển năng lực quý IV đã sẵn sàng" data-action="open-post" data-id="news-003">
-              <svg class="btn__icon" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                <use href="assets/icons/sprite.svg#arrow-right">
-                </use>
-              </svg>
-            </button>
-          </article>
-        </div>
+        <div class="card" data-region="news"></div>
         <nav class="pagination" aria-label="Phân trang tin tức">
-          <p class="pagination__summary" data-region="news-summary" aria-live="polite">Hiển thị 3 trong 3 bài viết</p>
-          <div class="pagination__list" data-region="pagination">
-            <button class="btn btn--primary btn--sm pagination__button" type="button" aria-label="Trang 1" aria-current="page">1</button>
-          </div>
+          <p class="pagination__summary" data-region="news-summary" aria-live="polite"></p>
+          <div class="pagination__list" data-region="pagination"></div>
         </nav>
       </section>
       <div class="index__columns">
@@ -265,22 +146,8 @@
         </section>
         <aside class="index__aside" aria-label="Sự kiện và hỗ trợ">
           <section class="card">
-            <h2 class="card__title">Sắp diễn ra</h2>
-            <div data-region="upcoming">
-              <article class="index__event">
-                <time class="index__event-date" datetime="2026-10-18">
-                  <strong>18</strong>
-                  <span>THÁNG 10</span>
-                </time>
-                <div>
-                  <h3>
-                    <button class="index__text-action index__event-title" type="button" data-action="open-post" data-id="event-002">Kết nối cùng lãnh đạo</button>
-                  </h3>
-                  <p class="index__muted index__caption">14:00 18/10/2026 · Trực tuyến</p>
-                </div>
-              </article>
-              <a class="index__gate" href="pages/login.html">Đăng nhập để xem chi tiết và hoạt động nội bộ →</a>
-            </div>
+            <h2 class="card__title">Bài viết sự kiện</h2>
+            <div data-region="upcoming"></div>
           </section>
           <div class="index__support">
             <strong>Cần hỗ trợ truy cập?</strong>
@@ -310,6 +177,31 @@
         </div>
       </div>
     </footer>
+    <template data-template="news-card">
+      <article class="index__article">
+        <div class="index__thumbnail" aria-hidden="true"><svg class="btn__icon"><use href="assets/icons/sprite.svg#folder"></use></svg></div>
+        <div class="index__article-body">
+          <span class="index__eyebrow"></span>
+          <h3><button class="index__text-action index__article-title" type="button" data-action="open-post"></button></h3>
+          <p class="index__muted"></p>
+          <span class="index__caption index__muted"></span>
+        </div>
+        <button class="btn btn--ghost btn--icon" type="button" aria-label="Đọc bài viết" data-action="open-post"><svg class="btn__icon" aria-hidden="true"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></button>
+      </article>
+    </template>
+    <template data-template="notice-card">
+      <article class="index__notice">
+        <div class="index__notice-meta"><span class="badge badge--info index__eyebrow"></span><span class="index__caption index__muted"></span></div>
+        <h3><button class="index__text-action index__notice-title" type="button" data-action="open-post"></button></h3>
+        <p class="index__muted"></p>
+      </article>
+    </template>
+    <template data-template="event-card">
+      <article class="index__event"><div>
+        <h3><button class="index__text-action index__event-title" type="button" data-action="open-post"></button></h3>
+        <p class="index__muted"></p><span class="index__caption index__muted"></span>
+      </div></article>
+    </template>
     <div id="modal-root">
     </div>
     <div id="toast-root" aria-live="polite">

@@ -1,0 +1,10 @@
+[
+  {
+    "id": "system",
+    "organizationName": "OnboardAI",
+    "supportEmail": "",
+    "supportPhone": null,
+    "onboardingDays": 30,
+    "reminderDays": 2
+  }
+]

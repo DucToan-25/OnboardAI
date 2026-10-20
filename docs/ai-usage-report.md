@@ -76,3 +76,50 @@ Phát hiện dữ liệu giữ nguyên để bàn giao: task-004/hire-002 lệch
 Các trang CRUD mentor/HR/Admin, Checklist Personalizer, Progress Risk, việc cá nhân mới và quên mật khẩu vẫn chưa nối nghiệp vụ; đây là phần SV2/SV3 hoặc ngoài hợp đồng SV1. Rà soát khởi tạo/giao diện của chúng không phải xác nhận nghiệp vụ hoàn tất. Owner review và minh chứng OBS của nhóm vẫn cần thực hiện trước merge.
 
 Script/ảnh/hồ sơ Chrome kiểm thử đặt ngoài repo trong thư mục tạm. Không có commit, merge hoặc triển khai hosting trong nhiệm vụ này.
+
+## Đợt đồng bộ cả SV1/SV2/SV3 — 19/10/2026
+
+Theo yêu cầu người dùng “sửa tất cả cho cả ba thành viên”, Codex xử lý xung đột merge, hợp nhất store/auth và nối nghiệp vụ trên 19 route. Các mô tả chưa nối CRUD trong báo cáo ngày 18/10 là lịch sử, đã được thay bằng phạm vi dưới đây.
+
+| Thành viên | Phần AI hỗ trợ trong đợt này | Phần cần thành viên tự review/minh chứng |
+|---|---|---|
+| SV1 | Store duy nhất, auth mật khẩu, people/ai-history; tích hợp profile/dashboard/checklist và nguồn dữ liệu chung | Hiểu schema/phiên/field tự sửa, reset và giới hạn frontend; OBS sáu trang |
+| SV2 | Viết lại module mentor bị chép sai; tasks/resources, check-in riêng tư, tài liệu, checklist AI có thử lại an toàn | Review scope mentee, trạng thái/tiến độ, chống trùng lịch và xử lý seed lệch; OBS sáu trang |
+| SV3 | HR journey/gán hồ sơ/dashboard/risk; Admin user/dept/settings; company/news chung, route/menu | Review quyền và đồng bộ form/dịch vụ, public news, cấu hình và các luồng xuyên vai trò; OBS sáu trang cùng index |
+
+Không có owner review hoặc OBS được giả nhận là đã hoàn tất. Không commit, merge hoặc deploy trong đợt này.
+
+### Kết quả kiểm tra
+
+- 32/32 kiểm tra hồi quy đạt trên seed users đã commit, dùng storage trong bộ nhớ và các collection canonical khác. Bản kiểm tra tạm chỉ thay đầu vào users bằng snapshot đã commit; không sửa users.json đang được người dùng chỉnh. Bao gồm route/module, đăng nhập/password, quyền, CRUD, tiến độ, check-in, lỗi lưu giữa chừng/thử lại, lịch sử AI, tin tức, cấu hình, schema, logout/reset.
+- 16 luồng thao tác Chrome đạt: Admin tạo/sửa phòng ban và user+hire; HR tạo/sửa/gán journey; Mentor tạo/sửa task và check-in, duyệt checklist; NewHire hoàn thành và F5; chặn query role; phát hành tài liệu/tin; lưu/duyệt risk không nhân đôi; cập nhật company và settings. Không phát hiện exception hoặc response lỗi trong lượt này.
+- 57 lượt trang/viewport (19 trang × 1440/768/390px) không phát hiện tràn ngang, ID DOM trùng hoặc lỗi tải. Đã xem ảnh modal Admin mobile và trang giao việc Mentor desktop.
+- Ba kiểm tra phiên: cập nhật profile truyền sang tab khác; logout thu hồi phiên tab khác; đổi role chạy lại guard và bỏ modal. Không có exception.
+- JavaScript runtime được kiểm tra cú pháp trong hồi quy; excel-to-json.cjs qua node --check. Chưa có workbook đầu vào để nghiệm thu chuyển Excel thực tế. git diff --check đạt.
+
+### Điểm đang chờ dữ liệu của người dùng
+
+Lần kiểm tra cuối, assets/data/users.json có 99 bản ghi nhưng 98 ID duy nhất: user-006 trùng giữa Phan Bảo Ngọc và tài khoản Vi Trung Kiên mới thêm. Người dùng chọn tự sửa ID; Codex không thay ID hoặc quan hệ seed. Chạy trực tiếp scripts/test-integration.mjs với seed hiện tại dừng đúng tại “users có ID thiếu hoặc trùng”. Vì vậy kết quả 32/32 ở trên không phải xác nhận seed hiện tại hợp lệ. Sau khi ID được sửa cần chạy lại npm test, rồi reset demo có xác nhận nếu muốn nạp seed mới vào trình duyệt.
+
+Các bất nhất task-004/journey, lịch check-in và timestamp cũ vẫn giữ nguyên. Tệp tài liệu local chưa được cung cấp; HTTP(S) dùng liên kết ngoài. Ba AI là mô phỏng; chưa có backend, upload, email khôi phục hoặc quyền NewHire tự tạo task. Script/ảnh/profile trình duyệt tạm ở thư mục TEMP ngoài repository; chỉ giữ bộ hồi quy scripts/test-integration.mjs để nhóm chạy lại.
+
+## Rà soát nguồn dữ liệu và kết nối module — 19/10/2026 (bổ sung)
+
+Người dùng yêu cầu kiểm tra toàn bộ code, chỉ giữ nguồn dữ liệu tại assets/data và chuẩn hóa kết nối giữa các module. Đã rà soát lại cả SV1/SV2/SV3; giữ vanilla ES modules, tên trang và bộ UI chung.
+
+- Nguồn khởi tạo hiện gồm 12 JSON trong assets/data: mười collection nghiệp vụ ban đầu cùng aiHistory.json và settings.json. Store không còn seed mặc định trong JavaScript. Các bản seed/import cũ và thư mục data-json rỗng đã bỏ; package.json và .vscode/settings.json là cấu hình công cụ, không phải dữ liệu nghiệp vụ.
+- Đã xóa record mẫu khỏi vùng render/template HTML, gồm policy giả ở detail, nhân sự/mentor/tài liệu/tin tức/check-in/AI mẫu và số liệu cứng. Index dùng template cấu trúc trống rồi render từ organization; giới thiệu công ty cũng đọc company-001.
+- Sửa login UI nhận ID hoặc email; optional task dueDate; normalize từ khóa Đ hoa; kiểm URL tài liệu; task/check-in bỏ draft khi mất phân công. Admin sửa user/hire qua updateUserAccount để kiểm tra cả hai bản ghi trước khi ghi. Cho phép giữ mentor đã ngừng hoạt động khi sửa trường không liên quan, chặn gán mới mentor đó.
+- Risk kiểm tra liên kết tồn tại, không mô tả thiếu task khi thực tế còn task; chỉ lịch sử accepted ảnh hưởng thống kê. Form settings theo dõi thay đổi tab khác và giữ draft. Lifecycle tin tức và kiểu field settings được kiểm tra chặt hơn.
+- Reset xác thực toàn bộ nguồn trước khi xóa, có khôi phục khi ghi lỗi. Store báo rõ collection/ID trùng; không tự sửa seed. Server HTTP hỗ trợ GET/HEAD, chặn đường dẫn riêng tư/ra ngoài repo và phương thức khác.
+- Thêm npm run check qua scripts/check-project.mjs để kiểm JSON/ID/tham chiếu, vị trí nguồn dữ liệu, import/route/menu và link/asset. Cải tiến Excel importer: XML entities, inline/shared strings, workbook relationships, ngày/ISO/Excel serial, tham chiếu và ghi nhiều collection có khôi phục; chỉ thêm ID mới, không tự đổi/gộp seed.
+
+Kết quả kiểm tra bổ sung:
+
+- 42/42 ca hồi quy đạt với users snapshot đã commit và các JSON canonical còn lại, dùng storage bộ nhớ và HTTP server tạm. Không thay users.json để làm test đạt.
+- 16/16 luồng trình duyệt xuyên vai trò đạt sau cập nhật (dữ liệu kiểm thử đã lưu trong hồ sơ Chrome tách biệt); không có exception hoặc lỗi tải. Lượt thử cũ có dữ liệu kiểm thử trùng tên và thiếu trường mới đã được thay bằng tên riêng/đầu vào đầy đủ trong script tạm trước lượt xác nhận cuối.
+- 57/57 lượt trang/viewport đạt ở 1440/768/390px. Ba ca trình duyệt bổ sung đạt: đăng nhập bằng ID; reset nguồn lỗi giữ nguyên dữ liệu/phiên; origin mới báo user-006 trùng mà chưa ghi một phần seed.
+- 13 kiểm tra Excel importer đạt với workbook/bản sao canonical trong TEMP, có kiểm khôi phục sau lỗi rename; CLI dry-run và kiểm tra cú pháp đạt. 42 module được import thực, 19 route/43 module được kiểm graph, không có import/link bị đứt.
+- git diff --check đạt. Mã kiểm thử duy trì trong scripts; fixture, script CDP, ảnh và hồ sơ trình duyệt tạm không đưa vào repo.
+
+Kiểm tra trực tiếp nguồn hiện tại vẫn báo 1 lỗi: users.json có user-006 trùng (items 6 và 99; tài khoản Vi Trung Kiên mới thêm trùng ID Phan Bảo Ngọc). Người dùng đã chọn tự sửa ID, nên giữ nguyên dữ liệu. Ba cảnh báo dữ liệu: task-004 lệch quan hệ journey, 42 nhóm check-in trùng và 100 tệp local chưa được cung cấp. Npm test trên seed hiện tại dừng ở lỗi ID trùng; 42/42 ở trên không phải nghiệm thu seed hiện tại hợp lệ. Sau khi người dùng sửa ID cần chạy npm run check và npm test, rồi reset có xác nhận để nạp seed mới nếu muốn.

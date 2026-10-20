@@ -1,5 +1,4 @@
 import { getMyProfile } from '../data/people.js';
-import { getById } from '../data/store.js';
 import { getTasksForHire, getProgress } from '../data/tasks.js';
 import { getReadableDocuments } from '../data/resources.js';
 import { createTaskItem, createDocumentCard, createAvatar, element, actionButton } from '../common/renderers.js';
@@ -9,7 +8,7 @@ import { parseStoredDate } from '../common/format.js';
 export async function initPage({ ui }) {
   const region = name => document.querySelector(`[data-region="${name}"]`);
   function render() {
-    const { user, hire, mentor } = getMyProfile();
+    const { user, hire, mentor, journey } = getMyProfile();
     const tasks = hire ? getTasksForHire(hire.id).filter(item => item.status !== 'archived') : [];
     const progress = hire ? getProgress(hire.id) : { completed: 0, total: 0, percent: 0 };
     document.querySelector('.page-header__description').textContent = `Chào ${user.fullName}, đây là những việc cần theo dõi.`;
@@ -19,7 +18,7 @@ export async function initPage({ ui }) {
     values[1].textContent = tasks.filter(item => item.status === 'inProgress').length;
     values[2].textContent = tasks.filter(item => item.status === 'blocked').length;
     region('stats').querySelectorAll('.stat-card__label')[2].textContent = 'Đang vướng mắc';
-    region('journey-name').textContent = hire?.journeyId ? getById('journeys', hire.journeyId)?.title || 'Không tìm thấy hành trình' : 'Chưa gán hành trình';
+    region('journey-name').textContent = hire?.journeyId ? journey?.title || 'Không tìm thấy hành trình' : 'Chưa gán hành trình';
     region('progress-value').textContent = `${progress.percent}%`;
     region('progress-bar').value = progress.percent;
     const upcoming = tasks.filter(item => item.status !== 'completed')

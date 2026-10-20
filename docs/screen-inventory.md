@@ -1,5 +1,18 @@
 # Bảng màn hình UI
 
+## Trạng thái tích hợp ngày 19/10/2026
+
+| Owner | Trang/task | Kết quả |
+|---|---|---|
+| SV1 | UI-01–06 | Dashboard/checklist, Q&A, thư viện, đăng nhập mật khẩu và profile dùng dữ liệu chung |
+| SV2 | UI-07–09 | Mentee theo quyền, task/check-in CRUD; checklist AI mô phỏng, duyệt và áp dụng có thể thử lại |
+| SV2 | UI-10–12 | HR/Admin quản lý tài liệu, Mentor đọc; detail theo ID/quyền; 403 dùng module lỗi chung |
+| SV3 | UI-13–14 | Quản lý journey và gán hồ sơ; dashboard/Progress Risk; quản lý công ty/tin tức |
+| SV3 | UI-15–17 | CRUD phòng ban/tài khoản, cấu hình được lưu, reset có xác nhận; dùng chung quản lý công ty/tin tức |
+| SV3 | UI-18 / UI-PUBLIC | 404 dùng module chung; index đọc tin published và company-001 |
+
+Đủ 19 route, không có admin-company-info/admin-news-management riêng. Kiểm tra 57 lượt trang/viewport ở 1440, 768, 390px không thấy lỗi tải, ID DOM trùng hoặc tràn ngang. 16 luồng thao tác trình duyệt đã đạt. Kiểm tra bổ sung 42 ca hồi quy trên users snapshot đã commit và ba luồng lỗi/đăng nhập trên trình duyệt đạt. Nguồn duy nhất hiện là 12 JSON assets/data; npm run check báo cụ thể lỗi/cảnh báo seed. Kết quả seed hiện tại phụ thuộc việc người dùng sửa ID trùng; xem báo cáo AI. Những bảng phía dưới mô tả các đợt cũ.
+
 ## Trạng thái tích hợp ngày 18/10/2026
 
 | Phạm vi | Trạng thái hiện tại |

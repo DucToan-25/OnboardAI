@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/pages/hr-journey-management.css">
     <link rel="stylesheet" href="../css/responsive.css">
   </head>
-  <body class="page page--hr-journey-management" data-page="hr-journey-management" data-display-name="Nguyễn Thu Hà" data-layout-role="hr">
+  <body class="page page--hr-journey-management" data-page="hr-journey-management">
     <div class="app-shell is-collapsed">
       <header class="app-header" id="app-header">
       </header>
@@ -57,71 +57,17 @@
                     <th scope="col">Thao tác</th>
                   </tr>
                 </thead>
-                <tbody data-region="journey-rows">
-                </tbody>
+                <tbody data-region="journey-rows"></tbody>
               </table>
             </div>
-            <p class="form-field__hint hr-journeys__summary" data-region="journey-summary" aria-live="polite">2 / 2 mẫu hành trình</p>
+            <p class="form-field__hint hr-journeys__summary" data-region="journey-summary" aria-live="polite"></p>
           </section>
+<section class="card" data-region="hire-management"><div class="card__header"><h2 class="card__title">Hồ sơ hội nhập và phân công</h2><button class="btn btn--primary" type="button" data-action="create-hire">Tạo hồ sơ</button></div><div class="form-field"><label class="form-field__label" for="hire-search">Tìm nhân sự</label><input id="hire-search" class="form-field__control" type="search" data-region="hire-search"></div><div data-region="hire-state" aria-live="polite"></div><div class="table-wrap"><table class="table"><thead><tr><th>Nhân sự</th><th>Mentor</th><th>Hành trình</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody data-region="hire-rows"></tbody></table></div></section>
         </div>
       </main>
     </div>
-    <template data-template="open-journey-form" data-title="Tạo mẫu hành trình">
-      <div>
-        <form class="form" novalidate="">
-          <div class="form__grid">
-            <div class="form-field">
-              <label class="form-field__label" for="field-name-1">
-                Tên hành trình
-                <span class="form-field__required" aria-hidden="true">*</span>
-              </label>
-              <input type="text" class="form-field__control" id="field-name-1" name="title" required="" aria-describedby="field-name-1-error" value="">
-              <p class="form-field__error" id="field-name-1-error" data-error-for="title" hidden="">
-              </p>
-            </div>
-            <div class="form-field">
-              <label class="form-field__label" for="field-departmentId-2">
-                Phòng ban
-                <span class="form-field__required" aria-hidden="true">*</span>
-              </label>
-              <select class="form-field__control" id="field-departmentId-2" name="departmentId" required="" aria-describedby="field-departmentId-2-error">
-                <option value="" selected="">— Chọn phòng ban —</option>
-                <option value="dept-engineering">Công nghệ</option>
-                <option value="dept-product">Sản phẩm</option>
-                <option value="dept-people">Nhân sự</option>
-                <option value="dept-marketing">Marketing</option>
-              </select>
-              <p class="form-field__error" id="field-departmentId-2-error" data-error-for="departmentId" hidden="">
-              </p>
-            </div>
-            <div class="form-field">
-              <label class="form-field__label" for="field-status-3">Trạng thái</label>
-              <select class="form-field__control" id="field-status-3" name="status" aria-describedby="field-status-3-error">
-                <option value="active" selected="">Đang áp dụng</option>
-                <option value="inactive">Ngừng áp dụng</option>
-              </select>
-              <p class="form-field__error" id="field-status-3-error" data-error-for="status" hidden="">
-              </p>
-            </div>
-            <div class="form-field">
-              <label class="form-field__label" for="field-steps-4">
-                Thời lượng (ngày)
-                <span class="form-field__required" aria-hidden="true">*</span>
-              </label>
-              <input type="number" class="form-field__control" id="field-steps-4" name="durationDays" min="1" step="1" required="" aria-describedby="field-steps-4-error field-steps-4-hint" value="">
-              <p class="form-field__error" id="field-steps-4-error" data-error-for="durationDays" hidden="">
-              </p>
-              <p class="form-field__hint" id="field-steps-4-hint">Số nguyên dương, ví dụ 30.</p>
-            </div>
-          </div>
-          <div class="modal__footer">
-            <button type="button" class="btn btn--secondary">Hủy</button>
-            <button type="submit" class="btn btn--primary">Tạo hành trình</button>
-          </div>
-        </form>
-      </div>
-    </template>
-    <div id="modal-root">
+    <template data-template="open-journey-form" data-title="Hành trình"><form class="form" novalidate><div class="form__grid"><div class="form-field"><label class="form-field__label" for="edit-title">Tên hành trình</label><input class="form-field__control" id="edit-title" name="title" type="text" value="" required  ><p class="form-field__error" data-error-for="title" hidden></p></div><div class="form-field"><label class="form-field__label" for="edit-description">Mô tả</label><textarea class="form-field__control" id="edit-description" name="description" ></textarea><p class="form-field__error" data-error-for="description" hidden></p></div><div class="form-field"><label class="form-field__label" for="edit-departmentId">Phòng ban</label><select class="form-field__control" id="edit-departmentId" name="departmentId" ></select><p class="form-field__error" data-error-for="departmentId" hidden></p></div><div class="form-field"><label class="form-field__label" for="edit-targetRole">Đối tượng</label><input class="form-field__control" id="edit-targetRole" name="targetRole"  type="text" placeholder="all" required><p class="form-field__error" data-error-for="targetRole" hidden></p></div><div class="form-field"><label class="form-field__label" for="edit-durationDays">Thời lượng (ngày)</label><input class="form-field__control" id="edit-durationDays" name="durationDays" type="number" value="" required min="1" ><p class="form-field__error" data-error-for="durationDays" hidden></p></div></div><div class="form__actions"><button type="button" class="btn btn--secondary">Hủy</button><button type="submit" class="btn btn--primary">Lưu</button></div></form></template>
+<template data-template="open-hire-form"><form class="form" novalidate><div class="form__grid"><div class="form-field"><label class="form-field__label" for="hire-userId">Tài khoản</label><select class="form-field__control" id="hire-userId" name="userId" required></select><p class="form-field__error" data-error-for="userId" hidden></p></div><div class="form-field"><label class="form-field__label" for="hire-mentorId">Mentor</label><select class="form-field__control" id="hire-mentorId" name="mentorId" ></select><p class="form-field__error" data-error-for="mentorId" hidden></p></div><div class="form-field"><label class="form-field__label" for="hire-journeyId">Hành trình</label><select class="form-field__control" id="hire-journeyId" name="journeyId" ></select><p class="form-field__error" data-error-for="journeyId" hidden></p></div><div class="form-field"><label class="form-field__label" for="hire-startDate">Ngày bắt đầu</label><input class="form-field__control" id="hire-startDate" name="startDate" type="date"><p class="form-field__error" data-error-for="startDate" hidden></p></div><div class="form-field"><label class="form-field__label" for="hire-status">Trạng thái</label><select class="form-field__control" id="hire-status" name="status" ><option value="notStarted">Chưa bắt đầu</option><option value="inProgress">Đang hội nhập</option><option value="completed">Hoàn thành</option><option value="archived">Đã lưu trữ</option></select><p class="form-field__error" data-error-for="status" hidden></p></div><div class="form-field"><label class="form-field__label" for="hire-notes">Ghi chú</label><textarea class="form-field__control" id="hire-notes" name="notes"></textarea><p class="form-field__error" data-error-for="notes" hidden></p></div></div><div class="form__actions"><button class="btn btn--secondary" type="button">Hủy</button><button class="btn btn--primary" type="submit">Lưu hồ sơ</button></div></form></template><div id="modal-root">
     </div>
     <div id="toast-root" aria-live="polite">
     </div>

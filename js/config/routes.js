@@ -25,7 +25,5 @@ export const ROUTES = Object.freeze({
   'admin-department-management': route('admin-department-management', ['admin']),
   'admin-user-management': route('admin-user-management', ['admin']),
   'admin-system-settings': route('admin-system-settings', ['admin']),
-  'admin-company-info': route('admin-company-info', ['admin']),
-  'admin-news-management': route('admin-news-management', ['hr', 'admin']),
   '403': route('403', [], true), '404': route('404', [], true),
 });

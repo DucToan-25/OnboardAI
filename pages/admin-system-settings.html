@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/pages/admin-system-settings.css">
     <link rel="stylesheet" href="../css/responsive.css">
   </head>
-  <body class="page page--admin-system-settings" data-page="admin-system-settings" data-display-name="Quản trị viên" data-layout-role="admin">
+  <body class="page page--admin-system-settings" data-page="admin-system-settings">
     <div class="app-shell is-collapsed">
       <header class="app-header" id="app-header">
       </header>
@@ -32,21 +32,21 @@
             <article class="card stat-card">
               <div>
                 <p class="stat-card__label">Tài khoản</p>
-                <p class="stat-card__value" data-region="users-count">5</p>
+                <p class="stat-card__value" data-region="users-count">—</p>
                 <a href="admin-user-management.html">Quản lý tài khoản →</a>
               </div>
             </article>
             <article class="card stat-card">
               <div>
                 <p class="stat-card__label">Phòng ban</p>
-                <p class="stat-card__value" data-region="departments-count">3</p>
+                <p class="stat-card__value" data-region="departments-count">—</p>
                 <a href="admin-department-management.html">Quản lý phòng ban →</a>
               </div>
             </article>
             <article class="card stat-card">
               <div>
                 <p class="stat-card__label">Tài liệu đã phát hành</p>
-                <p class="stat-card__value" data-region="documents-count">7</p>
+                <p class="stat-card__value" data-region="documents-count">—</p>
                 <a href="hr-document-library.html">Quản lý tài liệu →</a>
               </div>
             </article>
@@ -66,7 +66,7 @@
                       Tên tổ chức
                       <span class="form-field__required" aria-hidden="true">*</span>
                     </label>
-                    <input type="text" class="form-field__control" id="field-organizationName-1" name="organizationName" required="" aria-describedby="field-organizationName-1-error" value="Onvera">
+                    <input type="text" class="form-field__control" id="field-organizationName-1" name="organizationName" required="" aria-describedby="field-organizationName-1-error" value="">
                     <p class="form-field__error" id="field-organizationName-1-error" data-error-for="organizationName" hidden="">
                     </p>
                   </div>
@@ -75,7 +75,7 @@
                       Email hỗ trợ nhân sự
                       <span class="form-field__required" aria-hidden="true">*</span>
                     </label>
-                    <input type="email" class="form-field__control" id="field-supportEmail-2" name="supportEmail" required="" aria-describedby="field-supportEmail-2-error" value="hr@example.com">
+                    <input type="email" class="form-field__control" id="field-supportEmail-2" name="supportEmail" aria-describedby="field-supportEmail-2-error" value="">
                     <p class="form-field__error" id="field-supportEmail-2-error" data-error-for="supportEmail" hidden="">
                     </p>
                   </div>
@@ -100,7 +100,7 @@
                       Thời gian hội nhập mặc định (ngày)
                       <span class="form-field__required" aria-hidden="true">*</span>
                     </label>
-                    <input type="number" class="form-field__control" id="field-onboardingDays-4" name="onboardingDays" required="" aria-describedby="field-onboardingDays-4-error" min="1" max="365" step="1" value="30">
+                    <input type="number" class="form-field__control" id="field-onboardingDays-4" name="onboardingDays" required="" aria-describedby="field-onboardingDays-4-error" min="1" max="365" step="1" value="">
                     <p class="form-field__error" id="field-onboardingDays-4-error" data-error-for="onboardingDays" hidden="">
                     </p>
                   </div>
@@ -109,27 +109,20 @@
                       Nhắc trước hạn nhiệm vụ (ngày)
                       <span class="form-field__required" aria-hidden="true">*</span>
                     </label>
-                    <input type="number" class="form-field__control" id="field-reminderDays-5" name="reminderDays" required="" aria-describedby="field-reminderDays-5-error" min="0" max="30" step="1" value="2">
+                    <input type="number" class="form-field__control" id="field-reminderDays-5" name="reminderDays" required="" aria-describedby="field-reminderDays-5-error" min="0" max="30" step="1" value="">
                     <p class="form-field__error" id="field-reminderDays-5-error" data-error-for="reminderDays" hidden="">
                     </p>
                   </div>
                 </div>
                 <p class="form-field__hint">Chưa áp dụng cho hành trình đang chạy và chưa gửi thông báo tự động.</p>
               </section>
+              <div data-region="settings-form-state" aria-live="polite"></div>
               <div class="form__actions" data-region="settings-actions">
                 <button class="btn btn--primary" type="submit" data-action="save-settings">Lưu thay đổi</button>
                 <button class="btn btn--secondary" type="button" data-action="cancel-settings">Hủy thay đổi</button>
                 <button class="btn btn--ghost" type="button" data-action="reset-settings">Khôi phục cấu hình đã tải</button>
                 <button class="btn btn--danger" type="button" data-action="reset-demo-data">Đặt lại dữ liệu demo</button>
               </div>
-              <section class="card" data-region="settings-preview" aria-live="polite" hidden="">
-                <div class="card__header">
-                  <h2 class="card__title">Bản xem trước cấu hình</h2>
-                </div>
-                <dl class="admin-settings__summary" data-region="settings-summary">
-                </dl>
-                <p class="form-field__hint">Chưa lưu hoặc áp dụng vào hệ thống. Tải lại trang sẽ bỏ bản nháp.</p>
-              </section>
             </form>
             <aside class="page-body" aria-label="Hướng dẫn quản trị">
               <section class="card">
@@ -144,8 +137,8 @@
                 </div>
               </section>
               <section class="alert alert--info">
-                <h2 class="alert__title">Chế độ xem trước</h2>
-                <p class="alert__message">Thay đổi chỉ nằm trên biểu mẫu để kiểm tra trước khi tích hợp lưu dữ liệu. Không ảnh hưởng đến tài khoản hay quy trình hiện tại.</p>
+                <h2 class="alert__title">Cấu hình dùng chung</h2>
+                <p class="alert__message">Lưu thay đổi để cập nhật cấu hình trong trình duyệt. Số ngày hội nhập được dùng khi tạo hành trình mới; hành trình đang chạy giữ nguyên.</p>
               </section>
             </aside>
           </div>
@@ -164,24 +157,7 @@
                     <th scope="col">Khu vực sử dụng</th>
                   </tr>
                 </thead>
-                <tbody data-region="role-scope">
-                  <tr>
-                    <th scope="row">Nhân sự mới</th>
-                    <td>Tổng quan, Checklist nhiệm vụ, Thư viện tài liệu, Trợ giúp AI, Hồ sơ cá nhân</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Người hướng dẫn</th>
-                    <td>Danh sách mentee, Ghi chú check-in, Giao nhiệm vụ, Thư viện tài liệu, Hồ sơ cá nhân</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Nhân sự</th>
-                    <td>Quản lý hành trình, Thư viện tài liệu, Tổng quan nhân sự, Hồ sơ cá nhân</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Quản trị viên</th>
-                    <td>Quản lý phòng ban, Quản lý tài khoản, Quản lý hệ thống, Thư viện tài liệu, Hồ sơ cá nhân</td>
-                  </tr>
-                </tbody>
+                <tbody data-region="role-scope"></tbody>
               </table>
             </div>
           </section>

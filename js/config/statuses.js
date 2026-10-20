@@ -1,58 +1,18 @@
-<<<<<<< HEAD
-// Shared labels and tones; persisted records keep the status codes only.
-export const STATUS_META = Object.freeze({
-  tasks: {
-    pending: { label: 'Chưa bắt đầu', tone: 'neutral' },
-    in_progress: { label: 'Đang thực hiện', tone: 'info' },
-    submitted: { label: 'Chờ duyệt', tone: 'info' },
-    changes_requested: { label: 'Cần chỉnh sửa', tone: 'warning' },
-    completed: { label: 'Hoàn thành', tone: 'success' },
-    canceled: { label: 'Đã hủy', tone: 'neutral' }
-  },
-  documents: {
-    draft: { label: 'Bản nháp', tone: 'neutral' },
-    published: { label: 'Đã phát hành', tone: 'success' },
-    archived: { label: 'Đã lưu trữ', tone: 'neutral' }
-  },
-  users: {
-    active: { label: 'Hoạt động', tone: 'success' },
-    disabled: { label: 'Vô hiệu hóa', tone: 'neutral' }
-  },
-  departments: {
-    active: { label: 'Hoạt động', tone: 'success' },
-    archived: { label: 'Đã lưu trữ', tone: 'neutral' }
-  },
-  journeys: {
-    draft: { label: 'Bản nháp', tone: 'neutral' },
-    active: { label: 'Đang áp dụng', tone: 'success' },
-    archived: { label: 'Đã lưu trữ', tone: 'neutral' }
-  },
-  journeyAssignments: {
-    active: { label: 'Đang hội nhập', tone: 'info' },
-    completed: { label: 'Hoàn thành', tone: 'success' },
-    archived: { label: 'Đã lưu trữ', tone: 'neutral' }
-  },
-  newHires: {
-    active: { label: 'Đang hội nhập', tone: 'info' },
-    completed: { label: 'Hoàn thành', tone: 'success' },
-    archived: { label: 'Đã lưu trữ', tone: 'neutral' }
-  },
-  checkins: {
-    scheduled: { label: 'Đã lên lịch', tone: 'info' },
-    completed: { label: 'Hoàn thành', tone: 'success' },
-    canceled: { label: 'Đã hủy', tone: 'neutral' }
-  },
-  news: {
-    draft: { label: 'Bản nháp', tone: 'neutral' },
-    published: { label: 'Đã xuất bản', tone: 'success' },
-    archived: { label: 'Đã lưu trữ', tone: 'neutral' }
-  }
-=======
 export const TASK_STATUSES = Object.freeze({
   todo: { label: 'Chưa bắt đầu', tone: 'neutral' },
   inProgress: { label: 'Đang thực hiện', tone: 'info' },
   blocked: { label: 'Đang vướng mắc', tone: 'warning' },
   completed: { label: 'Hoàn thành', tone: 'success' },
   archived: { label: 'Đã lưu trữ', tone: 'neutral' },
->>>>>>> 906d77f (Update localstorage sv1)
+});
+
+const active = { active: { label: 'Hoạt động', tone: 'success' }, inactive: { label: 'Ngừng hoạt động', tone: 'neutral' } };
+export const STATUS_META = Object.freeze({
+ tasks: TASK_STATUSES,
+ users: { ...active, invited: { label: 'Chờ kích hoạt', tone: 'info' } },
+ departments: active, journeys: active,
+ newHires: { notStarted: { label: 'Chưa bắt đầu', tone: 'neutral' }, inProgress: { label: 'Đang hội nhập', tone: 'info' }, completed: { label: 'Hoàn thành', tone: 'success' }, archived: { label: 'Đã lưu trữ', tone: 'neutral' } },
+ documents: { draft: { label: 'Bản nháp', tone: 'neutral' }, active: { label: 'Đã phát hành', tone: 'success' }, archived: { label: 'Đã lưu trữ', tone: 'neutral' } },
+ news: { draft: { label: 'Bản nháp', tone: 'neutral' }, published: { label: 'Đã xuất bản', tone: 'success' }, archived: { label: 'Đã lưu trữ', tone: 'neutral' } },
+ checkins: { scheduled: { label: 'Đã lên lịch', tone: 'info' }, completed: { label: 'Hoàn thành', tone: 'success' }, cancelled: { label: 'Đã hủy', tone: 'neutral' } },
 });

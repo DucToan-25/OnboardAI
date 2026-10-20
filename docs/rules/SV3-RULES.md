@@ -1,5 +1,9 @@
 # Quy tắc Codex cho SV3 — HR, Admin, khung ứng dụng và tích hợp
 
+> **Rà soát nguồn dữ liệu 19/10/2026:** Form Admin gọi updateUserAccount một lần; chỉ risk accepted ảnh hưởng thống kê. Settings lấy từ JSON canonical, giữ draft khi tab khác ghi. Bộ kiểm tra npm run check rà soát liên kết toàn dự án.
+
+> **Hiện hành 19/10/2026:** yêu cầu người dùng mở rộng tích hợp cả ba thành viên. HR journey/gán hồ sơ/dashboard/Progress Risk và Admin tài khoản/phòng ban/cấu hình đã nối. Company/news dùng UI chung trong các trang hiện có; giữ 19 route và shell chung. Áp dụng phần mới nhất của [AGENTS.md](../../AGENTS.md) và [quy tắc LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md). Các giới hạn tĩnh/preview/SV1-only dưới đây là lịch sử. Owner review và OBS vẫn cần nhóm thực hiện.
+
 > **Điểm nối hiện hành 18/10/2026:** theo [quy tắc LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md), main/layout dùng phiên và role từ users, không từ query. `js/data/organization.js` có getCompanyInfo/getPublishedNews phục vụ trang chủ. SV3 gọi people của SV1 cho quản trị user/hire, tiếp tục làm CRUD organization và các màn hình HR/Admin; không tạo store riêng. UI HR/Admin hiện vẫn tĩnh. Cấu trúc dữ liệu/mật khẩu/status mới thay thế phần preview cũ phía dưới.
 
 

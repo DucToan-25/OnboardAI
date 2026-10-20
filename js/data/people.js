@@ -1,47 +1,3 @@
-<<<<<<< HEAD
-/*
- * people.js — users và newHires.
- * OWNER: SV1. CHƯA TRIỂN KHAI: SV3 chỉ bàn giao chữ ký theo hợp đồng mục 3.3
- * (OnboardAI_QuyTac_LocalStorage.md) để màn hình Admin/HR của SV3 gọi đúng tên hàm.
- * Mọi hàm ném MODULE_NOT_READY với thông báo rõ; KHÔNG trả dữ liệu giả, KHÔNG lưu gì cả.
- * SV1 thay thân hàm bằng logic thật (kiểm tra quyền, email duy nhất, liên kết userId…).
- */
-import { StoreError } from './store.js';
-
-function notReady(method) {
-  return new StoreError(
-    'MODULE_NOT_READY',
-    `people.js (${method}) chưa được SV1 triển khai. Màn hình hiển thị trạng thái chờ; không báo lưu thành công giả.`,
-  );
-}
-
-// Danh sách tài khoản cho trang quản trị (Admin). Trả { items, total } hoặc throw.
-export async function listUsers(query = {}) { throw notReady('listUsers'); }
-
-// Tạo tài khoản (+ hồ sơ newHire nếu role là newHire); kiểm tra email duy nhất và liên kết.
-export async function createUser(input) { throw notReady('createUser'); }
-
-// Sửa tài khoản theo id; Admin; không sửa được id/role tùy ý ngoài quy tắc quản trị.
-export async function updateUser(id, patch) { throw notReady('updateUser'); }
-
-// Vô hiệu hóa/khôi phục tài khoản (active ↔ inactive); lần kiểm tra quyền kế tiếp phải phản ánh ngay.
-export async function setUserStatus(id, status) { throw notReady('setUserStatus'); }
-
-// Danh sách hồ sơ newHires; filter theo mentorId/departmentId/status.
-export async function listNewHires(query = {}) { throw notReady('listNewHires'); }
-
-// Hồ sơ newHire của chính người đang đăng nhập (newHires.userId === currentUser.id).
-export async function getMyHire() { throw notReady('getMyHire'); }
-
-// Nhân sự mới tự sửa các trường cá nhân được phép (fullName, email…).
-export async function updateMyProfile(patch) { throw notReady('updateMyProfile'); }
-
-// HR/Admin tạo hồ sơ nhân sự mới và gán mentor/journey (gọi assertJourneyAssignable của organization).
-export async function createNewHireProfile(input) { throw notReady('createNewHireProfile'); }
-
-// Đổi mentor của một hồ sơ; mentee list của mentor cũ/mới phải đổi theo.
-export async function assignMentor(hireId, mentorUserId) { throw notReady('assignMentor'); }
-=======
 import * as store from './store.js';
 import { publicUser, requireRoles } from '../common/auth.js';
 import { ROLES } from '../config/roles.js';
@@ -80,7 +36,7 @@ function validateHire(input, previous = null, account = null) {
   validateReference('journeys', input.journeyId, previous?.journeyId);
   if (input.mentorId !== null) {
     const mentor = store.getById('users', input.mentorId);
-    if (!mentor || mentor.role !== ROLES.MENTOR || mentor.status !== 'active') throw new Error('Mentor phải là tài khoản hướng dẫn đang hoạt động.');
+    if (!mentor || mentor.role !== ROLES.MENTOR || (mentor.status !== 'active' && input.mentorId !== previous?.mentorId)) throw new Error('Mentor phải là tài khoản hướng dẫn đang hoạt động.');
   }
   if (!['notStarted', 'inProgress', 'completed', 'archived'].includes(input.status)) throw new Error('Trạng thái hồ sơ không hợp lệ.');
   if (input.startDate !== null && (!/^\d{4}-\d{2}-\d{2}$/.test(input.startDate) || !parseStoredDate(input.startDate))) throw new Error('Ngày bắt đầu không hợp lệ.');
@@ -88,6 +44,7 @@ function validateHire(input, previous = null, account = null) {
 }
 export function getMyHire() {
   const user = requireRoles();
+  if (user.role !== ROLES.NEWHIRE) return null;
   const hires = store.getAll('newHires').filter(item => item.userId === user.id);
   if (hires.length > 1) throw new Error('Tài khoản liên kết nhiều hồ sơ. Cần quản trị viên kiểm tra dữ liệu.');
   return hires[0] || null;
@@ -95,7 +52,7 @@ export function getMyHire() {
 export function getMyProfile() {
   const user = requireRoles();
   const hire = getMyHire();
-  return { user, hire, department: store.getById('departments', user.departmentId), mentor: publicUser(hire?.mentorId ? store.getById('users', hire.mentorId) : null) };
+  return { user, hire, department: store.getById('departments', user.departmentId), journey: hire?.journeyId ? store.getById('journeys', hire.journeyId) : null, mentor: publicUser(hire?.mentorId ? store.getById('users', hire.mentorId) : null) };
 }
 export function updateMyProfile(patch) {
   const actor = requireRoles(); allowed(patch, ['fullName', 'email']);
@@ -108,16 +65,44 @@ export function listHires() {
   const actor = requireRoles([ROLES.ADMIN, ROLES.HR, ROLES.MENTOR]);
   return store.getAll('newHires').filter(hire => actor.role !== ROLES.MENTOR || hire.mentorId === actor.id);
 }
-export function updateUser(id, patch) {
+function prepareUserUpdate(id, patch, allowLinkedDepartment = false) {
   const actor = requireRoles([ROLES.ADMIN]); allowed(patch, userFields);
   const previous = store.getById('users', id);
   if (!previous) throw new Error('Không tìm thấy tài khoản.');
   const user = validateUser({ ...previous, ...patch }, id, previous);
   const hires = store.getAll('newHires');
   if (user.role !== previous.role && hires.some(hire => hire.userId === id || hire.mentorId === id)) throw new Error('Cần xử lý liên kết hồ sơ/mentee trước khi đổi vai trò.');
-  if (user.departmentId !== previous.departmentId && hires.some(hire => hire.userId === id)) throw new Error('Dùng updateHire để đổi phòng ban của nhân sự có hồ sơ.');
+  if (!allowLinkedDepartment && user.departmentId !== previous.departmentId && hires.some(hire => hire.userId === id)) throw new Error('Dùng updateHire để đổi phòng ban của nhân sự có hồ sơ.');
   if (actor.id === id && (user.role !== ROLES.ADMIN || user.status !== 'active') && !store.getAll('users').some(item => item.id !== id && item.role === ROLES.ADMIN && item.status === 'active')) throw new Error('Phải giữ ít nhất một quản trị viên đang hoạt động.');
-  return publicUser(store.update('users', id, Object.fromEntries(Object.keys(patch).map(key => [key, user[key]]))));
+  return { user, patch: Object.fromEntries(Object.keys(patch).map(key => [key, user[key]])) };
+}
+export function updateUser(id, patch) {
+  const validated = prepareUserUpdate(id, patch);
+  return publicUser(store.update('users', id, validated.patch));
+}
+// Validate both forms before either write; retry keeps the existing user/hire IDs.
+export function updateUserAccount(id, patch, hirePatch = {}) {
+  hirePatch ??= {};
+  const { user, patch: userPatch } = prepareUserUpdate(id, patch, true);
+  const previous = store.getAll('newHires').find(hire => hire.userId === id);
+  if (!previous) {
+    allowed(hirePatch, hireFields);
+    const hire = user.role === ROLES.NEWHIRE ? validateHire({ departmentId: user.departmentId, jobTitle: user.jobTitle,
+      mentorId: null, journeyId: null, startDate: null, status: 'notStarted', notes: null, ...hirePatch,
+      userId: id, id: `hire-${id}` }, null, user) : null;
+    return store.transaction(() => {
+      const updatedUser = publicUser(store.update('users', id, userPatch));
+      if (hire) store.create('newHires', hire);
+      return { user: updatedUser, hire };
+    });
+  }
+  allowed(hirePatch, hireFields);
+  const hire = validateHire({ ...previous, departmentId: user.departmentId, jobTitle: user.jobTitle, ...hirePatch }, previous, user);
+  if (hire.journeyId !== previous.journeyId && store.getAll('tasks').some(task => task.newHireId === previous.id && task.status !== 'archived')) throw new Error('Cần xử lý nhiệm vụ hiện tại trước khi đổi hành trình.');
+  return store.transaction(() => {
+    store.update('newHires', hire.id, Object.fromEntries(hireFields.map(key => [key, hire[key]])));
+    return { user: publicUser(store.update('users', id, userPatch)), hire: store.getById('newHires', hire.id) };
+  });
 }
 export function createUser(input) {
   requireRoles([ROLES.ADMIN]); allowed(input, userFields);
@@ -146,11 +131,12 @@ export function createNewHireAccount(input, hireInput, operation) {
   if (hire.startDate !== null && (!/^\d{4}-\d{2}-\d{2}$/.test(hire.startDate) || !parseStoredDate(hire.startDate))) throw new Error('Ngày bắt đầu không hợp lệ.');
   const oldHire = store.getById('newHires', operation.hireId);
   if (oldHire && oldHire.userId !== operation.userId) throw new Error('Mã hồ sơ đã được sử dụng.');
-  try {
+  validateHire(hire, oldHire, { ...user, id: operation.userId });
+  return store.transaction(() => {
     if (!existing) store.create('users', { ...user, id: operation.userId, createdAt: new Date().toISOString() });
     if (!oldHire) store.create('newHires', validateHire(hire));
     return { user: publicUser(store.getById('users', operation.userId)), hire: store.getById('newHires', operation.hireId) };
-  } catch (error) { throw new Error(`${error.message} Nếu tài khoản đã lưu, hãy thử lại với cùng mã thao tác để hoàn tất hồ sơ.`); }
+  });
 }
 export function updateHire(id, patch) {
   const actor = requireRoles([ROLES.ADMIN, ROLES.HR]); allowed(patch, hireFields);
@@ -162,9 +148,40 @@ export function updateHire(id, patch) {
   if (moving && actor.role !== ROLES.ADMIN) throw new Error('Chỉ Admin được đổi phòng ban tài khoản.');
   const hire = validateHire(next, previous, moving ? { ...account, departmentId: next.departmentId } : null);
   if (hire.journeyId !== previous.journeyId && store.getAll('tasks').some(task => task.newHireId === id && task.status !== 'archived')) throw new Error('Cần xử lý nhiệm vụ hiện tại trước khi đổi hành trình.');
-  try {
+  return store.transaction(() => {
     if (moving) store.update('users', account.id, { departmentId: next.departmentId });
     return store.update('newHires', id, patch);
-  } catch (error) { throw new Error(`${error.message} Hãy thử lại cùng hồ sơ và phòng ban để hoàn tất đồng bộ.`); }
+  });
 }
->>>>>>> 906d77f (Update localstorage sv1)
+
+// Joined display data stays in the service; no password is returned to pages.
+export function getHireIssues(hire) {
+  const account = store.getById('users', hire.userId);
+  return [
+    !account || account.role !== 'newHire' ? `${hire.id}: tài khoản ${hire.userId} không phải nhân sự mới; cần nhóm xác nhận liên kết.` : '',
+    account && account.departmentId !== hire.departmentId ? `${hire.id}: phòng ban ${hire.departmentId} khác tài khoản ${account.departmentId}; cần Admin kiểm tra.` : '',
+  ].filter(Boolean);
+}
+export function getHireSummaries() {
+  return listHires().map(hire => ({ ...hire,
+    issues: getHireIssues(hire),
+    user: publicUser(store.getById('users', hire.userId)),
+    mentor: publicUser(store.getById('users', hire.mentorId)),
+    department: store.getById('departments', hire.departmentId),
+    journey: store.getById('journeys', hire.journeyId),
+  }));
+}
+export function getAssignmentOptions() {
+  requireRoles(['hr', 'admin']);
+  return {
+    users: store.getAll('users').filter(user => ['newHire', 'mentor'].includes(user.role)).map(publicUser),
+    departments: store.getAll('departments'), journeys: store.getAll('journeys'),
+  };
+}
+export function createNewHireProfile(input) {
+  requireRoles(['hr', 'admin']); allowed(input, ['userId', ...hireFields]);
+  const user = store.getById('users', input.userId);
+  const hire = validateHire({ departmentId: user?.departmentId ?? null, jobTitle: user?.jobTitle ?? null,
+    mentorId: null, journeyId: null, startDate: null, status: 'notStarted', notes: null, ...input, id: store.createId('newHires') });
+  return store.create('newHires', hire);
+}

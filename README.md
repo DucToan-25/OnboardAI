@@ -1,6 +1,6 @@
 # OnboardAI
 
-Website HTML5/CSS/JavaScript thuần (ES modules). Đã tích hợp phần SV1 theo [quy tắc LocalStorage](OnboardAI_QuyTac_LocalStorage.md); chưa có backend hoặc AI thật.
+Website HTML5/CSS/JavaScript thuần (ES modules), tích hợp LocalStorage cho cả SV1, SV2 và SV3. Giữ 19 route và một bộ dịch vụ chung; chưa có backend hoặc AI thật.
 
 ## Chạy dự án
 
@@ -8,38 +8,41 @@ Website HTML5/CSS/JavaScript thuần (ES modules). Đã tích hợp phần SV1 t
 node scripts/serve.cjs
 ```
 
-Mở http://127.0.0.1:8000/ rồi chọn Đăng nhập. Có thể đổi cổng bằng `node scripts/serve.cjs 8080`. Không mở bằng file://.
+Mở http://127.0.0.1:8000/. Đổi cổng bằng `node scripts/serve.cjs 8080`; không mở bằng file://. Đăng nhập bằng email hoặc ID và password trong [assets/data/users.json](assets/data/users.json), tài khoản phải active. Mật khẩu là dữ liệu mô phỏng có thể đọc từ trình duyệt, không dùng mật khẩu thật.
 
-Dùng email và password tương ứng trong [assets/data/users.json](assets/data/users.json), tài khoản phải có status active. Mật khẩu bạn bổ sung được giữ nguyên khi chuyển JSON từ data-json sang assets/data. Không có cách đăng nhập chỉ bằng role hoặc userId. Mật khẩu này phục vụ mô phỏng frontend và có thể đọc từ trình duyệt; không dùng mật khẩu thật.
+## Các luồng đã nối
 
-## Phần SV1 đã nối
+- SV1: đăng nhập, profile bốn vai trò, dashboard/checklist và tiến độ, thư viện và Policy Q&A với lịch sử riêng.
+- SV2: mentee theo phân công, tạo/sửa/lưu trữ task, check-in có kiểm tra trùng lịch và ghi chú riêng; quản lý tài liệu theo quyền; Checklist Personalizer cho phép sửa, từ chối và duyệt để giao việc.
+- SV3: quản lý journey, tạo/gán hồ sơ hội nhập, dashboard và Progress Risk; Admin quản lý tài khoản, phòng ban và cấu hình hệ thống.
+- HR/Admin dùng chung phần thông tin công ty và tin tức trong các trang hiện có. Trang chủ chỉ đọc company-001 và tin published.
+- Tiến độ tính từ tasks chung, bỏ archived. Checklist thử lại sau lỗi lưu dùng ID ổn định, không nhân đôi task. HR/Admin không đọc hoặc tìm kiếm ghi chú check-in riêng của Mentor.
+- Phiên chỉ lưu userId. Query role không cấp quyền. Đổi phiên/role hoặc vô hiệu hóa tài khoản làm tab khác tải lại và bỏ draft. Logout giữ dữ liệu nghiệp vụ.
 
-- Store chung: khởi tạo 10 JSON và aiHistory rỗng khi khóa chưa tồn tại; kiểm tra ID/JSON/phiên bản; giữ thay đổi qua F5; lỗi có hướng dẫn thử lại.
-- Login/profile dùng danh tính trong users; profile bốn vai trò, sửa fullName/email duy nhất. Query role/userId không thay danh tính hoặc cấp quyền.
-- Dashboard/checklist đọc hire theo userId, tính tiến độ chung; đổi todo/inProgress/blocked/completed qua tasks.updateTaskStatus.
-- Thư viện/detail dùng documents và quyền đọc. Không có tệp đính kèm trong dữ liệu được giao nên detail hiển thị metadata và thông báo thiếu tệp.
-- Policy Q&A tra cứu aiMockData với nguồn phù hợp quyền; fallback khi thiếu thông tin; lịch sử riêng có sửa/chấp nhận/từ chối/tạo lại/xóa.
-- Trang chủ đọc news published, tìm/lọc/phân trang/chi tiết; sứ mệnh từ company-001.
-- Header/sidebar/route dùng phiên chung; thay phiên ở tab khác làm kiểm tra lại quyền. Logout giữ dữ liệu nghiệp vụ.
-- API people/ai-history đã sẵn sàng cho SV2/SV3 gọi; chữ ký và cách thử lại thao tác nhiều bước nằm trong quy tắc LocalStorage.
+Ba chức năng AI dùng aiMockData hoặc tính toán mô phỏng từ dữ liệu hiện có; không gọi mô hình bên ngoài. Cấu hình số ngày hội nhập được dùng khi tạo journey; không tự thay journey cũ hoặc gửi nhắc việc.
 
-Dữ liệu chỉ dùng chung giữa các trang/tab cùng protocol, hostname và port trên cùng hồ sơ trình duyệt. Các tab cùng dùng một tài khoản hiện tại; phạm vi demo chỉ một tab ghi tại một thời điểm.
+## Dữ liệu và đồng bộ
 
-## Reset và lỗi dữ liệu
+12 JSON ở assets/data là nguồn khởi tạo duy nhất, gồm aiHistory.json và settings.json. Store chỉ đọc các file này khi chưa có khóa; tổng cộng 14 khóa đăng ký, schemaVersion 1. Không còn seed/import, dữ liệu nghiệp vụ nhúng trong HTML hoặc store song song.
 
-Nút **Đặt lại dữ liệu demo** ở Hồ sơ có xác nhận: xóa đúng 13 khóa onboardai_*, đăng xuất và nạp JSON ban đầu, giữ dữ liệu website khác. Màn hình lỗi khởi tạo cũng có Thử lại/Đặt lại/Đăng xuất. Không reset tự động; mảng [] đã lưu không bị seed lại.
+LocalStorage chỉ dùng chung giữa các trang/tab cùng protocol, hostname, port và hồ sơ trình duyệt. Git đồng bộ mã nguồn/JSON giữa ba thành viên, không đồng bộ dữ liệu đang dùng giữa ba máy. Demo hỗ trợ một tab ghi tại một thời điểm.
 
-Sau khi sửa JSON, F5 vẫn giữ LocalStorage cũ. Dùng reset có xác nhận nếu muốn nạp seed mới. Schema chưa hỗ trợ hoặc JSON hỏng sẽ dừng thao tác và báo lỗi, không tự thay bằng dữ liệu rỗng.
+Sau khi sửa JSON, F5 vẫn giữ dữ liệu trình duyệt. Dùng **Đặt lại dữ liệu demo** tại Hồ sơ hoặc Quản lý hệ thống để nạp seed mới: thao tác có xác nhận, kiểm tra toàn bộ JSON trước khi xóa đúng khóa dự án và đăng xuất; giữ dữ liệu website khác. Seed lỗi được báo trước khi xóa; lỗi ghi có bước khôi phục dữ liệu trước đó. JSON lỗi, ID trùng hoặc schema không hỗ trợ sẽ báo lỗi, không tự sửa/gộp hoặc ghi đè dữ liệu cũ.
 
-## Phạm vi bàn giao còn lại
+## Kiểm tra
 
-Các trang mentor, quản trị HR/Admin và thư viện quản lý vẫn giữ giao diện tĩnh, thao tác ghi báo chưa kết nối. SV2/SV3 tiếp tục CRUD và hai AI Checklist Personalizer/Progress Risk; không tạo store hoặc dịch vụ trùng. Nút thêm việc cá nhân chưa có quyền tạo task trong hợp đồng này; quên mật khẩu/liên hệ HR chưa gửi email hay đặt lại mật khẩu.
+```powershell
+npm run check
+npm test
+```
 
-Dữ liệu gốc cần nhóm xử lý có chủ đích:
+npm run check kiểm tra JSON/ID/liên kết, import, route/menu và tài nguyên. Bộ kiểm tra hồi quy dùng bộ nhớ giả cùng HTTP server tạm, không ghi seed hoặc LocalStorage trình duyệt. Kiểm tra route/module, auth/quyền, CRUD, tiến độ, lỗi lưu/thử lại, AI, reset và schema. Script thử trình duyệt, ảnh và profile tạm nằm ngoài repo. Kết quả cụ thể xem [báo cáo AI](docs/ai-usage-report.md).
 
-- task-004 gắn journeys-001, trong khi hire-002 gắn journeys-002; cập nhật task này bị chặn.
-- 42 nhóm check-in trùng newHireId/mentorId/scheduledAt; giữ nguyên nội dung để SV2 rà soát.
-- 100 fileUrl tài liệu chưa có tệp; không tạo nội dung chính sách giả để thay thế.
-- Các bất nhất timestamp đã được nêu trong quy tắc LocalStorage vẫn cần owner dữ liệu xử lý.
+## Giới hạn và dữ liệu cần nhóm xử lý
 
-Quy tắc chung ở [AGENTS.md](AGENTS.md); tình trạng từng trang ở [bảng màn hình](docs/screen-inventory.md); kiểm tra và AI hỗ trợ ở [báo cáo AI](docs/ai-usage-report.md). Script, ảnh và hồ sơ trình duyệt kiểm thử chỉ dùng trong thư mục tạm, không lưu vào repo.
+- Người dùng đang tự sửa ID trùng user-006 trong users.json. Cần ID duy nhất trước khi khởi tạo/reset từ seed hiện tại; không đổi ID của tài khoản cũ đang được tham chiếu.
+- task-004 và hire-002 lệch journeyId: giữ seed, chặn cập nhật liên kết không nhất quán. Các nhóm check-in trùng lịch và bất nhất timestamp cũ cũng cần nhóm quyết định, không tự gộp ghi chú.
+- Các tệp assets/docs trong seed chưa được cung cấp. Detail báo thiếu tệp; tài liệu mới có URL HTTP(S) mở được liên kết ngoài. Chưa có upload tệp.
+- NewHire chưa có quyền tự tạo task; quên mật khẩu chỉ hướng dẫn liên hệ, không gửi email hoặc đặt lại mật khẩu giả.
+
+Quy tắc hiện hành: [AGENTS.md](AGENTS.md), [LocalStorage](OnboardAI_QuyTac_LocalStorage.md), [bảng màn hình](docs/screen-inventory.md). Các phần tài liệu cũ có mốc ngày được giữ làm lịch sử; mục ngày 19/10/2026 có ưu tiên. Owner review và OBS do nhóm thực hiện trước merge.

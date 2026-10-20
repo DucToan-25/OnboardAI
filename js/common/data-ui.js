@@ -2,8 +2,8 @@ import { subscribe } from '../data/store.js';
 import { setViewState, showToast } from './ui.js';
 
 export function watchData(collections, render, state) {
-  function refresh() {
-    try { render(); }
+  async function refresh() {
+    try { await render(); }
     catch (error) {
       if (state) setViewState(state, { status: 'error', message: error.message });
       else showToast({ message: error.message, type: 'error' });

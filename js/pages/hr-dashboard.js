@@ -1,22 +1,20 @@
 import { showToast, openModal, setViewState } from '../common/ui.js';
-import { validateFields } from '../common/page-ui.js';
+import { bindForm, validateFields } from '../common/page-ui.js';
 import { formatDateTime } from '../common/format.js';
 import * as progressRisk from '../data/progress-risk.js';
 import * as aiHistory from '../data/ai-history.js';
 import { getProgress } from '../data/tasks.js';
-import { ensurePreviewSession } from '../data/auth.js';
+import { watchData } from '../common/data-ui.js';
+import { element, createField, fillSelect, actionButton } from '../common/renderers.js';
+import { initOrganizationManagement } from '../common/organization-ui.js';
+import { STATUS_META } from '../config/statuses.js';
 
 const root = () => document.querySelector('#main-content');
 const region = (name) => root().querySelector(`[data-region="${name}"]`);
 
-const HIRE_STATUS_LABELS = {
-  notStarted: { label: 'Chưa bắt đầu', tone: 'neutral' },
-  inProgress: { label: 'Đang hội nhập', tone: 'info' },
-  completed: { label: 'Hoàn thành', tone: 'success' },
-  archived: { label: 'Đã lưu trữ', tone: 'warning' },
-};
+const HIRE_STATUS_LABELS = STATUS_META.newHires;
 
-const state = { hires: [], evaluations: [], progressByHire: new Map(), analysis: null, error: null };
+const state = { hires: [], evaluations: [], progressByHire: new Map(), analysis: null, historyId: null, saving: false, analyzing: false, error: null };
 
 function showError(error) {
   console.error(error);
@@ -36,7 +34,7 @@ function initials(fullName) {
 
 function latestEvaluation(hireId) {
   return state.evaluations
-    .filter((item) => item.newHireId === hireId)
+    .filter((item) => item.newHireId === hireId && item.decision === 'accepted')
     .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))[0] ?? null;
 }
 
@@ -48,7 +46,7 @@ function renderStats() {
     state.hires.length,
     state.hires.filter((hire) => hire.status === 'inProgress').length,
     state.hires.filter((hire) => hire.status === 'completed').length,
-    state.evaluations.filter((item) => item.result?.level === 'high').length,
+    state.hires.filter(hire => latestEvaluation(hire.hireId)?.result?.level === 'high').length,
   ];
   [...grid.querySelectorAll('.stat-card__value')].forEach((node, index) => {
     node.textContent = String(values[index] ?? 0);
@@ -104,7 +102,7 @@ function renderRow(hire) {
   } else {
     const hint = document.createElement('span');
     hint.className = 'form-field__hint';
-    hint.textContent = progress ? 'Chưa có nhiệm vụ' : 'Chưa đọc được (tasks.js chờ SV2)';
+    hint.textContent = progress ? 'Chưa có nhiệm vụ' : 'Chưa đọc được tiến độ';
     progressCell.append(hint);
   }
 
@@ -141,7 +139,7 @@ function matchesFilter(hire, form) {
   const search = form.elements.search?.value.trim().toLocaleLowerCase('vi') ?? '';
   const department = form.elements.departmentId?.value ?? '';
   const text = `${hire.fullName ?? ''} ${hire.email ?? ''}`.toLocaleLowerCase('vi');
-  return (!search || text.includes(search)) && (!department || hire.departmentName === department);
+  return (!search || text.includes(search)) && (!department || hire.departmentId === department);
 }
 
 function render() {
@@ -171,14 +169,19 @@ async function load() {
       try { state.progressByHire.set(hire.hireId, await getProgress(hire.hireId)); } catch { state.progressByHire.set(hire.hireId, null); }
     }));
     state.error = null;
+    const departments = [...new Map(state.hires.map(hire => [hire.departmentId, hire.departmentName])).entries()].map(([value, label]) => ({ value, label }));
+    fillSelect(region('dashboard-filters')?.elements.departmentId, departments, 'Tất cả phòng ban');
     const select = region('risk-form')?.elements.namedItem('newHireId');
     if (select) {
+      const selected = select.value;
       select.replaceChildren(new Option('— Chọn nhân sự —', ''));
       for (const hire of state.hires) {
         select.append(new Option(`${hire.fullName ?? hire.hireId} (${hire.hireId})`, hire.hireId));
       }
+      select.value = selected;
     }
     render();
+    renderHistory();
   } catch (error) {
     state.error = error;
     setViewState(region('dashboard-state'), {
@@ -198,17 +201,21 @@ function renderAnalysis(analysis, { saved = false } = {}) {
   badgeNode.textContent = meta.label;
   region('risk-text').textContent = analysis.summary;
   region('risk-explanation').textContent = analysis.reason;
+  region('risk-recommendations').replaceChildren(...(analysis.recommendations || []).map(text => element('li', '', text)));
+  const decision = state.historyId ? aiHistory.getHistory(state.historyId).decision : 'pending';
   region('risk-draft-status').textContent = saved
-    ? 'Đã lưu vào lịch sử đánh giá AI (aiHistory).'
+    ? `Đã lưu vào lịch sử đánh giá. ${decision === 'accepted' ? 'HR đã chấp nhận kết quả.' : decision === 'rejected' ? 'HR đã từ chối kết quả.' : 'Đang chờ quyết định của HR.'}`
     : 'Kết quả đang ở chế độ nháp, nhấn Lưu để ghi vào lịch sử.';
   const sources = region('risk-sources');
   sources.replaceChildren();
   const lines = [
     `newHires: ${analysis.hireId}`,
-    analysis.progress ? `tasks.getProgress(): ${analysis.progress.completed}/${analysis.progress.total} (${analysis.progress.percent}%)` : 'tasks.getProgress(): chưa đọc được (module chờ SV2)',
-    `Nhiệm vụ quá hạn: ${analysis.signals.overdueTasks}; bị chặn: ${analysis.signals.blockedTasks}`,
-    `Check-in: ${analysis.signals.checkins}; mentor: ${analysis.signals.hasMentor ? 'có' : 'chưa gán'}; hành trình: ${analysis.signals.hasJourney ? 'có' : 'chưa gán'}`,
-    'Nguyên tắc: thiếu dữ liệu không coi là rủi ro thấp (mục 5.7).',
+    analysis.progress ? `Tiến độ: ${analysis.progress.completed}/${analysis.progress.total} (${analysis.progress.percent}%)` : 'Tiến độ chi tiết chưa có trong bản lưu.',
+    ...(analysis.signals ? [
+      `Nhiệm vụ quá hạn: ${analysis.signals.overdueTasks}; bị chặn: ${analysis.signals.blockedTasks}`,
+      `Check-in: ${analysis.signals.checkins}; mentor hợp lệ: ${analysis.signals.hasMentor ? 'có' : 'chưa có'}; hành trình hợp lệ: ${analysis.signals.hasJourney ? 'có' : 'chưa có'}`,
+    ] : ['Bản lưu chỉ giữ kết quả và giải thích; tạo lại để đọc số liệu hiện tại.']),
+    'Thiếu dữ liệu không được coi là rủi ro thấp. Đây là đánh giá mô phỏng, cần HR rà soát.',
   ];
   for (const line of lines) {
     const p = document.createElement('p');
@@ -217,10 +224,14 @@ function renderAnalysis(analysis, { saved = false } = {}) {
     sources.append(p);
   }
   region('risk-actions').hidden = false;
+  for (const action of ['accept-risk', 'reject-risk', 'edit-risk', 'save-risk']) {
+    region('risk-actions').querySelector(`[data-action="${action}"]`).disabled = decision !== 'pending';
+  }
 }
 
 
 async function analyzeSelected() {
+  if (state.analyzing || state.saving) return;
   const form = region('risk-form');
   const hireId = form?.elements.namedItem('newHireId')?.value ?? '';
   if (!hireId) {
@@ -229,42 +240,50 @@ async function analyzeSelected() {
   }
   setViewState(region('risk-state'), { status: 'loading', message: 'Đang phân tích rủi ro tiến độ…' });
   region('risk-result').hidden = true;
+  state.analyzing = true;
+  const submit = form.querySelector('[type="submit"]'); submit.disabled = true;
   try {
     state.analysis = await progressRisk.analyzeRisk(hireId);
+    state.historyId = null;
     setViewState(region('risk-state'), { status: 'ready', message: '' });
     renderAnalysis(state.analysis);
   } catch (error) {
     state.analysis = null;
     setViewState(region('risk-state'), { status: 'error', message: error?.message || 'Không phân tích được rủi ro.' });
-  }
+  } finally { state.analyzing = false; submit.disabled = false; }
 }
 
 async function saveAnalysis(decision) {
-  if (!state.analysis) return;
+  if (!state.analysis || state.saving) return;
+  state.saving = true;
   try {
-    const saved = await aiHistory.createAiHistory({
-      featureType: 'progressRisk',
-      newHireId: state.analysis.hireId,
-      input: `Đánh giá rủi ro tiến độ ${state.analysis.hireId}`,
-      result: {
-        level: state.analysis.level,
-        summary: state.analysis.summary,
-        recommendations: state.analysis.recommendations,
-      },
-      reason: state.analysis.reason,
-      decision,
-    });
-    if (decision === 'accepted') await aiHistory.updateAiHistory(saved.id, { decision: 'accepted' });
-    showToast({
-      message: decision === 'rejected' ? 'Đã từ chối và lưu kết quả vào lịch sử.' : 'Đã lưu kết quả đánh giá vào lịch sử.',
-      type: 'success',
-    });
+    if (!state.historyId) {
+      const saved = await progressRisk.saveRiskEvaluation(state.analysis);
+      state.historyId = saved.id;
+    }
+    if (decision !== 'pending') aiHistory.decideHistory(state.historyId, decision);
     state.evaluations = await progressRisk.listSavedEvaluations();
-    renderAnalysis(state.analysis, { saved: true });
-    render();
-  } catch (error) {
-    showError(error);
-  }
+    renderAnalysis(state.analysis, { saved: true }); render(); renderHistory();
+    showToast({ message: 'Đã lưu quyết định đánh giá.', type: 'success' });
+  } catch (error) { showError(error); }
+  finally { state.saving = false; }
+}
+function renderHistory() {
+  const list = region('risk-history'); if (!list) return;
+  list.replaceChildren(...state.evaluations.map(item => actionButton(formatDateTime(item.createdAt) + ' · ' + item.newHireId + ' · ' + item.decision, 'open-risk', item.id, 'ghost')));
+}
+function editAnalysis() {
+  if (!state.analysis) return;
+  if (state.historyId && aiHistory.getHistory(state.historyId).decision !== 'pending') { showToast({ message: 'Kết quả đã được quyết định. Hãy tạo đánh giá mới.', type: 'info' }); return; }
+  const form = element('form', 'form');
+  form.append(createField({ name: 'summary', label: 'Nhận định', type: 'textarea', value: state.analysis.summary, required: true }), createField({ name: 'recommendations', label: 'Đề xuất (mỗi dòng một việc)', type: 'textarea', value: state.analysis.recommendations.join('\n') }), createField({ name: 'reason', label: 'Giải thích', type: 'textarea', value: state.analysis.reason }));
+  const button = element('button', 'btn btn--primary', 'Lưu chỉnh sửa'); button.type = 'submit'; form.append(button);
+  const modal = openModal({ title: 'Sửa đánh giá rủi ro', content: form });
+  bindForm(form, () => {
+    const next = { ...state.analysis, summary: form.elements.summary.value, recommendations: form.elements.recommendations.value.split('\n').map(line => line.trim()).filter(Boolean), reason: form.elements.reason.value };
+    if (state.historyId) aiHistory.updateHistory(state.historyId, { result: { level: next.level, summary: next.summary, recommendations: next.recommendations }, reason: next.reason });
+    state.analysis = next; renderAnalysis(next, { saved: Boolean(state.historyId) }); modal.close();
+  });
 }
 
 function viewHireDetail(hireId) {
@@ -301,13 +320,8 @@ function viewHireDetail(hireId) {
   openModal({ title: `Chi tiết nhân sự ${hire.fullName ?? hire.hireId}`, content: dl });
 }
 
-export async function initPage({ currentUser }) {
-  try {
-    await ensurePreviewSession(currentUser?.role ?? 'hr');
-  } catch (error) {
-    showError(error);
-    return;
-  }
+export async function initPage() {
+  initOrganizationManagement();
   const filters = region('dashboard-filters');
   filters?.addEventListener('submit', (event) => { event.preventDefault(); render(); });
   filters?.addEventListener('input', render);
@@ -315,15 +329,23 @@ export async function initPage({ currentUser }) {
   region('risk-form')?.addEventListener('submit', (event) => { event.preventDefault(); if (validateFields(event.currentTarget)) analyzeSelected(); });
   root().addEventListener('click', (event) => {
     const button = event.target.closest('button[data-action]');
-    if (!button || button.type === 'submit') return;
+    if (!button || button.type === 'submit' || state.saving) return;
     const { action, id } = button.dataset;
-    if (action === 'open-newhire') viewHireDetail(id);
-    else if (action === 'accept-risk') saveAnalysis('accepted');
-    else if (action === 'save-risk') saveAnalysis('pending');
-    else if (action === 'reject-risk') saveAnalysis('rejected');
-    else if (action === 'rerun-risk') analyzeSelected();
-    else if (action === 'edit-risk') showToast({ message: 'Kết quả AI được tạo lại bằng nút Tạo lại; sửa chi tiết khi lưu vào hồ sơ sẽ mở ở đợt dữ liệu sau.', type: 'info' });
+    try {
+      if (action === 'open-newhire') viewHireDetail(id);
+      else if (action === 'accept-risk') saveAnalysis('accepted');
+      else if (action === 'save-risk') saveAnalysis('pending');
+      else if (action === 'reject-risk') saveAnalysis('rejected');
+      else if (action === 'rerun-risk') analyzeSelected();
+      else if (action === 'edit-risk') editAnalysis();
+      else if (action === 'open-risk') {
+        const item = aiHistory.getHistory(id);
+        state.historyId = id;
+        state.analysis = { ...item.result, hireId: item.newHireId, reason: item.reason };
+        region('risk-form').elements.newHireId.value = item.newHireId;
+        renderAnalysis(state.analysis, { saved: true });
+      }
+    } catch (error) { showError(error); }
   });
-  await load();
+  watchData(['users', 'newHires', 'tasks', 'checkins', 'aiHistory', 'departments'], load, region('dashboard-state'));
 }
-

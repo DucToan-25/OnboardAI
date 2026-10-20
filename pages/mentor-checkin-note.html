@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/pages/mentor-checkin-note.css">
     <link rel="stylesheet" href="../css/responsive.css">
   </head>
-  <body class="page page--mentor-checkin-note" data-page="mentor-checkin-note" data-display-name="Trần Quang Huy" data-layout-role="mentor">
+  <body class="page page--mentor-checkin-note" data-page="mentor-checkin-note">
     <div class="app-shell is-collapsed">
       <header class="app-header" id="app-header">
       </header>
@@ -39,8 +39,6 @@
                     </label>
                     <select class="form-field__control" id="checkin-newHireId" name="newHireId" required="" aria-describedby="checkin-newHireId-error">
                       <option value="" selected="">— Chọn mentee —</option>
-                      <option value="nh-001">Nguyễn Minh Anh</option>
-                      <option value="nh-002">Trần Thu Lan</option>
                     </select>
                     <p class="form-field__error" id="checkin-newHireId-error" data-error-for="newHireId" hidden="">
                     </p>
@@ -57,21 +55,16 @@
                   </div>
                 </div>
                 <div class="form-field form-field--full">
-                  <label class="form-field__label" for="checkin-situation">Tình hình hiện tại</label>
-                  <textarea class="form-field__control" id="checkin-situation" name="situation" rows="3" placeholder="Mô tả tình hình…" aria-describedby="checkin-situation-error"></textarea>
-                  <p class="form-field__error" id="checkin-situation-error" data-error-for="situation" hidden="">
+                  <label class="form-field__label" for="checkin-note">Tình hình hiện tại</label>
+                  <textarea class="form-field__control" id="checkin-note" name="note" rows="3" placeholder="Mô tả tình hình…" aria-describedby="checkin-note-error"></textarea>
+                  <p class="form-field__error" id="checkin-note-error" data-error-for="note" hidden="">
                   </p>
                 </div>
+
                 <div class="form-field form-field--full">
-                  <label class="form-field__label" for="checkin-challenges">Khó khăn cần hỗ trợ</label>
-                  <textarea class="form-field__control" id="checkin-challenges" name="challenges" rows="3" placeholder="Nhập khó khăn cần hỗ trợ…" aria-describedby="checkin-challenges-error"></textarea>
-                  <p class="form-field__error" id="checkin-challenges-error" data-error-for="challenges" hidden="">
-                  </p>
-                </div>
-                <div class="form-field form-field--full">
-                  <label class="form-field__label" for="checkin-nextSteps">Việc tiếp theo</label>
-                  <textarea class="form-field__control" id="checkin-nextSteps" name="nextSteps" rows="3" placeholder="Kế hoạch tiếp theo…" aria-describedby="checkin-nextSteps-error"></textarea>
-                  <p class="form-field__error" id="checkin-nextSteps-error" data-error-for="nextSteps" hidden="">
+                  <label class="form-field__label" for="checkin-nextAction">Việc tiếp theo</label>
+                  <textarea class="form-field__control" id="checkin-nextAction" name="nextAction" rows="3" placeholder="Kế hoạch tiếp theo…" aria-describedby="checkin-nextAction-error"></textarea>
+                  <p class="form-field__error" id="checkin-nextAction-error" data-error-for="nextAction" hidden="">
                   </p>
                 </div>
                 <div class="form-field form-field--full">
@@ -79,21 +72,16 @@
                   <select class="form-field__control" id="checkin-status" name="status" aria-describedby="checkin-status-error">
                     <option value="scheduled" selected="">Đã lên lịch</option>
                     <option value="completed">Hoàn thành</option>
-                    <option value="canceled">Đã hủy</option>
+                    <option value="cancelled">Đã hủy</option>
                   </select>
                   <p class="form-field__error" id="checkin-status-error" data-error-for="status" hidden="">
                   </p>
-                </div>
-                <div class="alert alert--info" data-region="preview-notice" hidden="">
-                  <p class="alert__message">Đây là bản xem trước. Bản giao diện chưa lưu ghi chú vào kho dữ liệu.</p>
                 </div>
                 <div class="form__actions">
                   <button type="submit" class="btn btn--primary" data-action="save-checkin">Lưu ghi chú</button>
                   <button type="button" class="btn btn--secondary" data-action="reset-checkin">Hủy</button>
                 </div>
               </form>
-              <div class="mentor-checkin__preview" data-region="checkin-preview" aria-live="polite" hidden="">
-              </div>
             </section>
             <section class="card">
               <div class="card__header">
@@ -105,48 +93,12 @@
                   <label class="form-field__label" for="checkin-filter-mentee">Lọc mentee</label>
                   <select class="form-field__control" id="checkin-filter-mentee" name="newHireId">
                     <option value="" selected="">Tất cả mentee</option>
-                    <option value="nh-001">Nguyễn Minh Anh</option>
-                    <option value="nh-002">Trần Thu Lan</option>
                   </select>
                 </div>
               </form>
               <div data-region="checkin-state" aria-live="polite" class="view-state" role="status" aria-busy="false" hidden="">
               </div>
               <div class="mentor-checkin__list" data-region="checkin-list">
-                <article class="mentor-checkin__item" data-id="checkin-001">
-                  <div class="mentor-checkin__item-head">
-                    <span class="avatar avatar--sm" aria-label="Nguyễn Minh Anh">
-                      <span class="avatar__initials">MA</span>
-                    </span>
-                    <div>
-                      <strong>Nguyễn Minh Anh</strong>
-                      <p class="form-field__hint">10:00 06/10/2026</p>
-                    </div>
-                    <span class="badge badge--info">Đã lên lịch</span>
-                  </div>
-                  <p class="mentor-checkin__note">Ghi chú riêng của mentor, không cung cấp cho nhân sự mới.</p>
-                  <div class="mentor-checkin__actions">
-                    <button type="button" class="btn btn--ghost btn--sm" data-action="edit-checkin" data-id="checkin-001">Sửa</button>
-                    <button type="button" class="btn btn--danger btn--sm" data-action="cancel-checkin" data-id="checkin-001">Hủy lịch</button>
-                  </div>
-                </article>
-                <article class="mentor-checkin__item" data-id="checkin-002">
-                  <div class="mentor-checkin__item-head">
-                    <span class="avatar avatar--sm" aria-label="Trần Thu Lan">
-                      <span class="avatar__initials">TL</span>
-                    </span>
-                    <div>
-                      <strong>Trần Thu Lan</strong>
-                      <p class="form-field__hint">10:00 08/10/2026</p>
-                    </div>
-                    <span class="badge badge--info">Đã lên lịch</span>
-                  </div>
-                  <p class="mentor-checkin__note">Trao đổi về mục tiêu kinh doanh.</p>
-                  <div class="mentor-checkin__actions">
-                    <button type="button" class="btn btn--ghost btn--sm" data-action="edit-checkin" data-id="checkin-002">Sửa</button>
-                    <button type="button" class="btn btn--danger btn--sm" data-action="cancel-checkin" data-id="checkin-002">Hủy lịch</button>
-                  </div>
-                </article>
               </div>
             </section>
           </div>

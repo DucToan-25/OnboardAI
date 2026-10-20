@@ -1,5 +1,13 @@
 # Field bổ sung cho giai đoạn giao diện
 
+## Hợp đồng runtime — 19/10/2026
+
+Phạm vi hiện hành là cả ba thành viên theo [quy tắc LocalStorage](../OnboardAI_QuyTac_LocalStorage.md), phần ngày 19/10/2026. JSON ở assets/data là nguồn khởi tạo duy nhất; các module js/data cung cấp nghiệp vụ và permissions.js mô tả quyền. Không áp dụng schema portalPosts, journeyAssignments hoặc profile phone của thiết kế cũ.
+
+CRUD Mentor/HR/Admin và ba AI mô phỏng đã nối. settings.id=system đọc từ assets/data/settings.json; aiHistory bắt đầu từ assets/data/aiHistory.json; không có fallback seed trong code; trường và validation xem hợp đồng hiện hành. Phiên chỉ lưu userId, role lấy từ tài khoản active; profile chỉ sửa fullName/email. Chỉ Mentor ghi và đọc ghi chú check-in riêng; HR/Admin đọc metadata. Tài liệu HTTP(S) mở liên kết, tệp local chưa cung cấp được báo rõ.
+
+Các mục ngày 18/10 trở xuống là lịch sử; những giới hạn SV1-only, cấm settings hoặc preview-only đã được thay thế ở đợt này.
+
 ## Hợp đồng hiện hành — 18/10/2026
 
 Nguồn chuẩn cho giai đoạn LocalStorage là [OnboardAI_QuyTac_LocalStorage.md](../OnboardAI_QuyTac_LocalStorage.md), gồm schema thực tế, trạng thái, chữ ký hàm và bổ sung mật khẩu. JSON runtime nằm trong `assets/data/`. Nội dung từ phần “Khôi phục mật khẩu” trở xuống là lịch sử thiết kế, không áp dụng thay hợp đồng mới.
