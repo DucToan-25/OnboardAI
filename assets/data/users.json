@@ -1056,12 +1056,12 @@
     "password": "QuocHung2026"
   },
   {
-    "id": "user-ư097",
+    "id": "user-097",
     "fullName": "Nguyễn Đức Toàn",
     "email": "ndt03012007@gmail.com",
-    "role": "newHire",
-    "departmentId": "dept-engineering",
-    "jobTitle": "Lập trình viên",
+    "role": "admin",
+    "departmentId": "dept-people",
+    "jobTitle": "Quản trị viên",
     "status": "active",
     "createdAt": "2026-10-02",
     "password": "@Toan200779"
