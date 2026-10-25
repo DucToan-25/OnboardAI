@@ -23,6 +23,8 @@ export async function initPage({ ui }) {
     const visible = records.filter(item => !filters.elements.newHireId.value || item.newHireId === filters.elements.newHireId.value);
     region('checkin-list').replaceChildren(...visible.map(item => {
       const article = element('article', 'mentor-checkin__item'); article.dataset.id = item.id;
+      article.style.borderLeft="5px solid #2563eb";
+      article.style.backgroundColor="#eff6ff";
       
       const head = element('div', 'mentor-checkin__item-head');
       head.append(element('strong', '', hires.find(hire => hire.id === item.newHireId)?.user?.fullName || item.newHireId), createStatusBadge('checkins', item.status));
