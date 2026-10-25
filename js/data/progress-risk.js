@@ -8,12 +8,12 @@
  *   trả level = 'unknown' kèm giải thích; KHÔNG BAO GIỜ coi thiếu dữ liệu là rủi ro thấp.
  * - Kết quả/đề xuất được lưu vào aiHistory qua ai-history.js (SV1) khi người dùng chọn Lưu.
  */
-import { createHistory, listMyHistory } from './ai-history.js';
-import { requireRoles } from './auth.js';
+import { saveHistoryDraft, listMyHistory } from './ai-history.js';
+import { requireRoles } from '../common/auth.js';
 import { StoreError, getAll, getById } from './store.js';
 import { getProgress, getTasksForHire } from './tasks.js';
 import { listCheckins } from './resources.js';
-import { getTodayDate } from '../common/format.js';
+import { getTodayDate, parseStoredDate } from '../common/format.js';
 
 const HR_ROLES = ['hr', 'admin'];
 const LEVEL_ORDER = { low: 0, medium: 1, high: 2 };
@@ -86,6 +86,7 @@ export async function listHires() {
  */
 export async function analyzeRisk(hireId) {
   await requireRoles(HR_ROLES);
+  const draftId = crypto.randomUUID();
   const hireRecord = getById('newHires', hireId);
   if (!hireRecord) throw new StoreError('NOT_FOUND', `Không tìm thấy hồ sơ nhân sự ${hireId}.`);
   const { hasUser, hasMentor, hasJourney } = getLinks(hireRecord, linkIndex());
@@ -95,14 +96,31 @@ export async function analyzeRisk(hireId) {
   const overdue = ownTasks.filter((task) => task.status !== 'completed'
     && typeof task.dueDate === 'string' && task.dueDate && task.dueDate < today).length;
   const blocked = ownTasks.filter((task) => task.status === 'blocked').length;
+  const completed = ownTasks.filter((task) => task.status === 'completed').length;
+  const inProgress = ownTasks.filter((task) => task.status === 'inProgress').length;
+  const notStarted = ownTasks.filter((task) => task.status === 'todo').length;
+  const checkins = listCheckins({ newHireId: hireId });
+  const start = parseStoredDate(hireRecord.startDate);
+  const current = parseStoredDate(today);
+  const onboardingDaysElapsed = start && current
+    ? Math.max(0, Math.floor((current.getTime() - start.getTime()) / 86400000) + 1)
+    : null;
   const signals = {
     totalTasks: ownTasks.length,
+    completedTasks: completed,
+    inProgressTasks: inProgress,
+    notStartedTasks: notStarted,
     overdueTasks: overdue,
     blockedTasks: blocked,
+    completedCheckins: checkins.filter(item => item.status === 'completed').length,
+    scheduledCheckins: checkins.filter(item => item.status === 'scheduled').length,
+    onboardingDaysElapsed,
+    riskTasks: ownTasks
+      .filter(task => task.status === 'blocked' || (task.status !== 'completed' && task.dueDate && task.dueDate < today))
+      .map(task => ({ id: task.id, title: task.title, status: task.status, dueDate: task.dueDate || null })),
     hasUser,
     hasMentor,
     hasJourney,
-    checkins: listCheckins({ newHireId: hireId }).filter(item => item.status !== 'cancelled').length,
   };
 
   const missing = [];
@@ -121,6 +139,7 @@ export async function analyzeRisk(hireId) {
   if (!progress) {
     const detail = `Không lấy được tiến độ: ${progressError?.message ?? 'lỗi không rõ'}.`;
     return {
+      draftId,
       hireId,
       level: 'unknown',
       tone: RISK_LEVEL_LABELS.unknown.tone,
@@ -137,6 +156,7 @@ export async function analyzeRisk(hireId) {
 
   if (progress.total === 0 || missing.length) {
     return {
+      draftId,
       hireId,
       level: 'unknown',
       tone: RISK_LEVEL_LABELS.unknown.tone,
@@ -169,6 +189,7 @@ export async function analyzeRisk(hireId) {
   if (!recommendations.length) recommendations.push('Duy trì nhịp độ hiện tại và kiểm tra định kỳ.');
 
   return {
+    draftId,
     hireId,
     level,
     tone: RISK_LEVEL_LABELS[level].tone,
@@ -181,12 +202,13 @@ export async function analyzeRisk(hireId) {
 }
 
 /** Lưu kết quả đánh giá vào aiHistory (featureType = progressRisk) cho HR xem lại. */
-export async function saveRiskEvaluation(analysis, note = '') {
+export async function saveRiskEvaluation(analysis, note = '', decision = 'pending') {
   await requireRoles(HR_ROLES);
   if (!analysis || typeof analysis !== 'object' || !analysis.hireId) {
     throw new StoreError('VALIDATION_ERROR', 'saveRiskEvaluation cần kết quả analyzeRisk().');
   }
-  return createHistory({
+  return saveHistoryDraft({
+    draftId: analysis.draftId,
     featureType: 'progressRisk',
     newHireId: analysis.hireId,
     input: `Đánh giá rủi ro tiến độ ${analysis.hireId}`,
@@ -194,9 +216,13 @@ export async function saveRiskEvaluation(analysis, note = '') {
       level: analysis.level,
       summary: analysis.summary,
       recommendations: analysis.recommendations,
+      progress: analysis.progress,
+      signals: analysis.signals,
     },
     reason: `${analysis.reason}${note ? ` Ghi chú HR: ${note}` : ''}`,
-  });
+    aiSource: analysis.aiSource || 'rule-based',
+    model: analysis.model || null,
+  }, decision);
 }
 
 /** Các đánh giá đã lưu của người đang đăng nhập (HR/Admin). */

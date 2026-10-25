@@ -1,7 +1,12 @@
 import { getAll, getById, create, update, createId, StoreError, transaction } from './store.js';
 import { requireRoles } from '../common/auth.js';
 import { parseStoredDate } from '../common/format.js';
-import { getHistory, createHistory, completeChecklistHistory } from './ai-history.js';
+import {
+  getHistory,
+  createDraft,
+  saveHistoryDraft,
+  completeChecklistHistory,
+} from './ai-history.js';
 
 const STATUSES = ['todo', 'inProgress', 'blocked', 'completed'];
 function fail(message, code = 'VALIDATION_ERROR') { throw new StoreError(code, message); }
@@ -94,23 +99,110 @@ export function saveTaskResult(id, input) {
   const now = new Date().toISOString();
   return update('tasks', id, { result: { note: input.note.trim(), url, createdAt: task.result?.createdAt || now, updatedAt: now }, updatedAt: now });
 }
-export function suggestChecklist(hireId, input) {
+function normalize(value) {
+  return String(value)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/gi, 'd')
+    .toLowerCase();
+}
+
+function checklistTitles(value) {
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) return parsed.map(String).map((item) => item.trim()).filter(Boolean);
+  } catch {
+    // Older fixtures use semicolon/newline text instead of a JSON array.
+  }
+  return String(value || '')
+    .split(/[;\n]+/)
+    .map((item) => item.replace(/^\s*[-\d.)]+\s*/, '').trim())
+    .filter(Boolean);
+}
+
+export function generateChecklistDraft(hireId, input) {
   const { hire } = authorizedHire(hireId, true);
   requireRoles(['mentor']);
   assertAssignable(hire);
   if (typeof input !== 'string' || !input.trim()) fail('Nhập nhu cầu hội nhập để tạo gợi ý.');
-  const normalize = value => String(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/gi, 'd').toLowerCase();
-  const query = normalize(`${input} ${hire.jobTitle || ''}`);
-  const candidates = getAll('aiMockData').filter(item => item.featureType === 'checklistPersonalizer' && item.status === 'active')
-    .map(item => ({ item, score: String(item.inputKeywords || '').split(';').map(normalize).filter(word => word.trim() && query.includes(word.trim())).length }))
-    .filter(entry => entry.score > 0).sort((a, b) => b.score - a.score || b.item.confidence - a.item.confidence);
-  const match = candidates[0]?.item;
+  const user = getById('users', hire.userId);
+  const department = getById('departments', hire.departmentId);
+  const journey = getById('journeys', hire.journeyId);
+  const factors = {
+    role: user?.role || 'newHire',
+    departmentId: hire.departmentId,
+    departmentName: department?.name || '',
+    journeyId: hire.journeyId,
+    journeyTitle: journey?.title || '',
+    jobTitle: hire.jobTitle || user?.jobTitle || '',
+    goal: input.trim(),
+  };
+  const searchable = Object.values(factors).map(normalize);
+  const candidates = getAll('aiMockData')
+    .filter((item) => item.featureType === 'checklistPersonalizer' && item.status === 'active')
+    .map((item) => {
+      const keywords = String(item.inputKeywords || '').split(';').map(normalize).filter(Boolean);
+      const matchedFactors = Object.entries(factors)
+        .filter(([, value]) => keywords.some((word) => normalize(value).includes(word)))
+        .map(([name]) => name);
+      const score = keywords.reduce(
+        (total, word) => total + (searchable.some((value) => value.includes(word)) ? 1 : 0),
+        0,
+      );
+      return { item, score, matchedFactors };
+    })
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score || b.item.confidence - a.item.confidence);
+  const match = candidates[0];
   if (!match) fail('Chưa có dữ liệu mẫu phù hợp. Hãy bổ sung mô tả vị trí hoặc giao nhiệm vụ thủ công.');
-  const titles = String(match.resultContent || '').split(/[;\n]+/).map(value => value.replace(/^\s*[-\d.)]+\s*/, '').trim()).filter(Boolean);
+  const titles = checklistTitles(match.item.resultContent);
   if (!titles.length) fail('Dữ liệu gợi ý chưa có nhiệm vụ hợp lệ.');
-  return createHistory({ featureType: 'checklistPersonalizer', newHireId: hireId, input,
-    result: { items: titles.map(title => ({ title, description: '', category: 'Hội nhập', priority: 'medium', dueDate: null })) },
-    reason: `${match.reason || 'Khớp từ khóa vị trí.'} Đây là gợi ý từ dữ liệu mẫu, cần mentor rà soát trước khi giao việc.` });
+  const labels = {
+    role: 'vai trò tài khoản',
+    departmentId: 'mã phòng ban',
+    departmentName: 'tên phòng ban',
+    journeyId: 'mã hành trình',
+    journeyTitle: 'hành trình',
+    jobTitle: 'chức danh',
+    goal: 'mục tiêu mentor nhập',
+  };
+  const used = [...new Set(match.matchedFactors)].map((key) => labels[key]).join(', ');
+  return createDraft({
+    featureType: 'checklistPersonalizer',
+    newHireId: hireId,
+    input,
+    result: {
+      items: titles.map((title) => ({
+        title,
+        description: `Hoàn thành nhiệm vụ "${title}" và ghi lại kết quả để mentor rà soát.`,
+        category: 'Hội nhập',
+        priority: 'medium',
+        dueDate: null,
+        reason: match.item.reason || 'Phù hợp với hồ sơ và mục tiêu hội nhập đã chọn.',
+      })),
+    },
+    reason: `${match.item.reason || 'Khớp dữ liệu hội nhập.'} Yếu tố đã dùng: ${used || 'mục tiêu mentor nhập'}. Đây là gợi ý từ dữ liệu mẫu, cần mentor rà soát trước khi giao việc.`,
+  });
+}
+
+export const suggestChecklist = generateChecklistDraft;
+
+export function saveChecklistDraft(draft) {
+  if (draft?.featureType !== 'checklistPersonalizer') fail('Bản nháp checklist không hợp lệ.');
+  return saveHistoryDraft(draft);
+}
+
+export function rejectChecklistDraft(draft) {
+  if (draft?.featureType !== 'checklistPersonalizer') fail('Bản nháp checklist không hợp lệ.');
+  return saveHistoryDraft(draft, 'rejected');
+}
+
+export function acceptChecklistDraft(draft) {
+  if (draft?.featureType !== 'checklistPersonalizer') fail('Bản nháp checklist không hợp lệ.');
+  return transaction(() => {
+    const history = saveHistoryDraft(draft);
+    return applyChecklistDraft(history.id);
+  });
 }
 export function applyChecklist(historyId) {
   return transaction(() => applyChecklistDraft(historyId));

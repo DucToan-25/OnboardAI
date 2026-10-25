@@ -71,7 +71,6 @@
 .page--index .index__event-date { display: grid; flex: 0 0 62px; text-align: center; border-radius: var(--radius-control); padding: var(--space-2) var(--space-1); background: var(--color-info-soft); color: var(--color-primary); font-size: var(--font-size-caption); }
 .page--index .index__event-date strong { font-size: var(--font-size-title); }
 .page--index .index__event-title { font-size: var(--font-size-small); font-weight: 600; }
-.page--index .index__gate { display: block; margin-top: var(--space-3); color: var(--color-muted); font-size: var(--font-size-caption); text-decoration: none; }
 .page--index .index__article { display: grid; grid-template-columns: 205px minmax(0, 1fr) auto; gap: var(--space-6); padding-block: var(--space-5); align-items: center; }
 .page--index .index__article:first-child { padding-top: 0; }
 .page--index .index__article:last-child { padding-bottom: 0; }

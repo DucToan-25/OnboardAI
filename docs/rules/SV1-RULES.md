@@ -1,5 +1,9 @@
 # Quy tắc Codex cho SV1 — Nhân sự mới và giao diện dùng chung
 
+> **Hiện hành 25/10/2026:** Policy Q&A mặc định dùng Mock Mode; Gemini Mode chỉ chạy sau khi người dùng nhập key tạm trong trang. Draft chưa tự lưu, nguồn/model được ghi cùng history khi Save/Accept/Reject và mã tài liệu ngoài quyền đọc bị loại. Có lưu trữ/xóa lịch sử và cảnh báo dữ liệu nhạy cảm; không quét mật khẩu trong users. Xem hợp đồng chung mới nhất.
+
+> **Đồng bộ 21/10/2026, lựa chọn mới nhất:** Store dùng manifest version cho đủ 12 collection theo [hợp đồng chung](../../OnboardAI_QuyTac_LocalStorage.md). Tăng version rồi F5 thay toàn bộ collection bằng JSON (thêm/sửa/xóa); version không đổi giữ dữ liệu trình duyệt. Lỗi không tiêu thụ version. Reset kiểm tra manifest và JSON. Auth/profile đọc cùng store sau đồng bộ.
+
 > **Rà soát nguồn dữ liệu 19/10/2026:** Store đọc toàn bộ 12 JSON từ assets/data, không giữ seed trong JS/HTML; reset preflight bảo toàn dữ liệu khi nguồn sai. Login nhận email/ID; updateUserAccount kiểm tra user/hire trước khi ghi.
 
 > **Hiện hành 19/10/2026:** yêu cầu người dùng mở rộng tích hợp cả ba thành viên. Auth/people/ai-history, sáu trang nhân sự mới và profile dùng chung đã nối; tiếp tục giữ token/component và API dùng chung cho SV2/SV3. Áp dụng phần mới nhất của [AGENTS.md](../../AGENTS.md) và [quy tắc LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md). Các giới hạn tĩnh/preview/SV1-only dưới đây là lịch sử. Owner review và OBS vẫn cần nhóm thực hiện.

@@ -1,13 +1,32 @@
 # OnboardAI – Phân công và quy tắc LocalStorage
 
+## Vòng đời AI và kiểm tra seed — 25/10/2026
+
+- Generate/Edit/Regenerate chỉ thao tác draft trong bộ nhớ. Save/Accept/Reject mới ghi history; `draftId` chống lưu trùng. Accept checklist ghi history và task theo transaction/idempotent flow.
+- Mock Mode là mặc định và chạy offline. Gemini Mode là tùy chọn, dùng model trong danh sách cấu hình, gửi key qua header `x-goog-api-key` và chỉ giữ key trong bộ nhớ trang; lịch sử lưu `aiSource`/`model` nhưng không lưu key.
+- Input AI không được so khớp với mật khẩu trong collection users. Trang hiển thị cảnh báo chung về dữ liệu nhạy cảm.
+- JSON nguồn phải qua validation schema/enum/ngày/URL/ID; checker kiểm tra foreign key, lịch check-in trùng và asset path. Lỗi không được tiêu thụ seed version.
+- Dữ liệu sửa ngày 25/10 tăng version của users, tasks, checkins, companyInfo, aiMockData và settings; lần tải kế tiếp thay snapshot các collection này theo quy tắc version ngày 21/10.
+
+## Đồng bộ JSON theo version — 21/10/2026
+
+Yêu cầu và xác nhận mới thay quy tắc chỉ nạp JSON khi thiếu khóa ở các mục lịch sử:
+
+- `assets/data/version.json` ánh xạ tên 12 collection sang số nguyên dương. Tăng version của từng file đã thêm dữ liệu, rồi F5. Manifest cũ chỉ có users vẫn đọc được; collection thiếu version mặc định 1. Sai tên collection hoặc version không hợp lệ phải báo lỗi.
+- **Lựa chọn mới nhất của người dùng:** đồng bộ cả thêm/sửa/xóa theo JSON khi tăng version, thay lựa chọn chỉ thêm ID mới. `initStore()` dùng chung Promise mỗi lần mở trang; kiểm tra schema/dữ liệu đã lưu, fetch manifest và JSON với `cache: 'no-store'`, thay toàn bộ collection thiếu hoặc khác version trong một transaction. Collection không đổi version giữ dữ liệu trình duyệt. Version thấp hơn bản đã nạp bị từ chối.
+- `onboardai_seedVersions` lưu map version đã áp dụng; khác `onboardai_schemaVersion` (cấu trúc, vẫn là 1). Khóa cũ `onboardai_usersSeedVersion` chỉ giữ trong registry để reset dọn. Tổng 16 khóa; 12 JSON dữ liệu cộng một manifest. Khi chưa có seedVersions, đối chiếu đủ 12 collection một lần dù usersSeedVersion đã khớp.
+- Kiểm tra toàn bộ đợt tải trước khi ghi. ID/email trùng trong JSON nguồn phải báo lỗi, không bỏ qua rồi tiêu thụ version. Ghi thất bại thì transaction khôi phục các khóa đã ghi; lần thử lại không nhân đôi ID.
+- Reset có xác nhận kiểm tra cả manifest và đủ 12 JSON, thay dữ liệu và lưu version, xóa phiên/khóa version cũ. F5 chỉ giữ chỉnh sửa trình duyệt khi version không đổi; tăng version thay các chỉnh sửa đó bằng JSON. Đồng bộ version giữ khóa phiên; auth kiểm tra lại tài khoản mới trước render, tài khoản bị xóa/vô hiệu hóa mất quyền truy cập.
+- Module nghiệp vụ và các trang giữ API hiện hành, không tự fetch seed hoặc thêm store.
+
 ## Hợp đồng tích hợp cả ba thành viên — 19/10/2026
 
 Đã mở rộng phạm vi theo yêu cầu người dùng sang SV1/SV2/SV3. Mục này thay các mô tả “chưa triển khai” và chữ ký đề xuất khác mã runtime bên dưới. Schema JSON, quan hệ ID và bất nhất seed được giữ nguyên.
 
-- initStore() bất đồng bộ; sau khi hoàn tất, các dịch vụ đọc/ghi đồng bộ và ném lỗi khi validation/quyền/lưu trữ thất bại. main.js chờ initStore, kiểm tra phiên và route rồi mới gọi initPage. data/auth.js chỉ tái xuất common/auth.js, không có đăng nhập preview.
+- initStore() bất đồng bộ; sau khi hoàn tất, các dịch vụ đọc/ghi đồng bộ và ném lỗi khi validation/quyền/lưu trữ thất bại. main.js chờ initStore, kiểm tra phiên và route rồi mới gọi initPage. `js/common/auth.js` là nguồn xác thực duy nhất; alias `js/data/auth.js` đã bỏ.
 - Nguồn khởi tạo duy nhất: 12 file JSON ở assets/data (kể cả aiHistory.json và settings.json); không có dữ liệu seed trong JS/HTML. 12 collection: users, newHires, tasks, departments, documents, checkins, journeys, companyInfo, news, aiMockData, aiHistory, settings. Cộng currentUser và schemaVersion là 14 khóa onboardai_* cố định. Reset xác thực đủ 12 JSON trước khi xóa danh sách khóa này, khôi phục dữ liệu trước đó nếu gặp lỗi ghi; logout chỉ xóa currentUser.
 - settings gồm một bản ghi system: organizationName (1–120 ký tự), supportEmail (trống hoặc email), supportPhone (null hoặc điện thoại), onboardingDays (số nguyên 1–365), reminderDays (số nguyên 0–30). Default: OnboardAI, email trống, phone null, 30, 2. Chỉ Admin sửa; HR đọc mặc định số ngày khi tạo journey. Không gửi thông báo tự động; không đổi hành trình đã có.
-- tasks quản lý tạo/sửa/trạng thái/lưu trữ và tiến độ; resources quản lý phòng ban/tài liệu/check-in. Checklist Personalizer tra aiMockData, chỉ apply sau duyệt; lần thử lại dùng cùng historyId và ID task. Draft đã áp dụng một phần không được sửa hoặc từ chối.
+- tasks quản lý tạo/sửa/trạng thái/lưu trữ và tiến độ; resources quản lý phòng ban/tài liệu/check-in. Checklist Personalizer dùng aiMockData ở Mock Mode hoặc Gemini Mode tùy chọn, chỉ apply sau duyệt; lần thử lại dùng cùng historyId và ID task. Draft đã áp dụng một phần không được sửa hoặc từ chối.
 - Mentor chỉ ghi check-in của mentee đang được phân công. HR/Admin chỉ đọc lịch không nhận nội dung note/nextAction và không tìm kiếm theo ghi chú riêng. NewHire không đọc check-in riêng.
 - people bổ sung getHireSummaries(), getAssignmentOptions(), createNewHireProfile(), updateUserAccount(id, patch, hirePatch); hàm sửa tài khoản/hồ sơ kiểm tra cả hai bản ghi trước khi ghi; HR/Admin gán mentor/journey và cập nhật hồ sơ. Thay department vẫn qua quy tắc đồng bộ users/newHires, không tạo tài khoản thứ hai.
 - organization quản lý journeys/companyInfo/news; công khai chỉ đọc company-001 và news published. settings không thay companyInfo. progress-risk dùng getProgress, trả unknown khi thiếu liên kết/dữ liệu cần thiết; người dùng quyết định lịch sử AI pending/accepted/rejected.

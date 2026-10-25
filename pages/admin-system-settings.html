@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
-    <link rel="stylesheet" href="../css/pages/admin-system-settings.css">
     <link rel="stylesheet" href="../css/responsive.css">
   </head>
   <body class="page page--admin-system-settings" data-page="admin-system-settings">
@@ -121,8 +120,10 @@
                 <button class="btn btn--primary" type="submit" data-action="save-settings">Lưu thay đổi</button>
                 <button class="btn btn--secondary" type="button" data-action="cancel-settings">Hủy thay đổi</button>
                 <button class="btn btn--ghost" type="button" data-action="reset-settings">Khôi phục cấu hình đã tải</button>
+                <button class="btn btn--secondary" type="button" data-action="restore-seed-backup">Khôi phục dữ liệu trước cập nhật</button>
                 <button class="btn btn--danger" type="button" data-action="reset-demo-data">Đặt lại dữ liệu demo</button>
               </div>
+              <p class="form-field__hint" data-region="seed-backup-state" aria-live="polite"></p>
             </form>
             <aside class="page-body" aria-label="Hướng dẫn quản trị">
               <section class="card">

@@ -1,5 +1,9 @@
 # Quy tắc Codex cho SV3 — HR, Admin, khung ứng dụng và tích hợp
 
+> **Hiện hành 25/10/2026:** Progress Risk tiếp tục tính level/số liệu bằng quy tắc từ dữ liệu thật; Gemini Mode tùy chọn chỉ viết giải thích/đề xuất, không được đổi baseline. Chỉ ghi khi Save/Accept/Reject và hỗ trợ archive/delete. Link shell không mang `?role=`; session là nguồn quyền duy nhất. Xem hợp đồng chung mới nhất.
+
+> **Đồng bộ 21/10/2026, lựa chọn mới nhất:** main chờ initStore trước auth/render. Organization/settings dùng version chung theo [hợp đồng LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md); tăng version rồi F5 thay toàn bộ collection bằng JSON (thêm/sửa/xóa). Version không đổi giữ dữ liệu trình duyệt. Reset kiểm tra manifest cùng JSON và lưu version. Giữ 19 route và API dịch vụ.
+
 > **Rà soát nguồn dữ liệu 19/10/2026:** Form Admin gọi updateUserAccount một lần; chỉ risk accepted ảnh hưởng thống kê. Settings lấy từ JSON canonical, giữ draft khi tab khác ghi. Bộ kiểm tra npm run check rà soát liên kết toàn dự án.
 
 > **Hiện hành 19/10/2026:** yêu cầu người dùng mở rộng tích hợp cả ba thành viên. HR journey/gán hồ sơ/dashboard/Progress Risk và Admin tài khoản/phòng ban/cấu hình đã nối. Company/news dùng UI chung trong các trang hiện có; giữ 19 route và shell chung. Áp dụng phần mới nhất của [AGENTS.md](../../AGENTS.md) và [quy tắc LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md). Các giới hạn tĩnh/preview/SV1-only dưới đây là lịch sử. Owner review và OBS vẫn cần nhóm thực hiện.

@@ -2,7 +2,7 @@
   {
     "id": "system",
     "organizationName": "OnboardAI",
-    "supportEmail": "",
+    "supportEmail": "hr@example.test",
     "supportPhone": null,
     "onboardingDays": 30,
     "reminderDays": 2

@@ -1,5 +1,9 @@
 # Quy tắc Codex cho SV2 — Mentor, tài liệu chung và tương tác JavaScript
 
+> **Hiện hành 25/10/2026:** Checklist Personalizer dùng role/phòng ban/hành trình/chức danh/mục tiêu và task hiện có để tạo draft. Mock Mode chạy offline; Gemini Mode là tùy chọn và validate 3–6 task trước khi hiển thị. Save ghi pending; Accept lưu history + task trong transaction idempotent; Reject không tạo task. Xem hợp đồng chung mới nhất.
+
+> **Đồng bộ 21/10/2026, lựa chọn mới nhất:** Tasks/resources dùng version chung theo [hợp đồng LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md). Tăng version rồi tải lại thay toàn bộ collection bằng JSON (thêm/sửa/xóa); version không đổi giữ dữ liệu trình duyệt. Không fetch JSON trong trang hoặc tạo store riêng.
+
 > **Rà soát nguồn dữ liệu 19/10/2026:** Các vùng render và template không còn bản ghi tài liệu/check-in/mentee mẫu. Task không có hạn dùng null; bộ lọc lấy từ documents; form bỏ draft khi mất phân công.
 
 > **Hiện hành 19/10/2026:** yêu cầu người dùng mở rộng tích hợp cả ba thành viên. Tasks/resources, mentee/task/check-in, thư viện/detail và Checklist Personalizer đã nối. Mentor ghi check-in đúng scope; HR/Admin chỉ đọc metadata. Không tạo store hoặc auth khác. Áp dụng phần mới nhất của [AGENTS.md](../../AGENTS.md) và [quy tắc LocalStorage](../../OnboardAI_QuyTac_LocalStorage.md). Các giới hạn tĩnh/preview/SV1-only dưới đây là lịch sử. Owner review và OBS vẫn cần nhóm thực hiện.

@@ -1,4 +1,4 @@
-import { getSystemSettings, updateSystemSettings } from '../data/settings.js';
+import { getSystemSettings, updateSystemSettings, getDataUpdateBackup, restoreDataUpdateBackup } from '../data/settings.js';
 import { listUsers } from '../data/people.js';
 import { listDepartments, getReadableDocuments } from '../data/resources.js';
 import { resetDemoData } from '../data/store.js';
@@ -24,6 +24,17 @@ export async function initPage({ ui }) {
   document.querySelector('[data-action="reset-demo-data"]')?.addEventListener('click', async () => {
     if (!await ui.confirmAction({ title: 'Đặt lại dữ liệu demo?', message: 'Xóa các thay đổi OnboardAI và đăng xuất. Các dữ liệu website khác được giữ nguyên.', tone: 'danger' })) return;
     try { await resetDemoData(); location.assign('login.html'); } catch (error) { showError(error); }
+  });
+  const backup = getDataUpdateBackup();
+  const backupButton = document.querySelector('[data-action="restore-seed-backup"]');
+  const backupState = region('seed-backup-state');
+  if (backupButton) backupButton.disabled = !backup;
+  if (backupState) backupState.textContent = backup
+    ? `Bản sao ${backup.collections.join(', ')} được tạo lúc ${new Date(backup.createdAt).toLocaleString('vi-VN')}.`
+    : 'Chưa có bản sao trước cập nhật version.';
+  backupButton?.addEventListener('click', async () => {
+    if (!await ui.confirmAction({ title: 'Khôi phục dữ liệu trước cập nhật?', message: 'Các collection trong bản sao sẽ thay dữ liệu hiện tại. Version đã nạp được giữ nguyên để tránh tự ghi đè lại.', tone: 'danger' })) return;
+    try { restoreDataUpdateBackup(); location.reload(); } catch (error) { showError(error); }
   });
   watchData(['settings'], () => {
     if (dirty) ui.setViewState(region('settings-form-state'), { status: 'empty', message: 'Cấu hình đã thay đổi ở tab khác. Bấm Hủy thay đổi để đọc bản mới nhất, hoặc kiểm tra trước khi lưu.' });

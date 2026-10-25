@@ -2,6 +2,7 @@ import * as store from './store.js';
 import { publicUser, requireRoles } from '../common/auth.js';
 import { ROLES } from '../config/roles.js';
 import { parseStoredDate } from '../common/format.js';
+import { getEditableFields } from '../common/permissions.js';
 
 const userFields = ['fullName', 'email', 'password', 'role', 'departmentId', 'jobTitle', 'status'];
 const hireFields = ['departmentId', 'jobTitle', 'mentorId', 'journeyId', 'startDate', 'status', 'notes'];
@@ -55,7 +56,8 @@ export function getMyProfile() {
   return { user, hire, department: store.getById('departments', user.departmentId), journey: hire?.journeyId ? store.getById('journeys', hire.journeyId) : null, mentor: publicUser(hire?.mentorId ? store.getById('users', hire.mentorId) : null) };
 }
 export function updateMyProfile(patch) {
-  const actor = requireRoles(); allowed(patch, ['fullName', 'email']);
+  const actor = requireRoles();
+  allowed(patch, getEditableFields(actor, 'profile', { id: actor.id }));
   const previous = store.getById('users', actor.id);
   const user = validateUser({ ...previous, ...patch }, actor.id, previous);
   return publicUser(store.update('users', actor.id, { fullName: user.fullName, email: user.email }));
@@ -66,9 +68,10 @@ export function listHires() {
   return store.getAll('newHires').filter(hire => actor.role !== ROLES.MENTOR || hire.mentorId === actor.id);
 }
 function prepareUserUpdate(id, patch, allowLinkedDepartment = false) {
-  const actor = requireRoles([ROLES.ADMIN]); allowed(patch, userFields);
+  const actor = requireRoles([ROLES.ADMIN]);
   const previous = store.getById('users', id);
   if (!previous) throw new Error('Không tìm thấy tài khoản.');
+  allowed(patch, getEditableFields(actor, 'users', previous));
   const user = validateUser({ ...previous, ...patch }, id, previous);
   const hires = store.getAll('newHires');
   if (user.role !== previous.role && hires.some(hire => hire.userId === id || hire.mentorId === id)) throw new Error('Cần xử lý liên kết hồ sơ/mentee trước khi đổi vai trò.');
@@ -139,9 +142,10 @@ export function createNewHireAccount(input, hireInput, operation) {
   });
 }
 export function updateHire(id, patch) {
-  const actor = requireRoles([ROLES.ADMIN, ROLES.HR]); allowed(patch, hireFields);
+  const actor = requireRoles([ROLES.ADMIN, ROLES.HR]);
   const previous = store.getById('newHires', id);
   if (!previous) throw new Error('Không tìm thấy hồ sơ hội nhập.');
+  allowed(patch, getEditableFields(actor, 'newHires', previous));
   const account = store.getById('users', previous.userId);
   const next = { ...previous, ...patch };
   const moving = next.departmentId !== previous.departmentId || next.departmentId !== account?.departmentId;

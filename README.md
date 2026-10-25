@@ -1,48 +1,78 @@
 # OnboardAI
 
-Website HTML5/CSS/JavaScript thuần (ES modules), tích hợp LocalStorage cho cả SV1, SV2 và SV3. Giữ 19 route và một bộ dịch vụ chung; chưa có backend hoặc AI thật.
+OnboardAI là nguyên mẫu Frontend cho hành trình hội nhập nhân sự mới, viết bằng HTML5, CSS3 và JavaScript ES modules. Ứng dụng có 19 route, bốn vai trò, CRUD mô phỏng trên LocalStorage, ba trải nghiệm AI chạy được ở Mock Mode và tích hợp Google Gemini tùy chọn. Dự án không có backend và không phải hệ thống xác thực dùng cho sản xuất.
 
 ## Chạy dự án
 
+Yêu cầu Node.js 20 trở lên. Tại thư mục dự án, chạy:
+
 ```powershell
-node scripts/serve.cjs
+npm run serve
 ```
 
-Mở http://127.0.0.1:8000/. Đổi cổng bằng `node scripts/serve.cjs 8080`; không mở bằng file://. Đăng nhập bằng email hoặc ID và password trong [assets/data/users.json](assets/data/users.json), tài khoản phải active. Mật khẩu là dữ liệu mô phỏng có thể đọc từ trình duyệt, không dùng mật khẩu thật.
+Mở http://127.0.0.1:8000/. Có thể đổi cổng bằng `node scripts/serve.cjs 8080`; không mở trực tiếp bằng `file://` vì ES modules và JSON cần HTTP.
 
-## Các luồng đã nối
+## Đăng nhập và bốn vai trò
 
-- SV1: đăng nhập, profile bốn vai trò, dashboard/checklist và tiến độ, thư viện và Policy Q&A với lịch sử riêng.
-- SV2: mentee theo phân công, tạo/sửa/lưu trữ task, check-in có kiểm tra trùng lịch và ghi chú riêng; quản lý tài liệu theo quyền; Checklist Personalizer cho phép sửa, từ chối và duyệt để giao việc.
-- SV3: quản lý journey, tạo/gán hồ sơ hội nhập, dashboard và Progress Risk; Admin quản lý tài khoản, phòng ban và cấu hình hệ thống.
-- HR/Admin dùng chung phần thông tin công ty và tin tức trong các trang hiện có. Trang chủ chỉ đọc company-001 và tin published.
-- Tiến độ tính từ tasks chung, bỏ archived. Checklist thử lại sau lỗi lưu dùng ID ổn định, không nhân đôi task. HR/Admin không đọc hoặc tìm kiếm ghi chú check-in riêng của Mentor.
-- Phiên chỉ lưu userId. Query role không cấp quyền. Đổi phiên/role hoặc vô hiệu hóa tài khoản làm tab khác tải lại và bỏ draft. Logout giữ dữ liệu nghiệp vụ.
+Form nhận email hoặc ID cùng mật khẩu seed. Một tài khoản active đại diện cho mỗi vai trò:
 
-Ba chức năng AI dùng aiMockData hoặc tính toán mô phỏng từ dữ liệu hiện có; không gọi mô hình bên ngoài. Cấu hình số ngày hội nhập được dùng khi tạo journey; không tự thay journey cũ hoặc gửi nhắc việc.
+| Vai trò | Email | Mật khẩu | Phạm vi chính |
+|---|---|---|---|
+| Nhân sự mới | `an.nguyen@example.com` | `MinhAn2026` | Dashboard, checklist, tài liệu, Policy Q&A |
+| Mentor | `ha.le@example.com` | `ThuHa123` | Mentee, task, check-in, Checklist Personalizer |
+| HR | `linh.pham@example.com` | `NgocLinh2007` | Journey, hồ sơ hội nhập, tài liệu, Progress Risk |
+| Admin | `minh.do@example.com` | `admin` | Tài khoản, phòng ban, cấu hình và reset demo |
 
-## Dữ liệu và đồng bộ
+Đây là mật khẩu mô phỏng lưu trong JSON/LocalStorage và có thể đọc bằng DevTools; không dùng lại các giá trị này ở hệ thống thật. Phiên chỉ lưu `userId`. Query string không cấp quyền, và logout giữ nguyên dữ liệu nghiệp vụ.
 
-12 JSON ở assets/data là nguồn khởi tạo duy nhất, gồm aiHistory.json và settings.json. Store chỉ đọc các file này khi chưa có khóa; tổng cộng 14 khóa đăng ký, schemaVersion 1. Không còn seed/import, dữ liệu nghiệp vụ nhúng trong HTML hoặc store song song.
+## Dữ liệu JSON và LocalStorage
 
-LocalStorage chỉ dùng chung giữa các trang/tab cùng protocol, hostname, port và hồ sơ trình duyệt. Git đồng bộ mã nguồn/JSON giữa ba thành viên, không đồng bộ dữ liệu đang dùng giữa ba máy. Demo hỗ trợ một tab ghi tại một thời điểm.
+Mười hai collection trong [assets/data](assets/data) là nguồn khởi tạo duy nhất; [version.json](assets/data/version.json) là manifest phát hành dữ liệu. `main.js` chờ store nạp xong rồi mới kiểm tra phiên, quyền và render trang. Chỉ [store.js](js/data/store.js) truy cập LocalStorage.
 
-Sau khi sửa JSON, F5 vẫn giữ dữ liệu trình duyệt. Dùng **Đặt lại dữ liệu demo** tại Hồ sơ hoặc Quản lý hệ thống để nạp seed mới: thao tác có xác nhận, kiểm tra toàn bộ JSON trước khi xóa đúng khóa dự án và đăng xuất; giữ dữ liệu website khác. Seed lỗi được báo trước khi xóa; lỗi ghi có bước khôi phục dữ liệu trước đó. JSON lỗi, ID trùng hoặc schema không hỗ trợ sẽ báo lỗi, không tự sửa/gộp hoặc ghi đè dữ liệu cũ.
+- Collection thiếu hoặc có version mới được thay toàn bộ bằng JSON nguồn trước khi render; quy tắc này áp dụng cả thêm, sửa và xóa.
+- Collection không đổi version giữ dữ liệu người dùng đã thao tác trên trình duyệt.
+- Một đợt đồng bộ ghi collection và `onboardai_seedVersions` theo transaction có rollback; lỗi tải, JSON, schema, ID/email hoặc storage không được đánh dấu đã cập nhật.
+- Muốn sửa seed thủ công: sửa JSON, tăng số nguyên dương của đúng collection trong `version.json`, rồi tải lại trang.
+- Công cụ `node scripts/excel-to-json.cjs <file.xlsx> --write` chỉ thêm ID mới cho `journeys`, `companyInfo`, `news` và tự tăng version của collection đã đổi.
 
-## Kiểm tra
+LocalStorage chỉ dùng chung giữa các tab có cùng protocol, hostname, port và hồ sơ trình duyệt. Git đồng bộ mã/JSON giữa thành viên, không đồng bộ LocalStorage giữa các máy.
+
+## Ba trải nghiệm AI
+
+Generate/Edit/Regenerate chỉ tạo bản nháp trong bộ nhớ. Save/Accept/Reject mới ghi `aiHistory`; Accept checklist lưu history và task trong cùng transaction với ID ổn định để thử lại không nhân đôi.
+
+### Mock Mode
+
+Đây là chế độ mặc định, không cần Internet hoặc API key:
+
+- Policy Q&A tra `aiMockData` và chỉ trích tài liệu tài khoản được phép đọc.
+- Checklist Personalizer dùng hồ sơ mentee cùng fixture để tạo draft nhiệm vụ.
+- Progress Risk tính mức rủi ro từ tasks/newHires/check-ins bằng quy tắc JavaScript, không dùng số ngẫu nhiên.
+
+### Gemini Mode tùy chọn
+
+Trên một trong ba màn hình AI, chọn **Cấu hình AI**, nhập key thử nghiệm, chọn model và dùng **Kiểm tra kết nối**. Key chỉ nằm trong bộ nhớ JavaScript của trang, mất khi F5/đóng tab, không ghi vào LocalStorage, SessionStorage, JSON hoặc lịch sử AI. Request dùng endpoint `generateContent` và header `x-goog-api-key`.
+
+Gọi Gemini trực tiếp từ trình duyệt chỉ phù hợp demo có kiểm soát vì key vẫn hiện trong DevTools Network. Triển khai công khai cần backend/proxy bảo mật. Khi Gemini lỗi, giao diện cho thử lại hoặc chuyển sang Mock Mode; kết quả lỗi không tự ghi dữ liệu. Repository không chứa key và lần rà soát này không xác nhận kết nối thật vì không có key hợp lệ được cung cấp.
+
+Chi tiết kiến trúc và giới hạn nằm trong [báo cáo AI](docs/ai-usage-report.md).
+
+## Kiểm tra và reset
 
 ```powershell
 npm run check
 npm test
+git diff --check
 ```
 
-npm run check kiểm tra JSON/ID/liên kết, import, route/menu và tài nguyên. Bộ kiểm tra hồi quy dùng bộ nhớ giả cùng HTTP server tạm, không ghi seed hoặc LocalStorage trình duyệt. Kiểm tra route/module, auth/quyền, CRUD, tiến độ, lỗi lưu/thử lại, AI, reset và schema. Script thử trình duyệt, ảnh và profile tạm nằm ngoài repo. Kết quả cụ thể xem [báo cáo AI](docs/ai-usage-report.md).
+`npm run check` kiểm tra schema/enum/ngày/URL, ID, foreign key, lịch check-in trùng, route/menu, import và asset. `npm test` dùng storage trong bộ nhớ và HTTP server tạm; không sửa seed hoặc LocalStorage của trình duyệt.
 
-## Giới hạn và dữ liệu cần nhóm xử lý
+Để khôi phục demo, đăng nhập Admin, mở **Quản lý hệ thống** và chọn **Đặt lại dữ liệu demo**. Thao tác có xác nhận, chỉ thay các khóa `onboardai_*` đã đăng ký, nạp lại đủ JSON/manifest và đăng xuất.
 
-- Người dùng đang tự sửa ID trùng user-006 trong users.json. Cần ID duy nhất trước khi khởi tạo/reset từ seed hiện tại; không đổi ID của tài khoản cũ đang được tham chiếu.
-- task-004 và hire-002 lệch journeyId: giữ seed, chặn cập nhật liên kết không nhất quán. Các nhóm check-in trùng lịch và bất nhất timestamp cũ cũng cần nhóm quyết định, không tự gộp ghi chú.
-- Các tệp assets/docs trong seed chưa được cung cấp. Detail báo thiếu tệp; tài liệu mới có URL HTTP(S) mở được liên kết ngoài. Chưa có upload tệp.
-- NewHire chưa có quyền tự tạo task; quên mật khẩu chỉ hướng dẫn liên hệ, không gửi email hoặc đặt lại mật khẩu giả.
+## Giới hạn và minh chứng còn cần nhóm hoàn tất
 
-Quy tắc hiện hành: [AGENTS.md](AGENTS.md), [LocalStorage](OnboardAI_QuyTac_LocalStorage.md), [bảng màn hình](docs/screen-inventory.md). Các phần tài liệu cũ có mốc ngày được giữ làm lịch sử; mục ngày 19/10/2026 có ưu tiên. Owner review và OBS do nhóm thực hiện trước merge.
+- Đây là frontend mô phỏng: không có database, server auth, gửi email, upload file hoặc cơ chế giữ bí mật API key ở môi trường công khai.
+- Browser smoke test thủ công, responsive, bàn phím, Figma/Canva, Trello/Jira/Notion, PR/review và video OBS phải được nhóm xác nhận bằng bằng chứng thật trong [biên bản UI](docs/ui-validation.md); repository không tự tạo các bằng chứng này.
+- Seed hiện có 23 users, 12 newHires, 84 tasks, 13 departments, 15 documents, 12 check-ins, 6 journeys, 1 companyInfo, 12 news, 21 aiMockData, 0 aiHistory và 1 settings.
+
+Tài liệu hiện hành: [AGENTS.md](AGENTS.md), [quy tắc LocalStorage](OnboardAI_QuyTac_LocalStorage.md), [hợp đồng dữ liệu](docs/data-contract.md), [bảng màn hình](docs/screen-inventory.md) và [báo cáo refactor cuối](docs/final-refactor-report.md).

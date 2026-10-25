@@ -1,5 +1,5 @@
-import { requireRoles } from './auth.js';
-import { StoreError, getById, update } from './store.js';
+import { requireRoles } from '../common/auth.js';
+import { StoreError, getById, update, getSeedBackupInfo, restoreSeedBackup } from './store.js';
 const EDITABLE = ['organizationName', 'supportEmail', 'supportPhone', 'onboardingDays', 'reminderDays'];
 export function getSystemSettings() {
   requireRoles(['admin']);
@@ -31,4 +31,12 @@ export function updateSystemSettings(patch) {
   }
   next.supportPhone ||= null;
   return update('settings', 'system', Object.fromEntries(EDITABLE.map(key => [key, next[key]])));
+}
+export function getDataUpdateBackup() {
+  requireRoles(['admin']);
+  return getSeedBackupInfo();
+}
+export function restoreDataUpdateBackup() {
+  requireRoles(['admin']);
+  return restoreSeedBackup();
 }

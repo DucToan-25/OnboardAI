@@ -9,7 +9,7 @@
  *   → khôi phục về draft (xóa archivedAt). Chỉ công khai sau publish rõ ràng.
  * - Journey chỉ có active/inactive; không có hàm xóa, tham chiếu thì vô hiệu hóa.
  */
-import { requireRoles } from './auth.js';
+import { requireRoles } from '../common/auth.js';
 import { STATUS_META } from '../config/statuses.js';
 import {
   StoreError, create, createId, getAll, getById, parseSeedDate, update,

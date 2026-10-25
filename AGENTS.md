@@ -1,13 +1,35 @@
 # AGENTS.md — Quy tắc phát triển giao diện OnboardAI
 
+## Phạm vi hiện hành ngày 25/10/2026 — vòng đời AI và toàn vẹn seed
+
+Theo yêu cầu sửa hoàn chỉnh, mục này thay các ghi chú cũ yêu cầu giữ bất nhất seed hoặc mô tả Generate là đã lưu.
+
+- AI-1/AI-2/AI-3 tạo draft trong bộ nhớ; chỉ Save/Accept/Reject mới ghi `aiHistory`. Draft có `draftId` để Save idempotent. Accept checklist lưu history và task trong cùng transaction, task dùng ID ổn định.
+- Mock Mode là mặc định, chạy không cần mạng/key. Gemini Mode là tích hợp tùy chọn: model lấy từ allowlist hiện hành, key chỉ giữ trong bộ nhớ trang và gửi bằng header `x-goog-api-key`; lịch sử lưu nguồn/model, không lưu key. Lỗi Gemini phải cho thử lại hoặc chuyển Mock.
+- `js/common/auth.js` là implementation xác thực duy nhất; alias chuyển tiếp `js/data/auth.js` đã xóa và mọi consumer import thẳng module chính.
+- Không quét input theo password trong `users`. UI chỉ hiển thị cảnh báo chung không nhập mật khẩu, token hoặc dữ liệu nhạy cảm.
+- Seed đã đồng bộ `user-097` với `hire-068`, sửa `task-004`, bỏ 42 check-in trùng và thu gọn còn 12 lịch theo quan hệ mentor. `companyInfo` là singleton; `aiMockData` không còn block Progress Risk chết.
+- `scripts/check-project.mjs` coi schema/enum/foreign key/lịch trùng/asset sai là lỗi. `npm test` kiểm tra Generate không ghi, Save một lần, Reject không tạo task và Accept idempotent.
+- Link điều hướng không mang `?role=`; session là nguồn quyền duy nhất. Tài liệu trạng thái hiện tại nằm ở README, data contract, screen inventory và UI validation; link quy trình bên ngoài chưa có phải để TODO, không tự bịa.
+
+## Phạm vi hiện hành ngày 21/10/2026 — đồng bộ JSON theo version
+
+Theo yêu cầu và xác nhận của người dùng, mở rộng version cho đủ 12 collection. Mục này thay quy tắc chỉ nạp seed sau reset ở các phần lịch sử bên dưới.
+
+- `assets/data/version.json` là manifest, mỗi collection có số nguyên dương; tăng version tương ứng khi thêm dữ liệu, rồi tải lại trang. `schemaVersion` vẫn là 1, không dùng để phát hành dữ liệu.
+- **Xác nhận mới nhất cùng ngày:** khi tăng version, người dùng muốn đồng bộ cả thêm/sửa/xóa theo JSON, thay lựa chọn chỉ thêm ID mới. `initStore()` lấy manifest không cache và thay toàn bộ collection đổi version bằng JSON nguồn trước auth/render. Collection không đổi version giữ dữ liệu trình duyệt. Các chỉnh sửa qua UI trong collection đổi version sẽ bị thay bằng JSON.
+- Store ghi dữ liệu và `onboardai_seedVersions` trong cùng transaction; lỗi tải/JSON/ID/email/ghi không được đánh dấu đã cập nhật. Email trùng giữa hai ID trong JSON nguồn phải báo lỗi.
+- Có 12 JSON dữ liệu và 1 manifest; 16 khóa đăng ký gồm 12 collection, currentUser, schemaVersion, seedVersions và usersSeedVersion cũ (chỉ giữ để reset dọn). Bản cũ được đối chiếu đủ collection một lần khi chưa có seedVersions. Reset kiểm tra cả manifest và 12 JSON, lưu version mới.
+- Người dùng xác nhận sửa bản ghi thứ 97 từ user-036 thành user-097. Các bất nhất quan hệ khác vẫn giữ nguyên; không tự đổi role/phòng ban hay gộp ID.
+
 ## Phạm vi hiện hành ngày 19/10/2026 — tích hợp cả SV1/SV2/SV3
 
 Theo yêu cầu trực tiếp “sửa tất cả cho cả ba thành viên”, nối nghiệp vụ LocalStorage trên toàn bộ 19 route. Mục này thay giới hạn chỉ SV1 và giao diện tĩnh trong các phần lịch sử phía dưới; giữ phân công owner, token, registry CSS, tên trang và ES modules.
 
-- Một store tại js/data/store.js; 12 JSON canonical ở assets/data, gồm aiHistory.json rỗng và settings.json. Tổng 14 khóa đã đăng ký, schemaVersion 1. Không dùng seed.json, import/ hoặc local-store/mock-repository song song.
+- Một store tại js/data/store.js; 12 JSON canonical ở assets/data, gồm aiHistory.json rỗng và settings.json. Registry hiện có 16 khóa theo phần version mới hơn, schemaVersion 1. Không dùng seed.json, import/ hoặc local-store/mock-repository song song.
 - SV1: auth/people/ai-history và sáu trang; SV2: tasks/resources, mentor, thư viện/detail và Checklist Personalizer; SV3: organization/progress-risk/settings, HR/Admin và tích hợp shell. Trang gọi dịch vụ; chỉ store truy cập LocalStorage.
 - CRUD đã nối theo quyền. Check-in chỉ Mentor ghi cho mentee hiện tại; HR/Admin đọc metadata không có note/nextAction. Profile chỉ sửa fullName/email. Query không cấp quyền.
-- Checklist dùng aiMockData, duyệt rồi tạo task với ID ổn định để thử lại; Progress Risk dùng dữ liệu và công thức tiến độ chung. Cả ba chức năng AI là mô phỏng, không gọi AI bên ngoài.
+- Checklist dùng aiMockData ở Mock Mode, duyệt rồi tạo task với ID ổn định để thử lại; Progress Risk dùng dữ liệu và công thức tiến độ chung. Gemini Mode tùy chọn được mô tả ở phạm vi 25/10/2026 và không thay Mock Mode bắt buộc.
 - HR quản lý gán hồ sơ/hành trình; Admin quản lý tài khoản/phòng ban/cấu hình. Thông tin công ty và tin tức dùng UI chung trên HR dashboard và Admin system settings, không tạo route mới.
 - Giữ nguyên bất nhất seed, không đổi/gộp ID khi chưa có quyết định của người dùng. Người dùng đang tự xử lý ID trùng trong users.json. Seed thay đổi chỉ được nạp sau reset có xác nhận; không ghi đè dữ liệu trình duyệt khi F5.
 - Duy trì scripts/test-integration.mjs làm kiểm tra hồi quy (npm test), scripts/check-project.mjs kiểm tra nguồn dữ liệu/import/route (npm run check). Reset kiểm tra đủ JSON trước khi xóa; dữ liệu seed ngoài assets/data và bản ghi minh họa trong HTML đã bỏ. Script thử trình duyệt, ảnh và profile kiểm thử tạm đặt ngoài repo. Owner review và OBS vẫn do nhóm thực hiện.
@@ -368,7 +390,7 @@ Nếu một trang chỉ dùng layout/component chung, không tạo CSS riêng r�
 | Thông báo ngắn | `toast`, `toast__stack`, `toast__icon`, `toast__message`, `toast__close`, `toast--success`, `toast--danger`, `toast--info` | `components.css` / SV1; `showToast` type `error` map sang tone `danger` |
 | Thông báo trong trang | `alert`, `alert__title`, `alert__message`, `alert--info`, `alert--success`, `alert--warning`, `alert--danger` | `components.css` / SV1 |
 | Loading/rỗng/lỗi | `view-state`, `view-state__icon`, `view-state__title`, `view-state__message`, `view-state__actions`, `view-state--loading`, `view-state--empty`, `view-state--error`; `spinner` khi cần | `components.css` / SV1 |
-| Khu vực AI | `ai-panel`, `ai-panel__header`, `ai-panel__input`, `ai-panel__result`, `ai-panel__explanation`, `ai-panel__sources`, `ai-panel__actions`; dùng thêm `card` nếu cần nền card | `components.css` / SV1; dùng chung ba AI |
+| Khu vực AI | `ai-panel`, `ai-panel__header`, `ai-panel__input`, `ai-panel__result`, `ai-panel__explanation`, `ai-panel__sources`, `ai-panel__actions`; cấu hình/trạng thái dùng `ai-status`, `ai-status__summary`, `ai-status__label`, `ai-status__key`, `ai-config`, `ai-config__*`, `ai-result__header`, `ai-error`, `ai-error__actions`; dùng thêm `card` nếu cần nền card | `components.css` / SV1; dùng chung ba AI |
 | Trợ giúp accessibility | `sr-only`; `hidden` dùng thuộc tính HTML, không tạo thêm ba class ẩn khác nhau | `base.css` / SV1 |
 
 Input/select/textarea đều dùng `form-field__control`; khác biệt cần thiết được style theo loại control bên trong component, không tạo `hr-input`, `mentor-select`. Không tạo thêm `table-container`, `table-responsive`, `table-wrapper` cùng chức năng với `table-wrap`.

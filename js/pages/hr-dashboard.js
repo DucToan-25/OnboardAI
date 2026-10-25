@@ -1,4 +1,4 @@
-import { showToast, openModal, setViewState } from '../common/ui.js';
+import { showToast, openModal, setViewState, confirmAction } from '../common/ui.js';
 import { bindForm, validateFields } from '../common/page-ui.js';
 import { formatDateTime } from '../common/format.js';
 import * as progressRisk from '../data/progress-risk.js';
@@ -8,6 +8,13 @@ import { watchData } from '../common/data-ui.js';
 import { element, createField, fillSelect, actionButton } from '../common/renderers.js';
 import { initOrganizationManagement } from '../common/organization-ui.js';
 import { STATUS_META } from '../config/statuses.js';
+import { analyzeProgressRiskWithAi } from '../services/ai-service.js';
+import { getAiMode, AI_MODES } from '../config/ai-config.js';
+import {
+  createAiStatusBar,
+  createAiSourceBadge,
+  createAiErrorNotice,
+} from '../common/ai-ui.js';
 
 const root = () => document.querySelector('#main-content');
 const region = (name) => root().querySelector(`[data-region="${name}"]`);
@@ -199,6 +206,19 @@ function renderAnalysis(analysis, { saved = false } = {}) {
   const badgeNode = region('risk-badge');
   badgeNode.className = `badge badge--${meta.tone}`;
   badgeNode.textContent = meta.label;
+
+  const head = panel.querySelector('.hr-dashboard__risk-head');
+  if (head) {
+    let aiBadgeNode = head.querySelector('[data-ai-source-badge]');
+    if (!aiBadgeNode) {
+      aiBadgeNode = document.createElement('span');
+      aiBadgeNode.dataset.aiSourceBadge = 'true';
+      head.append(aiBadgeNode);
+    }
+    const source = analysis.aiSource || (analysis.reason?.includes('Google Gemini') ? 'gemini' : analysis.level === 'unknown' ? 'rule-based' : 'mock');
+    aiBadgeNode.replaceChildren(createAiSourceBadge(source, analysis.model));
+  }
+
   region('risk-text').textContent = analysis.summary;
   region('risk-explanation').textContent = analysis.reason;
   region('risk-recommendations').replaceChildren(...(analysis.recommendations || []).map(text => element('li', '', text)));
@@ -213,7 +233,10 @@ function renderAnalysis(analysis, { saved = false } = {}) {
     analysis.progress ? `Tiến độ: ${analysis.progress.completed}/${analysis.progress.total} (${analysis.progress.percent}%)` : 'Tiến độ chi tiết chưa có trong bản lưu.',
     ...(analysis.signals ? [
       `Nhiệm vụ quá hạn: ${analysis.signals.overdueTasks}; bị chặn: ${analysis.signals.blockedTasks}`,
-      `Check-in: ${analysis.signals.checkins}; mentor hợp lệ: ${analysis.signals.hasMentor ? 'có' : 'chưa có'}; hành trình hợp lệ: ${analysis.signals.hasJourney ? 'có' : 'chưa có'}`,
+      `Chưa bắt đầu: ${analysis.signals.notStartedTasks}; đang làm: ${analysis.signals.inProgressTasks}; hoàn thành: ${analysis.signals.completedTasks}`,
+      `Check-in hoàn thành: ${analysis.signals.completedCheckins}; đang chờ: ${analysis.signals.scheduledCheckins}; số ngày onboarding: ${analysis.signals.onboardingDaysElapsed ?? 'chưa xác định'}`,
+      `Nhiệm vụ gây rủi ro: ${analysis.signals.riskTasks?.map(task => task.title).join(', ') || 'không có'}`,
+      `Mentor hợp lệ: ${analysis.signals.hasMentor ? 'có' : 'chưa có'}; hành trình hợp lệ: ${analysis.signals.hasJourney ? 'có' : 'chưa có'}`,
     ] : ['Bản lưu chỉ giữ kết quả và giải thích; tạo lại để đọc số liệu hiện tại.']),
     'Thiếu dữ liệu không được coi là rủi ro thấp. Đây là đánh giá mô phỏng, cần HR rà soát.',
   ];
@@ -230,7 +253,7 @@ function renderAnalysis(analysis, { saved = false } = {}) {
 }
 
 
-async function analyzeSelected() {
+async function analyzeSelected({ forceMock = false } = {}) {
   if (state.analyzing || state.saving) return;
   const form = region('risk-form');
   const hireId = form?.elements.namedItem('newHireId')?.value ?? '';
@@ -238,18 +261,36 @@ async function analyzeSelected() {
     setViewState(region('risk-state'), { status: 'empty', message: 'Hãy chọn một nhân sự trước khi phân tích.' });
     return;
   }
-  setViewState(region('risk-state'), { status: 'loading', message: 'Đang phân tích rủi ro tiến độ…' });
+  const activeMode = forceMock ? AI_MODES.MOCK : getAiMode();
+  setViewState(region('risk-state'), {
+    status: 'loading',
+    message: activeMode === AI_MODES.GEMINI
+      ? 'Đang phân tích rủi ro tiến độ bằng Google Gemini API…'
+      : 'Đang phân tích rủi ro tiến độ từ dữ liệu mẫu…',
+  });
   region('risk-result').hidden = true;
   state.analyzing = true;
   const submit = form.querySelector('[type="submit"]'); submit.disabled = true;
   try {
-    state.analysis = await progressRisk.analyzeRisk(hireId);
+    state.analysis = await analyzeProgressRiskWithAi(hireId, { forceMock });
     state.historyId = null;
     setViewState(region('risk-state'), { status: 'ready', message: '' });
     renderAnalysis(state.analysis);
   } catch (error) {
+    if (error?.code === 'SUPERSEDED') return;
     state.analysis = null;
-    setViewState(region('risk-state'), { status: 'error', message: error?.message || 'Không phân tích được rủi ro.' });
+    const riskState = region('risk-state');
+    riskState.replaceChildren(
+      createAiErrorNotice({
+        error,
+        onRetry: () => analyzeSelected(),
+        onFallbackMock: () => analyzeSelected({ forceMock: true }),
+        ui: { openModal, showToast },
+      }),
+    );
+    riskState.classList.remove('view-state--empty', 'view-state--loading');
+    riskState.classList.add('view-state--error');
+    riskState.hidden = false;
   } finally { state.analyzing = false; submit.disabled = false; }
 }
 
@@ -258,10 +299,9 @@ async function saveAnalysis(decision) {
   state.saving = true;
   try {
     if (!state.historyId) {
-      const saved = await progressRisk.saveRiskEvaluation(state.analysis);
+      const saved = await progressRisk.saveRiskEvaluation(state.analysis, '', decision);
       state.historyId = saved.id;
-    }
-    if (decision !== 'pending') aiHistory.decideHistory(state.historyId, decision);
+    } else if (decision !== 'pending') aiHistory.decideHistory(state.historyId, decision);
     state.evaluations = await progressRisk.listSavedEvaluations();
     renderAnalysis(state.analysis, { saved: true }); render(); renderHistory();
     showToast({ message: 'Đã lưu quyết định đánh giá.', type: 'success' });
@@ -270,7 +310,15 @@ async function saveAnalysis(decision) {
 }
 function renderHistory() {
   const list = region('risk-history'); if (!list) return;
-  list.replaceChildren(...state.evaluations.map(item => actionButton(formatDateTime(item.createdAt) + ' · ' + item.newHireId + ' · ' + item.decision, 'open-risk', item.id, 'ghost')));
+  list.replaceChildren(...state.evaluations.map((item) => {
+    const group = element('span', 'form__actions');
+    group.append(
+      actionButton(`${formatDateTime(item.createdAt)} · ${item.newHireId} · ${item.decision}`, 'open-risk', item.id, 'ghost'),
+      actionButton('Lưu trữ', 'archive-risk', item.id, 'ghost'),
+      actionButton('Xóa', 'delete-risk', item.id, 'ghost'),
+    );
+    return group;
+  }));
 }
 function editAnalysis() {
   if (!state.analysis) return;
@@ -322,12 +370,22 @@ function viewHireDetail(hireId) {
 
 export async function initPage() {
   initOrganizationManagement();
+
+  // Gắn thanh trạng thái AI ngay trước form phân tích rủi ro
+  const statusBar = createAiStatusBar({
+    ui: { openModal, showToast },
+    onModeChange: () => {
+      renderHistory();
+    },
+  });
+  region('risk-form')?.before(statusBar);
+
   const filters = region('dashboard-filters');
   filters?.addEventListener('submit', (event) => { event.preventDefault(); render(); });
   filters?.addEventListener('input', render);
   filters?.addEventListener('change', render);
   region('risk-form')?.addEventListener('submit', (event) => { event.preventDefault(); if (validateFields(event.currentTarget)) analyzeSelected(); });
-  root().addEventListener('click', (event) => {
+  root().addEventListener('click', async (event) => {
     const button = event.target.closest('button[data-action]');
     if (!button || button.type === 'submit' || state.saving) return;
     const { action, id } = button.dataset;
@@ -344,6 +402,29 @@ export async function initPage() {
         state.analysis = { ...item.result, hireId: item.newHireId, reason: item.reason };
         region('risk-form').elements.newHireId.value = item.newHireId;
         renderAnalysis(state.analysis, { saved: true });
+      } else if (action === 'archive-risk' && await confirmAction({
+        title: 'Lưu trữ đánh giá?',
+        message: 'Bản ghi sẽ được ẩn khỏi dashboard nhưng vẫn giữ trong dữ liệu đối chiếu.',
+      })) {
+        aiHistory.archiveHistory(id);
+        if (state.historyId === id) {
+          state.historyId = null;
+          state.analysis = null;
+          region('risk-result').hidden = true;
+        }
+        await load();
+      } else if (action === 'delete-risk' && await confirmAction({
+        title: 'Xóa đánh giá?',
+        message: 'Bản ghi đánh giá sẽ bị xóa vĩnh viễn.',
+        tone: 'danger',
+      })) {
+        aiHistory.deleteHistory(id);
+        if (state.historyId === id) {
+          state.historyId = null;
+          state.analysis = null;
+          region('risk-result').hidden = true;
+        }
+        await load();
       }
     } catch (error) { showError(error); }
   });

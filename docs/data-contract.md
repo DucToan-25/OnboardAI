@@ -1,75 +1,51 @@
-# Field bổ sung cho giai đoạn giao diện
+# Hợp đồng dữ liệu OnboardAI
 
-## Hợp đồng runtime — 19/10/2026
+Trạng thái hiện hành ngày 25/10/2026. Đây là hợp đồng runtime cho web frontend HTML/CSS/JavaScript, JSON và LocalStorage; không có backend. Mock AI chạy offline, còn Gemini API là tích hợp tùy chọn gọi trực tiếp từ trình duyệt demo.
 
-Phạm vi hiện hành là cả ba thành viên theo [quy tắc LocalStorage](../OnboardAI_QuyTac_LocalStorage.md), phần ngày 19/10/2026. JSON ở assets/data là nguồn khởi tạo duy nhất; các module js/data cung cấp nghiệp vụ và permissions.js mô tả quyền. Không áp dụng schema portalPosts, journeyAssignments hoặc profile phone của thiết kế cũ.
+## Nguồn và đồng bộ
 
-CRUD Mentor/HR/Admin và ba AI mô phỏng đã nối. settings.id=system đọc từ assets/data/settings.json; aiHistory bắt đầu từ assets/data/aiHistory.json; không có fallback seed trong code; trường và validation xem hợp đồng hiện hành. Phiên chỉ lưu userId, role lấy từ tài khoản active; profile chỉ sửa fullName/email. Chỉ Mentor ghi và đọc ghi chú check-in riêng; HR/Admin đọc metadata. Tài liệu HTTP(S) mở liên kết, tệp local chưa cung cấp được báo rõ.
+- 12 collection canonical nằm trong `assets/data/`; `version.json` chứa version nguyên dương của từng collection.
+- `schemaVersion` cố định là 1. Khi version collection tăng, `initStore()` kiểm tra rồi thay toàn bộ collection đó bằng JSON trước auth/render. Collection không đổi version giữ dữ liệu trình duyệt.
+- Dữ liệu và `onboardai_seedVersions` được ghi theo transaction có rollback best-effort. Lỗi tải, JSON, schema, ID/email trùng hoặc ghi storage không được đánh dấu đã áp dụng.
+- Trang chỉ gọi service. Chỉ `js/data/store.js` truy cập LocalStorage.
 
-Các mục ngày 18/10 trở xuống là lịch sử; những giới hạn SV1-only, cấm settings hoặc preview-only đã được thay thế ở đợt này.
+## Collection hiện hành
 
-## Hợp đồng hiện hành — 18/10/2026
-
-Nguồn chuẩn cho giai đoạn LocalStorage là [OnboardAI_QuyTac_LocalStorage.md](../OnboardAI_QuyTac_LocalStorage.md), gồm schema thực tế, trạng thái, chữ ký hàm và bổ sung mật khẩu. JSON runtime nằm trong `assets/data/`. Nội dung từ phần “Khôi phục mật khẩu” trở xuống là lịch sử thiết kế, không áp dụng thay hợp đồng mới.
-
-Đã nối sáu trang SV1, trang chủ và chi tiết tài liệu. Chưa có tự khôi phục mật khẩu qua email/điện thoại; users.json không có phone. Không tạo trường phone/avatarUrl/settings/journeyAssignments/portalPosts để khớp hợp đồng cũ. Hồ sơ chỉ tự sửa fullName/email; role tài khoản newHire. Tệp tài liệu chưa có: hiển thị metadata và thông báo thiếu tệp, không gán nội dung sổ tay tĩnh cũ cho ID mới.
-
-
-> Trạng thái 15/10/2026: đây là hợp đồng **dự kiến cho giai đoạn dữ liệu**, không phải mã đang chạy. Hiện tại card/bảng/form hiển thị HTML tĩnh, không có seed, repository, phiên đăng nhập hoặc AI fixture. Các mô tả xác minh/lưu/preview dữ liệu bên dưới chỉ được triển khai khi nhóm bắt đầu nối dữ liệu. Form hiện tại chỉ validate và báo chưa kết nối, không xác minh tài khoản hoặc giả đặt lại mật khẩu thành công.
-
-## Khôi phục mật khẩu — UI-05 (08/10/2026)
-
-Login xác minh một tài khoản đang hoạt động bằng cặp `users.email` + `users.phone` đã có trong seed/repository. Email được chuẩn hóa không phân biệt hoa thường; số điện thoại chỉ so sánh chữ số sau khi loại khoảng trắng/ký hiệu. Khi khớp, UI chuyển sang form `newPassword`/`confirmPassword` và kiểm tra tối thiểu 8 ký tự, có chữ và số. Bản giao diện chỉ dựng preview thành công; không gửi email giả, không ghi mật khẩu vào seed và không gọi HR. Nút `contact-hr` vẫn là luồng hỗ trợ riêng cho trường hợp không xác minh được hoặc cần trợ giúp.
-
-## Quản lý hệ thống — UI-17 (07/10/2026)
-
-Giữ bản ghi `settings.id = system`. Các field Admin được chuẩn bị sửa qua `getEditableFields`:
-
-| Field | Kiểu / validation |
-|---|---|
-| organizationName | Chuỗi bắt buộc, trim, tối đa 120 ký tự |
-| supportEmail | Email hỗ trợ nhân sự, bắt buộc; fixture `hr@example.com`, không gửi email |
-| supportPhone | Chuỗi điện thoại tùy chọn, dùng rule phone chung |
-| onboardingDays | Số nguyên 1–365, thời gian hội nhập mặc định dự kiến |
-| reminderDays | Số nguyên 0–30, số ngày nhắc trước hạn nhiệm vụ dự kiến; 0 là đúng ngày đến hạn |
-
-Form tạo draft `{ id, organizationName, supportEmail, supportPhone, onboardingDays, reminderDays }`, không gửi toàn bộ settings hay fixture AI. Baseline lấy từ repository; Hủy/khôi phục bỏ draft, không mutate seed. `capabilities.write=false` nên chỉ xem trước, chưa áp dụng tới auth/layout/journey/task hoặc gửi nhắc việc. API về sau áp dụng cùng validation và quyền Admin phía server; điểm ghi là `repository.update('settings', 'system', patch)` khi được triển khai.
-
-Số liệu quản trị lấy từ list users/departments và documents published trong scope, không giả trạng thái máy chủ/log/sao lưu. Phạm vi giao diện theo ROLE_MENUS, không dùng bảng này cấp quyền dữ liệu. Các fixture aiPreview/checklistPreview/riskPreview vẫn được màn hình AI đọc, nhưng không còn trong field quản trị được sửa.
-
-## Trang chủ công khai — UI-PUBLIC (07/10/2026)
-
-`portalPosts` là mảng trong seed chung, đọc bằng `repository.list('portalPosts')` / `get('portalPosts', id)`. Contract list vẫn `{ items, total }`. Không có kho riêng hoặc request trong module trang. Khi nối API, adapter trả cùng schema và server phải áp dụng phạm vi công khai.
-
-| Field | Kiểu / cách dùng |
-|---|---|
-| id, kind | ID chuỗi ổn định; kind: `news`, `notice`, `event` |
-| status, visibility | `draft`/`published`/`archived`; `public`/`internal`. Chỉ published + public được đọc, kể cả khi có user preview. |
-| title, summary, publishedAt | Chuỗi hiển thị công khai; ngày đăng `YYYY-MM-DD` |
-| content | Văn bản thuần công khai, tùy chọn; không chứa nội dung nội bộ. UI dùng textContent. |
-| requiresLogin | Boolean, chỉ dẫn phần chi tiết cần phiên. Không phải quyền đọc; không đưa chi tiết bị khóa vào seed này. |
-| category, readMinutes, imageUrl | News: `company`/`internal`/`event`, số phút đọc tùy chọn, URL ảnh tùy chọn (relative từ index.html hoặc HTTPS). category internal là nhãn chủ đề, không thay visibility. Không có ảnh/lỗi ảnh thì dùng icon chung. |
-| label, important, publisher | Notice: nhãn, boolean nhấn mạnh, đơn vị đăng |
-| eventDate, startsAt, location | Event: ngày địa phương YYYY-MM-DD, giờ ISO UTC, địa điểm. eventDate phải khớp startsAt theo múi giờ cấu hình. |
-
-Chỉ có 3 news, 3 notice, 2 event minh họa theo ảnh. Không ghi cứng tổng 24 bài/8 trang; số đếm, kết quả, phân trang suy từ dữ liệu. Sự kiện lọc từ ngày hiện tại theo timezone chung; fixture cũ sẽ tự hết hạn. Có thể để mảng rỗng để thử empty state. Bộ lọc/phân trang hiện xử lý trong trang vì dữ liệu nhỏ; khi có quy mô lớn, mở rộng query adapter chung. Chính sách/điều khoản/liên hệ chính thức chờ nội dung được cung cấp, không tạo giả email hỗ trợ.
-
-Nguồn chuẩn cho thực thể, ID/status, quyền và repository là [AGENTS.md](../AGENTS.md) mục 7–9. Tài liệu này đặc tả phần bổ sung dùng trong seed và form hiện tại; không định nghĩa lại contract theo thành viên.
-
-| Field | Kiểu/default | Cách dùng và phạm vi |
+| Collection | Khóa/trường chính | Enum và quan hệ quan trọng |
 |---|---|---|
-| tasks.relatedDocumentIds | string[], mặc định [] | Tham chiếu documents.id; UI mở nguồn sau khi repository kiểm tra quyền đọc. |
-| tasks.result | null hoặc { url: string, note: string, fileName: string } | Kết quả mẫu/nộp xem trước. Không upload tệp; fileName chỉ là tên hiển thị. Newhire gửi theo quyền tasks:submit, không tự duyệt completed. |
-| journeys.steps | string[], mặc định [] | Bước mẫu, tách khỏi task và assignment của từng nhân sự. |
-| checkins.sharedWithNewHire | boolean, mặc định false | Cho phép Newhire liên quan đọc thông tin lịch; adapter vẫn loại note riêng. HR/Admin không được mặc định đọc ghi chú. |
-| settings.aiPreview | { question, answer, explanation: string; documentIds: string[]; notes: PreviewNote[] } | Fixture Q&A tập trung. Ghi chú ở aiPreview.notes; không có bản sao settings.notes. Chỉ render nguồn trong quyền. |
-| settings.checklistPreview | { explanation: string; documentIds: string[]; tasks: { title, description: string }[] } | Fixture AI checklist. Mentor tạo ID draft, gắn newHireId trong scope và assignedById hiện tại; không tự ghi task thật. |
-| settings.riskPreview | { scenarios: { value, label: string }[]; errorMessage: string } | Scenario success/insufficient/error để kiểm tra state của AI risk; kết quả tính từ tasks qua selector chung. |
+| `users` | `id`, `fullName`, `email`, `password`, `role`, `departmentId`, `jobTitle`, `status`, `createdAt` | role: `newHire/mentor/hr/admin`; status: `active/inactive/invited`; email duy nhất |
+| `newHires` | `id`, `userId`, `departmentId`, `jobTitle`, `mentorId`, `journeyId`, `startDate`, `status`, `notes` | user phải là NewHire; mentor phải là Mentor; phòng ban khớp user |
+| `tasks` | `id`, `newHireId`, `journeyId`, `assignedTo`, nội dung, hạn, trạng thái, audit | status: `todo/inProgress/blocked/completed/archived`; journey/assignedTo khớp hồ sơ |
+| `departments` | `id`, `name`, `description`, `managerId`, `status`, audit | status: `active/inactive` |
+| `documents` | metadata, `fileUrl`, `departmentId`, `targetRole`, `status`, audit | URL HTTP(S) hoặc `assets/docs/...`; status: `draft/active/archived` |
+| `checkins` | `id`, `newHireId`, `mentorId`, `scheduledAt`, `status`, `note`, `nextAction`, audit | không trùng `newHireId + mentorId + instant`; note riêng của Mentor |
+| `journeys` | `id`, nội dung, `targetRole`, `departmentId`, `durationDays`, `status`, audit | duration 1–365; status `active/inactive` |
+| `companyInfo` | singleton `company-001`, nội dung tổ chức, `logoUrl`, audit | logo HTTP(S) hoặc `assets/images/...` có thật |
+| `news` | nội dung, category, status, feature/publish/archive timestamps | chỉ `published` hiển thị công khai |
+| `aiMockData` | `featureType`, keywords, kết quả, lý do, nguồn, confidence, status | chỉ Policy Q&A, Checklist và một fallback; Progress Risk không dùng fixture |
+| `aiHistory` | `draftId`, feature, owner, hire, input/result/reason, `aiSource`, `model`, decision, task IDs, archive/audit | source: `mock/gemini/rule-based`; decision: `pending/accepted/rejected`; owner-scoped |
+| `settings` | singleton `system`, thông tin hỗ trợ và số ngày | onboarding 1–365; reminder 0–30; email hợp lệ |
 
-PreviewNote có `{ id, title, body, updatedAt, documentIds }`; updatedAt là ISO UTC, documentIds tham chiếu kho tài liệu chung. Các ghi chú minh họa thuộc fixture, không phải ghi chú riêng của một người thật. Bản sửa nằm trong module trang, không làm đổi fixture.
+Ngày không có giờ dùng `YYYY-MM-DD`. Thời điểm chấp nhận ISO hoặc thời gian Việt Nam `YYYY-MM-DD HH:mm` theo helper chung. Checker báo lỗi dưới dạng `collection/id/field` và kiểm tra foreign key, lịch trùng, URL cùng asset path.
 
-`scheduledAt` luôn là ISO 8601 UTC. Form dùng input datetime-local theo APP_CONFIG.timeZone qua toDateTimeInput/fromDateTimeInput; khi không sửa ngày giờ phải giữ nguyên ISO gốc để không mất giây. Ngày không có giờ như dueDate/startDate dùng YYYY-MM-DD.
+## Quyền và phạm vi
 
-Quyền action/field nằm trong permissions.js. `profile` chỉ sửa fullName/phone/avatarUrl của chính mình. `users` là form Admin quản lý; departments/journeys/documents/settings và tasks/checkins dùng danh sách field của entity tương ứng. UI preview có thể hiển thị draft hợp lệ nhưng mọi method ghi của adapter hiện trả PREVIEW_ONLY, capabilities.write=false.
+- Session chỉ lưu `userId`; service đọc lại role/status từ users. Query URL không cấp hoặc truyền role.
+- Mọi mutation gọi `requireRoles` và kiểm tra quan hệ đối tượng trong service. `permissions.js` cung cấp cùng rule cho route/action/field; `getEditableFields()` được dùng cho profile, user và newHire update.
+- Profile chỉ tự sửa `fullName/email`. Admin quản lý tài khoản/phòng ban/settings; HR quản lý journey/hồ sơ và dashboard; Mentor chỉ ghi task/check-in cho mentee hiện tại; NewHire chỉ thao tác task/hồ sơ của mình.
+- Password không được trả sang page. Input AI không bị quét bằng password của users; UI chỉ cảnh báo không nhập mật khẩu, token hoặc dữ liệu nhạy cảm.
 
-`getDepartmentReferences(id)` trả số users/journeys/documents tham chiếu một phòng ban cho Admin để cảnh báo. Đây là tổng hợp từ seed trong adapter, không trả dữ liệu journey cho Admin hoặc thay đổi ma trận route. Archive vẫn cần xác nhận, chưa thực hiện ghi/xóa dây chuyền.
+## Vòng đời AI
+
+1. Validate input và hiển thị trạng thái loading trong lúc service xử lý.
+2. Generate trả draft có `draftId`; chưa ghi LocalStorage.
+3. Edit/Regenerate chỉ thay draft.
+4. Save gọi `saveHistoryDraft()` và tạo một history `pending`; gọi lại cùng `draftId` trả cùng bản ghi.
+5. Accept/Reject lưu decision. Accept checklist lưu history và task trong cùng transaction; task ID theo `task-<historyId>-<index>` nên thử lại không nhân đôi.
+6. History hỗ trợ đọc, sửa bản pending đã lưu ở service, lưu trữ và xóa khi không có task cần đối chiếu.
+
+Policy Q&A chỉ trích dẫn document tồn tại và người dùng được đọc. Checklist dùng role tài khoản, `departmentId`, tên phòng ban, `journeyId`, tên hành trình, `jobTitle`, mục tiêu Mentor và task hiện có; kết quả Gemini phải qua schema/trùng lặp trước khi thành draft. Progress Risk tính từ tasks/check-ins/liên kết hiện tại, dùng tiến độ chung và coi thiếu dữ liệu là `unknown`; Gemini chỉ được bổ sung giải thích/đề xuất. Kết quả accepted tác động tới badge/thống kê dashboard HR.
+
+## Snapshot seed hiện tại
+
+Seed có 23 users, 12 newHires, 84 tasks, 13 departments, 15 documents, 12 checkins, 6 journeys, 1 companyInfo, 12 news, 21 aiMockData, 0 aiHistory và 1 settings. Các record và PDF không còn consumer đã được thu gọn; toàn bộ foreign key và asset path còn lại được checker xác minh.

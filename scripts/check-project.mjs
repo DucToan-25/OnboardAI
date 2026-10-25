@@ -1,10 +1,11 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { COLLECTIONS } from '../js/data/store.js';
+import { COLLECTIONS, validateSeedVersions } from '../js/data/store.js';
 import { ROUTES } from '../js/config/routes.js';
 import { ROLE_MENUS } from '../js/config/roles.js';
 import { parseStoredDate } from '../js/common/format.js';
+import { validateRecord } from '../js/data/schema.js';
 
 // Read-only audit. Report collection/record IDs, never account fields or passwords.
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -30,12 +31,19 @@ async function inspectDataFiles(directory) {
     if (entry.isDirectory()) {
       if (!entry.name.startsWith('.') && entry.name !== 'node_modules') await inspectDataFiles(file);
     } else if (entry.isFile() && entry.name.endsWith('.json') && file !== path.join(root, 'package.json')) {
-      const expected = path.dirname(file) === dataDirectory && COLLECTIONS.includes(path.basename(file, '.json'));
+      const expected = path.dirname(file) === dataDirectory && (COLLECTIONS.includes(path.basename(file, '.json')) || path.basename(file) === 'version.json');
       if (!expected) report('ERROR', `${relative(file)}: JSON data is outside the registered canonical collections.`);
     }
   }
 }
 await inspectDataFiles(root);
+
+try {
+  validateSeedVersions(JSON.parse((await fs.readFile(path.join(dataDirectory, 'version.json'), 'utf8')).replace(/^\uFEFF/, '')));
+  report('OK', 'assets/data/version.json: valid seed version manifest.');
+} catch (error) {
+  report('ERROR', `assets/data/version.json: ${error instanceof SyntaxError ? 'invalid JSON.' : error.message}`);
+}
 
 for (const collection of COLLECTIONS) {
   const file = path.join(dataDirectory, `${collection}.json`);
@@ -51,6 +59,9 @@ for (const collection of COLLECTIONS) {
       }
       if (ids.has(item.id)) report('ERROR', `${relative(file)}: duplicate ID ${item.id} (items ${ids.get(item.id) + 1}, ${index + 1}).`);
       else ids.set(item.id, index);
+      for (const issue of validateRecord(collection, item)) {
+        report('ERROR', `${collection}/${item.id}: ${issue.field} ${issue.message}.`);
+      }
     }
     records.set(collection, rows.filter(item => item && typeof item === 'object' && !Array.isArray(item)));
     indexes.set(collection, new Map([...ids].map(([id, index]) => [id, rows[index]])));
@@ -61,7 +72,7 @@ for (const collection of COLLECTIONS) {
 }
 
 for (const file of await fs.readdir(dataDirectory)) {
-  if (file.endsWith('.json') && !COLLECTIONS.includes(file.slice(0, -5))) report('WARN', `assets/data/${file}: collection is not registered in store.js.`);
+  if (file.endsWith('.json') && file !== 'version.json' && !COLLECTIONS.includes(file.slice(0, -5))) report('WARN', `assets/data/${file}: collection is not registered in store.js.`);
 }
 
 const references = {
@@ -92,14 +103,14 @@ for (const [collection, fields] of Object.entries(references)) {
 for (const hire of records.get('newHires') || []) {
   const user = indexes.get('users')?.get(hire.userId);
   const mentor = indexes.get('users')?.get(hire.mentorId);
-  if (user && user.role !== 'newHire') report('WARN', `newHires/${hire.id}: user account role is not newHire.`);
-  if (user && user.departmentId !== hire.departmentId) report('WARN', `newHires/${hire.id}: departmentId differs from linked user.`);
-  if (mentor && mentor.role !== 'mentor') report('WARN', `newHires/${hire.id}: mentor account role is not mentor.`);
+  if (user && user.role !== 'newHire') report('ERROR', `newHires/${hire.id}: user account role is not newHire.`);
+  if (user && user.departmentId !== hire.departmentId) report('ERROR', `newHires/${hire.id}: departmentId differs from linked user.`);
+  if (mentor && mentor.role !== 'mentor') report('ERROR', `newHires/${hire.id}: mentor account role is not mentor.`);
 }
 for (const task of records.get('tasks') || []) {
   const hire = indexes.get('newHires')?.get(task.newHireId);
   if (hire && (task.assignedTo !== hire.userId || task.journeyId !== hire.journeyId)) {
-    report('WARN', `tasks/${task.id}: assignedTo or journeyId differs from linked newHires/${hire.id}; seed is preserved.`);
+    report('ERROR', `tasks/${task.id}: assignedTo or journeyId differs from linked newHires/${hire.id}.`);
   }
 }
 
@@ -113,13 +124,29 @@ for (const item of records.get('checkins') || []) {
   appointments.get(key).push(item.id);
 }
 const duplicateAppointments = [...appointments.values()].filter(ids => ids.length > 1);
-if (duplicateAppointments.length) report('WARN', `checkins: ${duplicateAppointments.length} duplicate appointment groups; first group ${duplicateAppointments[0].join(', ')}. Existing notes are preserved.`);
+if (duplicateAppointments.length) report('ERROR', `checkins: ${duplicateAppointments.length} duplicate appointment groups; first group ${duplicateAppointments[0].join(', ')}.`);
 
 const missingAttachments = [];
+const referencedAttachments = new Set();
 for (const item of records.get('documents') || []) {
-  if (item.fileUrl && !/^https?:\/\//i.test(item.fileUrl) && !await exists(path.resolve(root, item.fileUrl))) missingAttachments.push(item.id);
+  if (item.fileUrl && !/^https?:\/\//i.test(item.fileUrl)) {
+    const attachment = path.resolve(root, item.fileUrl);
+    referencedAttachments.add(attachment);
+    if (!await exists(attachment)) missingAttachments.push(item.id);
+  }
 }
 if (missingAttachments.length) report('WARN', `documents: ${missingAttachments.length} local attachments are absent; detail must display the missing-file state.`);
+const docsDirectory = path.join(root, 'assets', 'docs');
+for (const file of await fs.readdir(docsDirectory)) {
+  const absolute = path.join(docsDirectory, file);
+  if (!referencedAttachments.has(absolute)) report('WARN', `assets/docs/${file}: file is not referenced by documents.json.`);
+}
+
+for (const item of records.get('companyInfo') || []) {
+  if (item.logoUrl && !/^https?:\/\//i.test(item.logoUrl) && !await exists(path.resolve(root, item.logoUrl))) {
+    report('ERROR', `companyInfo/${item.id}: logoUrl points to a missing asset.`);
+  }
+}
 
 async function walk(directory) {
   const entries = await fs.readdir(directory, { withFileTypes: true });
@@ -138,6 +165,7 @@ for (const file of modules) {
     dependencies.push(target);
   }
   if (relative(file) !== 'js/data/store.js' && /\b(?:localStorage|sessionStorage)\s*[.\[]/.test(source)) report('ERROR', `${relative(file)}: direct browser storage reference outside store.js.`);
+  if (/\?role=|URLSearchParams\(\s*\{\s*role\b/.test(source)) report('ERROR', `${relative(file)}: role query must not be used for navigation or authorization.`);
   graph.set(file, dependencies);
 }
 

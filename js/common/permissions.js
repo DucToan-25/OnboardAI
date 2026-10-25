@@ -19,7 +19,7 @@ export function can(user, action, resource = {}) {
       if (manager) return true;
       if (resource.status !== 'active') return false;
       const audience = resource.targetRole === 'newhire' ? 'newHire' : resource.targetRole;
-      return (audience === 'all' || audience === user.role || (audience === 'engineer' && user.departmentId === 'dept-engineering'))
+      return (audience === 'all' || audience === user.role)
         && (resource.departmentId == null || resource.departmentId === user.departmentId);
     }
     case 'tasks': return (manager || (user.role === 'mentor' && mentee)) && ['read', 'create', 'update', 'archive', 'status'].includes(operation)

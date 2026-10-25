@@ -1,6 +1,6 @@
 import { getMyProfile, updateMyProfile } from '../data/people.js';
-import { resetDemoData } from '../data/store.js';
-import { createAvatar, createField, element, actionButton } from '../common/renderers.js';
+
+import { createAvatar, createField, element } from '../common/renderers.js';
 import { validateFields } from '../common/page-ui.js';
 import { applyFormErrors } from '../common/validation.js';
 import { watchData, showError } from '../common/data-ui.js';
@@ -39,11 +39,5 @@ export async function initPage({ ui }) {
     }
   });
   document.querySelector('[data-action="reset-profile"]').addEventListener('click', refresh);
-  const reset = actionButton('Đặt lại dữ liệu demo', 'reset-demo');
-  form.querySelector('.form__actions').append(reset);
-  reset.addEventListener('click', async () => {
-    if (!await ui.confirmAction({ title: 'Đặt lại dữ liệu demo?', message: 'Xóa toàn bộ thay đổi OnboardAI trên trình duyệt này, đăng xuất và nạp lại JSON ban đầu. Dữ liệu website khác được giữ nguyên.', tone: 'danger' })) return;
-    reset.disabled = true;
-    try { await resetDemoData(); location.assign('login.html'); } catch (error) { showError(error); reset.disabled = false; }
-  });
+
 }

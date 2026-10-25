@@ -34,7 +34,7 @@ export function renderLayout({ currentUser, pageId }) {
     const ready = ROUTES[item.pageId]?.available;
     const link = document.createElement(ready ? 'a' : 'span');
     link.className = 'app-nav__link';
-    if (ready) link.href = `${item.pageId}.html?${new URLSearchParams({ role: currentUser.role })}`;
+    if (ready) link.href = `${item.pageId}.html`;
     else {
       link.classList.add('is-disabled'); link.setAttribute('aria-disabled', 'true');
       link.title = 'Trang chưa sẵn sàng trong bản hiện tại.';
@@ -46,7 +46,7 @@ export function renderLayout({ currentUser, pageId }) {
   }
   nav.append(heading, list);
   const footer = document.createElement('div'); footer.className = 'app-sidebar__footer';
-  const account = document.createElement('a'); account.className = 'app-header__user'; account.href = `profile.html?${new URLSearchParams({ role: currentUser.role })}`;
+  const account = document.createElement('a'); account.className = 'app-header__user'; account.href = 'profile.html';
   const name = document.createElement('div');
   const fullName = document.createElement('strong'); fullName.textContent = currentUser.fullName;
   const role = document.createElement('p'); role.textContent = ROLE_LABELS[currentUser.role];
@@ -58,7 +58,7 @@ export function renderLayout({ currentUser, pageId }) {
   const date = document.createElement('time');
   const day = getTodayDate();
   date.dateTime = day; date.textContent = `Hôm nay, ${formatDate(day)}`;
-  const avatarLink = document.createElement('a'); avatarLink.className = 'app-header__user'; avatarLink.href = `profile.html?${new URLSearchParams({ role: currentUser.role })}`;
+  const avatarLink = document.createElement('a'); avatarLink.className = 'app-header__user'; avatarLink.href = 'profile.html';
   avatarLink.setAttribute('aria-label', `Hồ sơ ${currentUser.fullName}`); avatarLink.append(createAvatar(currentUser, { size: 'sm' }));
   actions.append(date, avatarLink); header.append(brand, actions);
   const main = document.querySelector('#main-content');

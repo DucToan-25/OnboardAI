@@ -761,6 +761,69 @@ textarea.form-field__control {
   margin-top: var(--space-5);
 }
 
+.ai-status,
+.ai-status__summary,
+.ai-result__header,
+.ai-config__key-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.ai-status {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: var(--space-2) var(--space-3);
+  margin-block: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+}
+
+.ai-status__summary {
+  flex-wrap: wrap;
+}
+
+.ai-status__label,
+.ai-status__key,
+.ai-result__header > p {
+  margin: 0;
+}
+
+.ai-result__header {
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.ai-config__notice {
+  margin-bottom: var(--space-4);
+}
+
+.ai-config__key-row .form-field__control {
+  flex: 1;
+}
+
+.ai-config__test-status {
+  min-height: 24px;
+  margin-block: var(--space-3);
+}
+
+.ai-config__actions {
+  justify-content: space-between;
+}
+
+.modal .ai-config__actions {
+  justify-content: space-between;
+}
+
+.ai-error {
+  margin-top: var(--space-3);
+}
+
+.ai-error__actions {
+  margin-top: var(--space-3);
+}
+
 .tabs__list {
   display: flex;
   gap: var(--space-2);

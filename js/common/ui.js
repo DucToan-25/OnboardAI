@@ -74,8 +74,6 @@ export function openModal({ title, content, onClose }) {
   return modal;
 }
 
-export async function closeModal() { return modals.at(-1)?.close(); }
-
 export function confirmAction({ title, message, confirmLabel = 'Xác nhận', tone = 'primary' }) {
   return new Promise((resolve) => {
     let answered = false;
@@ -120,26 +118,4 @@ export function setViewState(root, { status, message = '' }) {
   root.classList.add(`view-state--${status}`);
   if (status === 'loading') { const spinner = document.createElement('span'); spinner.className = 'spinner'; spinner.setAttribute('aria-hidden', 'true'); root.append(spinner); }
   const copy = document.createElement('p'); copy.className = 'view-state__message'; copy.textContent = message; root.append(copy);
-}
-
-const initializedTabs = new WeakSet();
-export function initTabs(root) {
-  if (initializedTabs.has(root)) return;
-  initializedTabs.add(root);
-  const tabs = [...root.querySelectorAll('[role="tab"]')];
-  function activate(tab) {
-    for (const item of tabs) {
-      const active = item === tab; item.classList.toggle('is-active', active); item.setAttribute('aria-selected', String(active)); item.tabIndex = active ? 0 : -1;
-      const panel = document.getElementById(item.getAttribute('aria-controls')); if (panel) panel.hidden = !active;
-    }
-  }
-  root.addEventListener('click', (event) => { const tab = event.target.closest('[role="tab"]'); if (tabs.includes(tab)) activate(tab); });
-  root.addEventListener('keydown', (event) => {
-    const index = tabs.indexOf(document.activeElement);
-    if (index < 0 || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
-    event.preventDefault();
-    const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
-    activate(tabs[next]); tabs[next].focus();
-  });
-  if (tabs.length) activate(tabs.find((tab) => tab.getAttribute('aria-selected') === 'true') || tabs[0]);
 }

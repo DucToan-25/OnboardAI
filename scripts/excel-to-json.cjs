@@ -5,11 +5,11 @@
 // Cách dùng:
 //   node scripts/excel-to-json.cjs <duong-dan.xlsx>              # chỉ kiểm tra và in báo cáo
 //   node scripts/excel-to-json.cjs <duong-dan.xlsx> --write      # ghi JSON vào assets/data/
-//   node scripts/excel-to-json.cjs <duong-dan.xlsx> --apply      # tương đương --write, chỉ thêm ID mới
 //   Tùy chọn: --skip-ids=id1,id2   bỏ các dòng mẫu (theo ID) khỏi dữ liệu xuất ra
 //
 // Quy tắc an toàn:
-// - Không bao giờ xóa hoặc ghi đè bản ghi đã có trong JSON chuẩn (--apply chỉ thêm ID mới).
+// - Không bao giờ xóa hoặc ghi đè bản ghi đã có trong JSON chuẩn; chỉ thêm ID mới.
+// - Tự tăng version của collection đã đổi để trình duyệt nạp snapshot JSON mới.
 // - In rõ số dòng hợp lệ / không hợp lệ / bị bỏ qua và lý do từng dòng.
 const fs = require('node:fs');
 const path = require('node:path');
@@ -309,15 +309,41 @@ function workbookSheets(workbook, relationships) {
   return sheets;
 }
 
-function appendCollections(seed, rawSeed, exported) {
+function appendCollections(seed, rawSeed, exported, versions, rawVersions) {
   // Check again before staging so an open editor cannot be silently overwritten.
   for (const [name, content] of Object.entries(rawSeed)) {
     if (fs.readFileSync(path.join(DATA_DIR, `${name}.json`), 'utf8') !== content) throw new Error(`${name}.json vừa thay đổi; chạy lại lệnh nhập.`);
   }
-  const plans = SHEETS.filter(sheet => exported[sheet]?.length).map(sheet => {
+  if (fs.readFileSync(path.join(DATA_DIR, 'version.json'), 'utf8') !== rawVersions) {
+    throw new Error('version.json vừa thay đổi; chạy lại lệnh nhập.');
+  }
+  const collectionPlans = SHEETS.filter(sheet => exported[sheet]?.length).map(sheet => {
     const file = path.join(DATA_DIR, OUTPUT_NAMES[sheet]);
-    return { sheet, file, stage: `${file}.import-${randomUUID()}.tmp`, content: JSON.stringify([...seed[sheet], ...exported[sheet]], null, 2) + '\n' };
+    return {
+      sheet,
+      file,
+      stage: `${file}.import-${randomUUID()}.tmp`,
+      content: `${JSON.stringify([...seed[sheet], ...exported[sheet]], null, 2)}\n`,
+      original: rawSeed[sheet],
+    };
   });
+  if (!collectionPlans.length) {
+    console.log('Không có ID mới để ghi; version.json được giữ nguyên.');
+    return;
+  }
+  const nextVersions = { ...versions };
+  for (const { sheet } of collectionPlans) nextVersions[sheet] += 1;
+  const versionFile = path.join(DATA_DIR, 'version.json');
+  const plans = [
+    ...collectionPlans,
+    {
+      sheet: 'version',
+      file: versionFile,
+      stage: `${versionFile}.import-${randomUUID()}.tmp`,
+      content: `${JSON.stringify(nextVersions, null, 2)}\n`,
+      original: rawVersions,
+    },
+  ];
   const committed = [];
   try {
     for (const plan of plans) fs.writeFileSync(plan.stage, plan.content, { encoding: 'utf8', flag: 'wx' });
@@ -328,24 +354,26 @@ function appendCollections(seed, rawSeed, exported) {
   } catch (error) {
     let rollbackFailed = false;
     for (const plan of committed.reverse()) {
-      try { fs.writeFileSync(plan.file, rawSeed[plan.sheet], 'utf8'); } catch { rollbackFailed = true; }
+      try { fs.writeFileSync(plan.file, plan.original, 'utf8'); } catch { rollbackFailed = true; }
     }
     if (rollbackFailed) throw new Error('Lỗi ghi và khôi phục JSON. Kiểm tra các collection trước khi nhập lại.');
     throw new Error(`Không ghi được JSON; đã khôi phục các collection đã ghi. ${error.code || ''}`);
   } finally {
     for (const plan of plans) if (fs.existsSync(plan.stage)) fs.unlinkSync(plan.stage);
   }
-  for (const plan of plans) console.log(`Added ${exported[plan.sheet].length} records to ${path.relative(root, plan.file)}`);
+  for (const plan of collectionPlans) {
+    console.log(`Added ${exported[plan.sheet].length} records to ${path.relative(root, plan.file)}; version ${versions[plan.sheet]} → ${nextVersions[plan.sheet]}`);
+  }
 }
 
 function main() {
   const args = process.argv.slice(2);
   const input = args.find((arg) => !arg.startsWith('--'));
-  const write = args.includes('--write') || args.includes('--apply');
+  const write = args.includes('--write');
   const skipList = args.find((arg) => arg.startsWith('--skip-ids='))?.slice('--skip-ids='.length) || '';
   const skipIds = new Set(skipList.split(',').map((id) => id.trim()).filter(Boolean));
   if (!input) {
-    console.error('Cách dùng: node scripts/excel-to-json.cjs <file.xlsx> [--write] [--apply] [--skip-ids=id1,id2]');
+    console.error('Cách dùng: node scripts/excel-to-json.cjs <file.xlsx> [--write] [--skip-ids=id1,id2]');
     process.exitCode = 1;
     return;
   }
@@ -372,6 +400,15 @@ function main() {
       ids.add(item.id);
     }
   }
+  const versionFile = path.join(DATA_DIR, 'version.json');
+  const rawVersions = fs.readFileSync(versionFile, 'utf8');
+  let versions;
+  try { versions = JSON.parse(rawVersions.replace(/^\uFEFF/, '')); } catch { throw new Error('version.json không phải JSON hợp lệ; chưa nhập dữ liệu.'); }
+  for (const name of SHEETS) {
+    if (!Number.isSafeInteger(versions[name]) || versions[name] < 1) {
+      throw new Error(`version.json thiếu version nguyên dương cho ${name}.`);
+    }
+  }
   const exported = {};
   let hasError = false;
 
@@ -388,6 +425,11 @@ function main() {
       const id = String(row.id ?? '').trim();
       if (skipIds.has(id)) { skipped += 1; console.log(`- BỎ (chọn không dùng): ${id || `dòng ${index + 2}`}`); return; }
       if (!id) { hasError = true; console.error(`- LỖI: dòng ${row.__rowNumber ?? index + 2} thiếu ID.`); return; }
+      if (sheet === 'companyInfo' && id !== 'company-001') {
+        hasError = true;
+        console.error(`- LỖI: companyInfo là singleton; ID phải là company-001, không nhận “${id}”.`);
+        return;
+      }
       if (seenIds.has(id)) { hasError = true; console.error(`- LỖI: ID “${id}” trùng trong sheet.`); return; }
       const result = convertRow(sheet, row, index, date1904);
       if (result.error) { hasError = true; console.error(`- LỖI: ${result.error}`); return; }
@@ -405,7 +447,7 @@ function main() {
   }
 
   if (!write) {
-    console.log('\nChưa ghi file. Chạy lại với --write hoặc --apply để thêm ID mới vào JSON chuẩn.');
+    console.log('\nChưa ghi file. Chạy lại với --write để thêm ID mới và tăng version tương ứng.');
     if (hasError) { console.error('Có dòng không hợp lệ ở trên; sửa Excel rồi chạy lại.'); process.exitCode = 1; }
     return;
   }
@@ -414,8 +456,7 @@ function main() {
     process.exitCode = 1;
     return;
   }
-  // Both write modes append only new IDs to the canonical collections.
-  appendCollections(seed, rawSeed, exported);
+  appendCollections(seed, rawSeed, exported, versions, rawVersions);
 }
 
 try { main(); } catch (error) { console.error(`Không thể nhập Excel: ${error.message}`); process.exitCode = 1; }

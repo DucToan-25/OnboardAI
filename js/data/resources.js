@@ -66,6 +66,50 @@ export function getReadableDocuments() {
   const actor = requireRoles();
   return getAll('documents').filter(item => can(actor, 'documents:read', item));
 }
+function normalizeSearch(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/gi, 'd')
+    .toLocaleLowerCase('vi')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+const POLICY_STOP_WORDS = new Set(['cua', 'cong', 'ty', 'duoc', 'nhu', 'the', 'nao', 'la', 'va', 'cho', 'toi', 'mot', 'cac', 've']);
+function policyScore(entry, question) {
+  const query = normalizeSearch(question);
+  if (!query) return 0;
+  const queryTokens = new Set(query.split(' ').filter(token => token.length > 2 && !POLICY_STOP_WORDS.has(token)));
+  const terms = [entry.topic, entry.title, ...(entry.keywords || []), ...(entry.faqs || []).map(faq => faq.question)]
+    .map(normalizeSearch)
+    .filter(Boolean);
+  let score = 0;
+  for (const term of terms) {
+    if (query.includes(term)) score += 12 + term.split(' ').length;
+    const overlap = new Set(term.split(' ').filter(token => queryTokens.has(token) && !POLICY_STOP_WORDS.has(token)));
+    score += overlap.size;
+  }
+  return score;
+}
+export function findReadablePolicyKnowledge(question, { limit = 4 } = {}) {
+  const actor = requireRoles();
+  if (typeof question !== 'string' || !question.trim()) return [];
+  const matches = [];
+  for (const document of getReadableDocuments()) {
+    for (const entry of document.knowledge || []) {
+      const scopedDocument = { ...document, departmentId: entry.departmentId, targetRole: entry.targetRole };
+      if (!can(actor, 'documents:read', scopedDocument)) continue;
+      const score = policyScore(entry, question);
+      if (score >= 10) {
+  matches.push({ document, entry, score });
+}
+    }
+  }
+  return matches
+    .sort((a, b) => b.score - a.score || b.entry.updatedAt.localeCompare(a.entry.updatedAt) || a.entry.id.localeCompare(b.entry.id))
+    .slice(0, Math.max(1, Math.min(10, Number(limit) || 4)));
+}
 export function listDocuments(query = {}) { return filter(getReadableDocuments(), query, ['title', 'description', 'category']); }
 export function getDocument(id) {
   const actor = requireRoles(); const item = getById('documents', id);
@@ -75,7 +119,7 @@ export function getDocument(id) {
 function validateDocument(input, previous = {}) {
   const title = required(input.title, 'Tiêu đề');
   if (!['draft', 'active', 'archived'].includes(input.status)) fail('Trạng thái tài liệu không hợp lệ.');
-  if (!['all', 'newhire', 'newHire', 'mentor', 'hr', 'admin', 'engineer'].includes(input.targetRole)) fail('Đối tượng tài liệu không hợp lệ.');
+  if (!['all', 'newhire', 'newHire', 'mentor', 'hr', 'admin'].includes(input.targetRole)) fail('Đối tượng tài liệu không hợp lệ.');
   department(input.departmentId, previous.departmentId);
   const fileUrl = text(input.fileUrl);
   if (fileUrl) {
@@ -87,7 +131,7 @@ function validateDocument(input, previous = {}) {
       if (!/^assets\/docs\/[^?#]+$/i.test(path) || path.includes('\\') || path.split('/').some(part => !part || part === '.' || part === '..')) fail('Đường dẫn tệp cần là HTTP(S) hoặc assets/docs/ hợp lệ.');
     }
   }
-  return { title, category: text(input.category) || 'Chung', description: text(input.description), fileUrl, departmentId: input.departmentId, targetRole: input.targetRole, status: input.status };
+  return { title, category: text(input.category) || 'Chung', description: text(input.description), fileUrl, departmentId: input.departmentId, targetRole: input.targetRole, status: input.status, knowledge: Array.isArray(input.knowledge) ? input.knowledge : [] };
 }
 const DOC_FIELDS = ['title', 'category', 'description', 'fileUrl', 'departmentId', 'targetRole', 'status'];
 export function createDocument(input) {
