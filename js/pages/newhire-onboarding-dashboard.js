@@ -22,7 +22,7 @@ export async function initPage({ ui }) {
     region('progress-value').textContent = `${progress.percent}%`;
     region('progress-bar').value = progress.percent;
     const upcoming = tasks.filter(item => item.status !== 'completed')
-      .sort((a, b) => (parseStoredDate(a.dueDate)?.getTime() || Infinity) - (parseStoredDate(b.dueDate)?.getTime() || Infinity)).slice(0, 5);
+      .sort((a, b) => (parseStoredDate(a.dueDate)?.getTime() || Infinity) - (parseStoredDate(b.dueDate)?.getTime() || Infinity)).slice(0, 3);
     region('upcoming-tasks').replaceChildren(...upcoming.map(task => createTaskItem(task)));
     if (!upcoming.length) region('upcoming-tasks').append(element('p', 'form-field__hint', tasks.length ? 'Bạn đã hoàn thành các nhiệm vụ.' : 'Chưa có nhiệm vụ.'));
     region('mentor').replaceChildren();
