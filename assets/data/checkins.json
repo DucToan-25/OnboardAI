@@ -1,0 +1,134 @@
+[
+  {
+    "id": "checkin-001",
+    "newHireId": "hire-001",
+    "mentorId": "user-003",
+    "scheduledAt": "2026-10-08 10:00",
+    "status": "scheduled",
+    "note": null,
+    "nextAction": "Trao đổi trải nghiệm tuần đầu.",
+    "createdAt": "2026-10-02",
+    "updatedAt": "2026-10-02"
+  },
+  {
+    "id": "checkin-002",
+    "newHireId": "hire-002",
+    "mentorId": "user-003",
+    "scheduledAt": "2026-10-09 14:00",
+    "status": "scheduled",
+    "note": null,
+    "nextAction": "Kiểm tra môi trường làm việc và giải đáp câu hỏi.",
+    "createdAt": "2026-10-02",
+    "updatedAt": "2026-10-02"
+  },
+  {
+    "id": "checkin-003",
+    "newHireId": "hire-003",
+    "mentorId": "user-003",
+    "scheduledAt": "2026-10-04 11:00",
+    "status": "scheduled",
+    "note": "Buổi làm quen: giới thiệu team và kênh liên lạc.",
+    "nextAction": "Chuyển sang check-in tuần sau",
+    "createdAt": "2026-10-01",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "checkin-004",
+    "newHireId": "hire-004",
+    "mentorId": "user-003",
+    "scheduledAt": "2026-10-05 12:00",
+    "status": "scheduled",
+    "note": "Theo dõi tiến độ task kỹ thuật.",
+    "nextAction": "Nhắc hạn task quan trọng",
+    "createdAt": "2026-10-02",
+    "updatedAt": "2026-10-02"
+  },
+  {
+    "id": "checkin-005",
+    "newHireId": "hire-005",
+    "mentorId": "user-003",
+    "scheduledAt": "2026-10-06 13:00",
+    "status": "completed",
+    "note": "Hỗ trợ onboard công cụ nội bộ.",
+    "nextAction": "Lên lịch buổi tiếp theo",
+    "createdAt": "2026-10-03",
+    "updatedAt": "2026-10-06"
+  },
+  {
+    "id": "checkin-006",
+    "newHireId": "hire-006",
+    "mentorId": "user-003",
+    "scheduledAt": "2026-10-07 14:00",
+    "status": "scheduled",
+    "note": "Đánh giá checklist còn thiếu.",
+    "nextAction": "Gửi tài liệu bổ sung",
+    "createdAt": "2026-10-04",
+    "updatedAt": "2026-10-04"
+  },
+  {
+    "id": "checkin-007",
+    "newHireId": "hire-007",
+    "mentorId": "user-003",
+    "scheduledAt": "2026-10-08 15:00",
+    "status": "scheduled",
+    "note": "Trao đổi về văn hóa team.",
+    "nextAction": "Cập nhật ghi chú cho HR",
+    "createdAt": "2026-10-05",
+    "updatedAt": "2026-10-05"
+  },
+  {
+    "id": "checkin-008",
+    "newHireId": "hire-008",
+    "mentorId": "user-003",
+    "scheduledAt": "2026-10-09 08:00",
+    "status": "completed",
+    "note": "Review code mẫu và góp ý.",
+    "nextAction": "Theo dõi câu hỏi còn tồn",
+    "createdAt": "2026-10-06",
+    "updatedAt": "2026-10-09"
+  },
+  {
+    "id": "checkin-009",
+    "newHireId": "hire-009",
+    "mentorId": "user-013",
+    "scheduledAt": "2026-10-10 09:00",
+    "status": "scheduled",
+    "note": "Chuẩn bị cho buổi demo nội bộ.",
+    "nextAction": "Xác nhận đã cài xong tool",
+    "createdAt": "2026-10-07",
+    "updatedAt": "2026-10-07"
+  },
+  {
+    "id": "checkin-010",
+    "newHireId": "hire-010",
+    "mentorId": "user-013",
+    "scheduledAt": "2026-10-11 10:00",
+    "status": "scheduled",
+    "note": "Trao đổi trải nghiệm tuần đầu.",
+    "nextAction": "Gửi lại checklist còn thiếu",
+    "createdAt": "2026-10-08",
+    "updatedAt": "2026-10-08"
+  },
+  {
+    "id": "checkin-011",
+    "newHireId": "hire-011",
+    "mentorId": "user-023",
+    "scheduledAt": "2026-10-12 11:00",
+    "status": "completed",
+    "note": "Kiểm tra môi trường làm việc và giải đáp câu hỏi.",
+    "nextAction": "Chuyển sang check-in tuần sau",
+    "createdAt": "2026-10-09",
+    "updatedAt": "2026-10-12"
+  },
+  {
+    "id": "checkin-068-demo",
+    "newHireId": "hire-068",
+    "mentorId": "user-012",
+    "scheduledAt": "2026-11-12 10:00",
+    "status": "scheduled",
+    "note": null,
+    "nextAction": "Rà soát kế hoạch kiểm thử tuần đầu.",
+    "createdAt": "2026-10-25",
+    "updatedAt": "2026-10-25"
+  }
+]

@@ -1,0 +1,126 @@
+import { isSafeUrl } from './validation.js';
+import { TASK_STATUSES, STATUS_META } from '../config/statuses.js';
+import { formatDate } from './format.js';
+
+let fieldCounter = 0;
+
+export function element(tag, className = '', text) {
+  const node = document.createElement(tag); node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+export function actionButton(label, action, id, tone = 'secondary') {
+  const button = element('button', `btn btn--${tone} btn--sm`, label);
+  button.type = 'button'; button.dataset.action = action;
+  if (id) button.dataset.id = id;
+  return button;
+}
+export function createTaskBadge(status) {
+  const entry = TASK_STATUSES[status] || { label: status, tone: 'neutral' };
+  return element('span', `badge badge--${entry.tone}`, entry.label);
+}
+export function createStatusBadge(entity, status) {
+  const entry = STATUS_META[entity]?.[status] || { label: status, tone: 'neutral' };
+  return element('span', `badge badge--${entry.tone}`, entry.label);
+}
+export function fillSelect(select, options, placeholder = 'Tất cả') {
+  if (!select) return;
+  const value = select.value;
+  select.replaceChildren(new Option(placeholder, ''), ...options.map(option => new Option(option.label, option.value)));
+  select.value = [...select.options].some(option => option.value === value) ? value : '';
+}
+export function createTaskItem(task, { link = true } = {}) {
+  const item = element('div', 'task-item'); item.dataset.id = task.id;
+  const content = element('div', 'task-item__body');
+  const title = link ? element('a', 'task-item__title', task.title) : actionButton(task.title, 'open-task', task.id, 'ghost');
+  title.classList.add('task-item__title');
+  if (link) title.href = `newhire-checklist.html?${new URLSearchParams({ id: task.id })}`;
+  content.append(title, element('p', 'task-item__meta', `${task.category || 'Nhiệm vụ'} · Hạn ${formatDate(task.dueDate)}`));
+  if (task.linkIssue) content.append(element('p', 'form-field__hint', task.linkIssue));
+  item.append(createIcon(task.status === 'completed' ? 'check' : 'clock', 'task-item__check'), content);
+  if (link) {
+    const actions = element('div', 'task-item__actions'); actions.append(createTaskBadge(task.status)); item.append(actions);
+  }
+  return item;
+}
+export function createTaskResult(task) {
+  const section = element('section');
+  section.append(element('h3', '', 'Kết quả của nhân sự'), element('p', '', task.result?.note || 'Chưa có kết quả.'));
+  if (task.result?.url && isSafeUrl(task.result.url) && /^https?:\/\//i.test(task.result.url)) {
+    const link = element('a', 'btn btn--ghost', 'Mở liên kết kết quả');
+    link.href = task.result.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; section.append(link);
+  }
+  return section;
+}
+export function createDocumentCard(document) {
+  const card = element('article', 'card document-card'); card.dataset.id = document.id;
+  const icon = element('div', 'document-card__icon'); icon.append(createIcon('file'));
+  card.append(icon, element('span', 'badge badge--info', document.category), element('h3', 'document-card__title', document.title), element('p', 'document-card__meta', document.description));
+  const actions = element('div', 'document-card__actions');
+  const link = element('a', 'btn btn--secondary btn--sm', 'Đọc tài liệu');
+  link.href = `document-detail.html?${new URLSearchParams({ id: document.id })}`;
+  actions.append(link); card.append(actions); return card;
+}
+
+export function createIcon(name, className = 'btn__icon') {
+  const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  icon.setAttribute('class', className); icon.setAttribute('aria-hidden', 'true');
+  icon.setAttribute('focusable', 'false');
+  // Presentation belongs on the instance: external <use> does not inherit the sprite root.
+  icon.setAttribute('fill', 'none'); icon.setAttribute('stroke', 'currentColor');
+  icon.setAttribute('stroke-width', '1.7'); icon.setAttribute('stroke-linecap', 'round');
+  icon.setAttribute('stroke-linejoin', 'round');
+  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  use.setAttribute('href', new URL(`../../assets/icons/sprite.svg#${name}`, import.meta.url).href);
+  icon.append(use);
+  return icon;
+}
+
+export function createAvatar(user, { size } = {}) {
+  const avatar = document.createElement('span');
+  avatar.className = `avatar${['sm', 'lg'].includes(size) ? ` avatar--${size}` : ''}`;
+  const initials = document.createElement('span');
+  initials.className = 'avatar__initials';
+  initials.textContent = (user.fullName || '').trim().split(/\s+/).slice(-2).map((part) => part[0]).join('').toUpperCase() || '?';
+  avatar.setAttribute('aria-label', user.fullName || 'Ảnh đại diện');
+  avatar.append(initials);
+  if (isSafeUrl(user.avatarUrl, { allowRelative: true })) {
+    const image = document.createElement('img');
+    image.className = 'avatar__image'; image.alt = ''; image.referrerPolicy = 'no-referrer';
+    image.addEventListener('load', () => { initials.hidden = true; image.hidden = false; });
+    image.addEventListener('error', () => { image.remove(); initials.hidden = false; }, { once: true });
+    image.hidden = true; image.src = user.avatarUrl; avatar.append(image);
+  }
+  return avatar;
+}
+
+export function createField({ name, label, type = 'text', value = '', required = false, readOnly = false, options = [], hint = '' }) {
+  const id = `field-${name}-${++fieldCounter}`;
+  const field = document.createElement('div'); field.className = 'form-field';
+  const caption = document.createElement('label'); caption.className = 'form-field__label'; caption.htmlFor = id;
+  caption.textContent = label;
+  if (required) {
+    const star = document.createElement('span'); star.className = 'form-field__required';
+    star.textContent = ' *'; star.setAttribute('aria-hidden', 'true'); caption.append(star);
+  }
+  const control = document.createElement(type === 'select' ? 'select' : type === 'textarea' ? 'textarea' : 'input');
+  if (control.tagName === 'INPUT') control.type = type;
+  if (type === 'select') {
+    for (const option of options) {
+      const item = document.createElement('option'); item.value = option.value; item.textContent = option.label; control.append(item);
+    }
+  }
+  control.className = 'form-field__control'; control.id = id; control.name = name;
+  if (type !== 'file') control.value = value ?? '';
+  control.required = required;
+  if (type === 'select') control.disabled = readOnly;
+  else control.readOnly = readOnly;
+  const error = document.createElement('p'); error.className = 'form-field__error';
+  error.id = `${id}-error`; error.dataset.errorFor = name; error.hidden = true;
+  control.setAttribute('aria-describedby', `${id}-error${hint ? ` ${id}-hint` : ''}`);
+  field.append(caption, control, error);
+  if (hint) {
+    const help = document.createElement('p'); help.className = 'form-field__hint'; help.id = `${id}-hint`; help.textContent = hint; field.append(help);
+  }
+  return field;
+}

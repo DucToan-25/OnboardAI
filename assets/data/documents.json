@@ -1,0 +1,423 @@
+[
+  {
+    "id": "doc-001",
+    "title": "Sổ tay nhân viên",
+    "category": "Hướng dẫn",
+    "description": "Tổng quan văn hóa, quy định và kênh hỗ trợ.",
+    "fileUrl": "assets/docs/employee-handbook.pdf",
+    "departmentId": null,
+    "targetRole": "all",
+    "status": "active",
+    "createdBy": "user-004",
+    "createdAt": "2026-09-15",
+    "updatedAt": "2026-10-25",
+    "knowledge": [
+      {
+        "id": "policy-onboarding-process",
+        "topic": "Quy trình hội nhập",
+        "title": "Các bước bắt đầu hành trình hội nhập",
+        "content": "Nhân sự mới cần xác nhận mentor và đầu mối HR, mở hành trình onboarding, xem nhiệm vụ được giao, đọc tài liệu liên quan và tham gia check-in để cập nhật tiến độ trung thực.",
+        "keywords": ["quy trình hội nhập", "onboarding", "bắt đầu hội nhập", "ngày đầu"],
+        "faqs": [
+          {
+            "question": "Tôi nên bắt đầu onboarding từ đâu?",
+            "answer": "Hãy xác nhận mentor và HR, sau đó mở hành trình, xem nhiệm vụ và tài liệu được giao trong hệ thống."
+          }
+        ],
+        "sourceDocumentId": "doc-001",
+        "departmentId": null,
+        "targetRole": "all",
+        "status": "demo",
+        "updatedAt": "2026-10-25"
+      },
+      {
+        "id": "policy-onboarding-tasks",
+        "topic": "Nhiệm vụ onboarding",
+        "title": "Theo dõi nhiệm vụ trong thời gian hội nhập",
+        "content": "Checklist hiển thị công việc, thứ tự ưu tiên, hạn hoàn thành và tiêu chí hoàn thành. Nhân sự chỉ xác nhận hoàn thành khi có kết quả hoặc bằng chứng phù hợp và cần báo vướng mắc trong buổi check-in.",
+        "keywords": ["nhiệm vụ onboarding", "checklist", "công việc hội nhập", "hoàn thành nhiệm vụ"],
+        "faqs": [
+          {
+            "question": "Tôi theo dõi nhiệm vụ onboarding ở đâu?",
+            "answer": "Theo dõi trong checklist của hành trình hội nhập và cập nhật đúng trạng thái thực tế."
+          }
+        ],
+        "sourceDocumentId": "doc-001",
+        "departmentId": null,
+        "targetRole": "all",
+        "status": "demo",
+        "updatedAt": "2026-10-25"
+      },
+      {
+        "id": "policy-probation-gap",
+        "topic": "Chính sách thử việc",
+        "title": "Thông tin thử việc cần HR xác nhận",
+        "content": "Nguồn demo hiện không xác nhận thời hạn, quyền lợi hoặc tiêu chí thử việc. Nhân sự cần hỏi HR về chính sách đang có hiệu lực trước khi áp dụng.",
+        "keywords": ["thử việc", "thời gian thử việc", "quyền lợi thử việc"],
+        "faqs": [
+          {
+            "question": "Thời gian thử việc là bao lâu?",
+            "answer": "Nguồn nội bộ demo chưa có con số được xác nhận; hãy liên hệ HR."
+          }
+        ],
+        "sourceDocumentId": "doc-001",
+        "departmentId": null,
+        "targetRole": "all",
+        "status": "needsConfirmation",
+        "updatedAt": "2026-10-25"
+      },
+      {
+        "id": "policy-working-hours-gap",
+        "topic": "Giờ làm việc và chấm công",
+        "title": "Lịch làm việc cần HR xác nhận",
+        "content": "Nguồn demo hiện không quy định giờ vào, giờ ra hoặc cách chấm công cụ thể. Lịch áp dụng có thể phụ thuộc đơn vị và cần được HR xác nhận.",
+        "keywords": ["giờ làm việc", "giờ vào", "giờ ra", "lịch làm", "chấm công"],
+        "faqs": [
+          {
+            "question": "Giờ làm việc của công ty là mấy giờ?",
+            "answer": "Nguồn nội bộ demo chưa xác nhận khung giờ cụ thể; hãy hỏi HR về lịch áp dụng."
+          }
+        ],
+        "sourceDocumentId": "doc-001",
+        "departmentId": null,
+        "targetRole": "all",
+        "status": "needsConfirmation",
+        "updatedAt": "2026-10-25"
+      },
+      {
+        "id": "policy-hr-support",
+        "topic": "Quy trình xin hỗ trợ HR",
+        "title": "Chọn đúng đầu mối hỗ trợ",
+        "content": "Mentor hỗ trợ vấn đề nghiệp vụ và tiến độ công việc; HR hỗ trợ hồ sơ và chính sách. Khi hỏi cần nêu rõ ngữ cảnh và nội dung đang vướng.",
+        "keywords": ["hỗ trợ HR", "liên hệ HR", "hỏi mentor", "gặp vướng mắc"],
+        "faqs": [
+          {
+            "question": "Tôi nên hỏi mentor hay HR?",
+            "answer": "Hỏi mentor về nghiệp vụ; hỏi HR về hồ sơ và chính sách."
+          }
+        ],
+        "sourceDocumentId": "doc-001",
+        "departmentId": null,
+        "targetRole": "all",
+        "status": "demo",
+        "updatedAt": "2026-10-25"
+      },
+      {
+        "id": "policy-document-use",
+        "topic": "Quy định sử dụng tài liệu",
+        "title": "Sử dụng tài liệu nội bộ đúng phạm vi",
+        "content": "Chỉ đọc tài liệu được cấp quyền, không đăng tải tài liệu nội bộ lên nguồn công khai khi chưa được phép và báo người quản lý nội dung khi tài liệu thiếu hoặc hết hiệu lực.",
+        "keywords": ["sử dụng tài liệu", "chia sẻ tài liệu", "tài liệu nội bộ", "quyền đọc tài liệu"],
+        "faqs": [
+          {
+            "question": "Tôi có thể chia sẻ tài liệu nội bộ ra ngoài không?",
+            "answer": "Không chia sẻ công khai khi chưa được người có thẩm quyền cho phép."
+          }
+        ],
+        "sourceDocumentId": "doc-001",
+        "departmentId": null,
+        "targetRole": "all",
+        "status": "demo",
+        "updatedAt": "2026-10-25"
+      },
+      {
+        "id": "policy-tools-accounts-gap",
+        "topic": "Công cụ và tài khoản làm việc",
+        "title": "Danh sách công cụ cần được cấp theo vị trí",
+        "content": "Nguồn demo chưa xác nhận danh sách tài khoản hoặc công cụ bắt buộc cho từng vị trí. Nhân sự cần kiểm tra checklist được giao và hỏi mentor hoặc HR khi thiếu quyền truy cập.",
+        "keywords": ["công cụ làm việc", "tài khoản làm việc", "thiếu quyền truy cập", "phần mềm nội bộ"],
+        "faqs": [
+          {
+            "question": "Tôi cần những tài khoản nào?",
+            "answer": "Nguồn demo chưa có danh sách được phê duyệt; hãy đối chiếu checklist và hỏi mentor hoặc HR."
+          }
+        ],
+        "sourceDocumentId": "doc-001",
+        "departmentId": null,
+        "targetRole": "all",
+        "status": "needsConfirmation",
+        "updatedAt": "2026-10-25"
+      },
+      {
+        "id": "policy-company-conduct",
+        "topic": "Nội quy và thông tin công ty",
+        "title": "Nguyên tắc phối hợp trong dữ liệu demo",
+        "content": "OnboardAI nhấn mạnh tôn trọng, hợp tác, học hỏi, đổi mới, trách nhiệm, minh bạch và bảo mật. Nhân sự cần giao tiếp lịch sự, tôn trọng thời gian và phản hồi có ngữ cảnh.",
+        "keywords": ["nội quy công ty", "văn hóa", "giá trị cốt lõi", "nguyên tắc làm việc"],
+        "faqs": [
+          {
+            "question": "Giá trị nền tảng của OnboardAI là gì?",
+            "answer": "Tôn trọng, hợp tác, học hỏi, đổi mới, trách nhiệm, minh bạch và bảo mật trong dữ liệu minh họa."
+          }
+        ],
+        "sourceDocumentId": "doc-001",
+        "departmentId": null,
+        "targetRole": "all",
+        "status": "demo",
+        "updatedAt": "2026-10-25"
+      }
+    ]
+  },
+  {
+    "id": "doc-002",
+    "title": "Quy trình phát triển phần mềm",
+    "category": "Quy trình",
+    "description": "Các bước làm việc và quy tắc review mã nguồn.",
+    "fileUrl": "assets/docs/engineering-workflow.pdf",
+    "departmentId": "dept-engineering",
+    "targetRole": "all",
+    "status": "active",
+    "createdBy": "user-003",
+    "createdAt": "2026-09-18",
+    "updatedAt": "2026-10-25",
+    "knowledge": [
+      {
+        "id": "policy-engineering-workflow",
+        "topic": "Quy trình phát triển phần mềm",
+        "title": "Làm việc với Git và code review",
+        "content": "Nhóm kỹ thuật tiếp nhận nhiệm vụ có mô tả và tiêu chí nghiệm thu, làm rõ phạm vi, triển khai trên nhánh phù hợp, tự kiểm tra và gửi thay đổi để được review trước khi phát hành.",
+        "keywords": ["git", "github", "pull request", "code review", "review code", "quy trình phát triển"],
+        "faqs": [
+          {
+            "question": "Quy trình review code được thực hiện thế nào?",
+            "answer": "Hoàn thiện thay đổi và tự kiểm tra trước khi gửi pull request để thành viên khác review theo tiêu chí nghiệm thu."
+          }
+        ],
+        "sourceDocumentId": "doc-002",
+        "departmentId": "dept-engineering",
+        "targetRole": "all",
+        "status": "demo",
+        "updatedAt": "2026-10-25"
+      }
+    ]
+  },
+  {
+    "id": "doc-003",
+    "title": "Hướng dẫn sử dụng công cụ nội bộ",
+    "category": "Công cụ",
+    "description": "Tài liệu làm quen với các công cụ của công ty.",
+    "fileUrl": "assets/docs/internal-tools.pdf",
+    "departmentId": "dept-people",
+    "targetRole": "all",
+    "status": "draft",
+    "createdBy": "user-004",
+    "createdAt": "2026-10-01",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "doc-004",
+    "title": "Checklist hội nhập kỹ thuật",
+    "category": "Chính sách",
+    "description": "Tài liệu checklist hội nhập kỹ thuật phục vụ onboarding và vận hành.",
+    "fileUrl": "assets/docs/doc-004.pdf",
+    "departmentId": "dept-engineering",
+    "targetRole": "newhire",
+    "status": "draft",
+    "createdBy": "user-003",
+    "createdAt": "2026-08-26",
+    "updatedAt": "2026-09-25"
+  },
+  {
+    "id": "doc-005",
+    "title": "Hướng dẫn check-in mentor",
+    "category": "Hướng dẫn",
+    "description": "Tài liệu hướng dẫn check-in mentor phục vụ onboarding và vận hành.",
+    "fileUrl": "assets/docs/doc-005.pdf",
+    "departmentId": null,
+    "targetRole": "all",
+    "status": "active",
+    "createdBy": "user-004",
+    "createdAt": "2026-08-27",
+    "updatedAt": "2026-10-25",
+    "knowledge": [
+      {
+        "id": "policy-mentor-checkin",
+        "topic": "Quy trình làm việc với mentor",
+        "title": "Chuẩn bị và thực hiện check-in",
+        "content": "Trước buổi check-in cần xem nhiệm vụ và tiến độ; trong buổi trao đổi cần nêu việc đã làm, vướng mắc, hỗ trợ cần thiết và hành động tiếp theo. Chỉ trạng thái completed mới được xem là buổi check-in đã hoàn thành.",
+        "keywords": ["check-in mentor", "làm việc với mentor", "gặp mentor", "buổi check-in"],
+        "faqs": [
+          {
+            "question": "Tôi cần chuẩn bị gì cho buổi check-in?",
+            "answer": "Chuẩn bị tiến độ nhiệm vụ, vướng mắc, hỗ trợ cần thiết và hành động tiếp theo."
+          }
+        ],
+        "sourceDocumentId": "doc-005",
+        "departmentId": null,
+        "targetRole": "all",
+        "status": "demo",
+        "updatedAt": "2026-10-25"
+      }
+    ]
+  },
+  {
+    "id": "doc-006",
+    "title": "Mẫu mục tiêu 30 ngày",
+    "category": "Biểu mẫu",
+    "description": "Tài liệu mẫu mục tiêu 30 ngày phục vụ onboarding và vận hành.",
+    "fileUrl": "assets/docs/doc-006.pdf",
+    "departmentId": null,
+    "targetRole": "all",
+    "status": "active",
+    "createdBy": "user-005",
+    "createdAt": "2026-08-28",
+    "updatedAt": "2026-09-27"
+  },
+  {
+    "id": "doc-007",
+    "title": "Quy định bảo mật",
+    "category": "Hướng dẫn",
+    "description": "Tài liệu quy định bảo mật phục vụ onboarding và vận hành.",
+    "fileUrl": "assets/docs/doc-007.pdf",
+    "departmentId": "dept-ops",
+    "targetRole": "mentor",
+    "status": "active",
+    "createdBy": "user-003",
+    "createdAt": "2026-08-29",
+    "updatedAt": "2026-09-28"
+  },
+  {
+    "id": "doc-008",
+    "title": "Hướng dẫn Git và code review",
+    "category": "Quy trình",
+    "description": "Tài liệu hướng dẫn git và code review phục vụ onboarding và vận hành.",
+    "fileUrl": "assets/docs/doc-008.pdf",
+    "departmentId": "dept-engineering",
+    "targetRole": "newhire",
+    "status": "draft",
+    "createdBy": "user-004",
+    "createdAt": "2026-08-30",
+    "updatedAt": "2026-09-29"
+  },
+  {
+    "id": "doc-009",
+    "title": "Quy trình nghỉ phép",
+    "category": "Chính sách",
+    "description": "Tài liệu quy trình nghỉ phép phục vụ onboarding và vận hành.",
+    "fileUrl": "assets/docs/doc-009.pdf",
+    "departmentId": null,
+    "targetRole": "all",
+    "status": "active",
+    "createdBy": "user-005",
+    "createdAt": "2026-08-31",
+    "updatedAt": "2026-10-25",
+    "knowledge": [
+      {
+        "id": "policy-leave-process",
+        "topic": "Nghỉ phép và xin nghỉ",
+        "title": "Quy trình gửi yêu cầu nghỉ phép",
+        "content": "Nhân sự cần kiểm tra chính sách nghỉ đang có hiệu lực, dự kiến thời gian nghỉ, rà soát công việc đến hạn, gửi yêu cầu qua kênh được quy định, lập kế hoạch bàn giao và theo dõi trạng thái duyệt. Nguồn demo không xác nhận số ngày phép được hưởng.",
+        "keywords": ["nghỉ phép", "xin nghỉ", "phép năm", "nghỉ ốm", "ngày nghỉ phép"],
+        "faqs": [
+          {
+            "question": "Ngày nghỉ phép của công ty được áp dụng như thế nào?",
+            "answer": "Nguồn demo mô tả quy trình gửi yêu cầu và bàn giao nhưng không xác nhận số ngày phép; cần HR xác nhận chính sách đang có hiệu lực."
+          }
+        ],
+        "sourceDocumentId": "doc-009",
+        "departmentId": null,
+        "targetRole": "all",
+        "status": "needsConfirmation",
+        "updatedAt": "2026-10-25"
+      }
+    ]
+  },
+  {
+    "id": "doc-010",
+    "title": "Onboarding Marketing",
+    "category": "Chính sách",
+    "description": "Tài liệu onboarding marketing phục vụ onboarding và vận hành.",
+    "fileUrl": "assets/docs/doc-010.pdf",
+    "departmentId": "dept-marketing",
+    "targetRole": "all",
+    "status": "active",
+    "createdBy": "user-003",
+    "createdAt": "2026-09-01",
+    "updatedAt": "2026-10-25",
+    "knowledge": [
+      {
+        "id": "policy-marketing-onboarding",
+        "topic": "Onboarding Marketing",
+        "title": "Các bước làm quen công việc Marketing",
+        "content": "Nhân sự Marketing cần tìm hiểu định vị thương hiệu, lịch nội dung, cấu trúc brief, luồng review trước xuất bản và cách đánh giá hiệu quả theo mục tiêu chiến dịch.",
+        "keywords": ["onboarding marketing", "marketing", "brief", "lịch nội dung", "review nội dung"],
+        "faqs": [
+          {
+            "question": "Nhân sự Marketing cần bắt đầu từ đâu?",
+            "answer": "Bắt đầu từ định vị thương hiệu, lịch nội dung, cấu trúc brief và luồng duyệt trước xuất bản."
+          }
+        ],
+        "sourceDocumentId": "doc-010",
+        "departmentId": "dept-marketing",
+        "targetRole": "all",
+        "status": "demo",
+        "updatedAt": "2026-10-25"
+      }
+    ]
+  },
+  {
+    "id": "doc-011",
+    "title": "Brand guideline",
+    "category": "Biểu mẫu",
+    "description": "Tài liệu brand guideline phục vụ onboarding và vận hành.",
+    "fileUrl": "assets/docs/doc-011.pdf",
+    "departmentId": "dept-marketing",
+    "targetRole": "all",
+    "status": "active",
+    "createdBy": "user-004",
+    "createdAt": "2026-09-02",
+    "updatedAt": "2026-09-22"
+  },
+  {
+    "id": "doc-012",
+    "title": "Hướng dẫn Jira",
+    "category": "Tài liệu",
+    "description": "Tài liệu hướng dẫn jira phục vụ onboarding và vận hành.",
+    "fileUrl": "assets/docs/doc-012.pdf",
+    "departmentId": null,
+    "targetRole": "newhire",
+    "status": "draft",
+    "createdBy": "user-005",
+    "createdAt": "2026-09-03",
+    "updatedAt": "2026-09-23"
+  },
+  {
+    "id": "doc-013",
+    "title": "Hướng dẫn Slack",
+    "category": "Hướng dẫn",
+    "description": "Tài liệu hướng dẫn slack phục vụ onboarding và vận hành.",
+    "fileUrl": "assets/docs/doc-013.pdf",
+    "departmentId": "dept-engineering",
+    "targetRole": "all",
+    "status": "active",
+    "createdBy": "user-003",
+    "createdAt": "2026-09-04",
+    "updatedAt": "2026-09-24"
+  },
+  {
+    "id": "doc-014",
+    "title": "Quy trình UI/UX",
+    "category": "Quy trình",
+    "description": "Tài liệu quy trình ui/ux phục vụ onboarding và vận hành.",
+    "fileUrl": "assets/docs/doc-014.pdf",
+    "departmentId": "dept-product",
+    "targetRole": "all",
+    "status": "active",
+    "createdBy": "user-004",
+    "createdAt": "2026-09-05",
+    "updatedAt": "2026-09-25"
+  },
+  {
+    "id": "doc-015",
+    "title": "Checklist an toàn tài khoản",
+    "category": "Công cụ",
+    "description": "Tài liệu checklist an toàn tài khoản phục vụ onboarding và vận hành.",
+    "fileUrl": "assets/docs/doc-015.pdf",
+    "departmentId": null,
+    "targetRole": "all",
+    "status": "active",
+    "createdBy": "user-005",
+    "createdAt": "2026-09-06",
+    "updatedAt": "2026-09-26"
+  }
+]

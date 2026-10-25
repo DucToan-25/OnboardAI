@@ -1,0 +1,123 @@
+[
+  {
+    "id": "ai-checklist-001",
+    "featureType": "checklistPersonalizer",
+    "inputKeywords": "engineer; kỹ thuật",
+    "resultTitle": "Checklist cho lập trình viên",
+    "resultContent": "[\"Cài đặt môi trường làm việc\",\"Đọc quy trình phát triển phần mềm\",\"Gặp mentor kỹ thuật\"]",
+    "reason": "Checklist được chọn theo vị trí và phòng ban.",
+    "sourceDocumentId": "doc-002",
+    "confidence": 0.88,
+    "status": "active"
+  },
+  {
+    "id": "ai-checklist-002",
+    "featureType": "checklistPersonalizer",
+    "inputKeywords": "frontend; giao diện; lập trình viên frontend",
+    "resultTitle": "Checklist hội nhập Frontend",
+    "resultContent": "[\"Cập nhật hồ sơ nhân sự\", \"Đọc sổ tay nhân viên\", \"Kiểm tra công cụ phát triển\", \"Tìm hiểu quy trình review mã nguồn\", \"Hoàn thành tự đánh giá tuần đầu\"]",
+    "reason": "Các bước thiết lập và tài liệu kỹ thuật phù hợp vị trí frontend.",
+    "sourceDocumentId": "doc-002",
+    "confidence": 0.91,
+    "status": "active"
+  },
+  {
+    "id": "ai-checklist-003",
+    "featureType": "checklistPersonalizer",
+    "inputKeywords": "backend; api; lập trình viên backend",
+    "resultTitle": "Checklist hội nhập Backend",
+    "resultContent": "[\"Hoàn thiện hồ sơ cá nhân\", \"Kích hoạt tài khoản công cụ\", \"Đọc quy trình phát triển phần mềm\", \"Tìm hiểu cách kiểm tra thay đổi mã nguồn\", \"Tổng hợp câu hỏi tuần đầu\"]",
+    "reason": "Gợi ý checklist kỹ thuật từ từ khóa backend và hành trình phòng Công nghệ.",
+    "sourceDocumentId": "doc-002",
+    "confidence": 0.92,
+    "status": "active"
+  },
+  {
+    "id": "ai-checklist-004",
+    "featureType": "checklistPersonalizer",
+    "inputKeywords": "product; sản phẩm; phân tích sản phẩm",
+    "resultTitle": "Checklist hội nhập Sản phẩm",
+    "resultContent": "[\"Xác nhận hồ sơ và thông tin liên hệ\", \"Đọc sổ tay nhân viên\", \"Làm quen quy trình trao đổi nội bộ\", \"Tìm hiểu mục tiêu và nhiệm vụ bộ phận\", \"Gửi phản hồi sau tuần đầu\"]",
+    "reason": "Gợi ý bước hội nhập chung khi không có tài liệu riêng cho bộ phận Sản phẩm.",
+    "sourceDocumentId": "doc-001",
+    "confidence": 0.87,
+    "status": "active"
+  },
+  {
+    "id": "ai-checklist-005",
+    "featureType": "checklistPersonalizer",
+    "inputKeywords": "tester; qa; kiểm thử phần mềm",
+    "resultTitle": "Checklist hội nhập Kiểm thử",
+    "resultContent": "[\"Hoàn thiện thông tin cá nhân\", \"Kiểm tra quyền truy cập công cụ\", \"Đọc hướng dẫn quy trình phát triển\", \"Tìm hiểu cách báo cáo lỗi\", \"Gửi đánh giá kết quả học việc\"]",
+    "reason": "Dùng lộ trình kỹ thuật và các tác vụ phù hợp vai trò kiểm thử.",
+    "sourceDocumentId": "doc-002",
+    "confidence": 0.88,
+    "status": "active"
+  },
+  {
+    "id": "ai-checklist-006",
+    "featureType": "checklistPersonalizer",
+    "inputKeywords": "nhân viên mới; tổng quát; chưa rõ vị trí",
+    "resultTitle": "Checklist hội nhập cơ bản",
+    "resultContent": "[\"Hoàn thiện hồ sơ nhân sự\", \"Đọc sổ tay nhân viên\", \"Kiểm tra tài khoản truy cập\", \"Tìm hiểu quy trình làm việc\", \"Gửi báo cáo tuần đầu\"]",
+    "reason": "Áp dụng checklist cơ bản khi thông tin vị trí chưa đầy đủ.",
+    "sourceDocumentId": "doc-001",
+    "confidence": 0.84,
+    "status": "active"
+  },
+  {
+    "id": "ai-checklist-007",
+    "featureType": "checklistPersonalizer",
+    "inputKeywords": "lap trinh vien backend; lập trình viên backend; checklist lập trình viên backend",
+    "resultTitle": "Checklist theo vai trò Lập trình viên Backend",
+    "resultContent": "[\"Xác nhận hồ sơ và tài khoản làm việc\", \"Đọc hướng dẫn bảo mật và quy trình kỹ thuật\", \"Tìm hiểu nhiệm vụ lập trình viên backend\", \"Thực hành công cụ cùng mentor\", \"Gửi kết quả kiểm thử hoặc thay đổi mẫu\", \"Tham gia đánh giá hội nhập 30 ngày\"]",
+    "reason": "Ánh xạ vị trí thuộc dept-engineering sang 6 bước hội nhập.",
+    "sourceDocumentId": "doc-002",
+    "confidence": 0.8,
+    "status": "active"
+  },
+  {
+    "id": "ai-checklist-008",
+    "featureType": "checklistPersonalizer",
+    "inputKeywords": "lap trinh vien frontend; lập trình viên frontend; checklist lập trình viên frontend",
+    "resultTitle": "Checklist theo vai trò Lập trình viên Frontend",
+    "resultContent": "[\"Xác nhận hồ sơ và tài khoản làm việc\", \"Đọc hướng dẫn bảo mật và quy trình kỹ thuật\", \"Tìm hiểu nhiệm vụ lập trình viên frontend\", \"Thực hành công cụ cùng mentor\", \"Gửi kết quả kiểm thử hoặc thay đổi mẫu\", \"Tham gia đánh giá hội nhập 30 ngày\"]",
+    "reason": "Ánh xạ vị trí thuộc dept-engineering sang 6 bước hội nhập.",
+    "sourceDocumentId": "doc-002",
+    "confidence": 0.81,
+    "status": "active"
+  },
+  {
+    "id": "ai-checklist-009",
+    "featureType": "checklistPersonalizer",
+    "inputKeywords": "ky su kiem thu phan mem; kỹ sư kiểm thử phần mềm; checklist kỹ sư kiểm thử phần mềm",
+    "resultTitle": "Checklist theo vai trò Kỹ sư kiểm thử phần mềm",
+    "resultContent": "[\"Xác nhận hồ sơ và tài khoản làm việc\", \"Đọc hướng dẫn bảo mật và quy trình kỹ thuật\", \"Tìm hiểu nhiệm vụ kỹ sư kiểm thử phần mềm\", \"Thực hành công cụ cùng mentor\", \"Gửi kết quả kiểm thử hoặc thay đổi mẫu\", \"Tham gia đánh giá hội nhập 30 ngày\"]",
+    "reason": "Ánh xạ vị trí thuộc dept-engineering sang 6 bước hội nhập.",
+    "sourceDocumentId": "doc-002",
+    "confidence": 0.82,
+    "status": "active"
+  },
+  {
+    "id": "ai-checklist-010",
+    "featureType": "checklistPersonalizer",
+    "inputKeywords": "ky su du lieu; kỹ sư dữ liệu; checklist kỹ sư dữ liệu",
+    "resultTitle": "Checklist theo vai trò Kỹ sư dữ liệu",
+    "resultContent": "[\"Xác nhận hồ sơ và tài khoản làm việc\", \"Đọc hướng dẫn bảo mật và quy trình kỹ thuật\", \"Tìm hiểu nhiệm vụ kỹ sư dữ liệu\", \"Thực hành công cụ cùng mentor\", \"Gửi kết quả kiểm thử hoặc thay đổi mẫu\", \"Tham gia đánh giá hội nhập 30 ngày\"]",
+    "reason": "Ánh xạ vị trí thuộc dept-engineering sang 6 bước hội nhập.",
+    "sourceDocumentId": "doc-002",
+    "confidence": 0.83,
+    "status": "active"
+  },
+  {
+    "id": "ai-fallback-001",
+    "featureType": "fallback",
+    "inputKeywords": "không tìm thấy; thiếu dữ liệu",
+    "resultTitle": "Chưa đủ dữ liệu",
+    "resultContent": "AI mô phỏng chưa tìm được thông tin phù hợp. Hãy thử cách hỏi khác hoặc liên hệ HR.",
+    "reason": "Không có câu trả lời mẫu khớp với nội dung nhập.",
+    "sourceDocumentId": null,
+    "confidence": 0.35,
+    "status": "active"
+  }
+]

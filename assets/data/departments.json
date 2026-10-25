@@ -1,0 +1,119 @@
+[
+  {
+    "id": "dept-engineering",
+    "name": "Công nghệ",
+    "description": "Phát triển và vận hành sản phẩm công nghệ.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2024-01-10",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-product",
+    "name": "Sản phẩm",
+    "description": "Nghiên cứu nhu cầu và định hướng sản phẩm.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2024-01-10",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-people",
+    "name": "Nhân sự",
+    "description": "Tuyển dụng, hội nhập và phát triển nhân viên.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2024-01-10",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-marketing",
+    "name": "Marketing",
+    "description": "Truyền thông thương hiệu và content.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-03-10",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-finance",
+    "name": "Tài chính",
+    "description": "Quản lý ngân sách và báo cáo tài chính.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-03-20",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-sales",
+    "name": "Kinh doanh",
+    "description": "Phát triển khách hàng và chăm sóc hợp đồng.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-03-30",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-ops",
+    "name": "Vận hành",
+    "description": "Hỗ trợ vận hành nội bộ và cơ sở vật chất.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-04-09",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-design",
+    "name": "Thiết kế",
+    "description": "UI/UX và nhận diện thương hiệu sản phẩm.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-04-19",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-qa",
+    "name": "Đảm bảo chất lượng",
+    "description": "Kiểm thử và đảm bảo chất lượng sản phẩm.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-04-29",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-data",
+    "name": "Dữ liệu",
+    "description": "Phân tích dữ liệu và báo cáo kinh doanh.",
+    "managerId": "user-003",
+    "status": "active",
+    "createdAt": "2025-05-09",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-support",
+    "name": "Chăm sóc khách hàng",
+    "description": "Hỗ trợ khách hàng và xử lý phản hồi.",
+    "managerId": "user-004",
+    "status": "active",
+    "createdAt": "2025-05-19",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-legal",
+    "name": "Pháp chế",
+    "description": "Tư vấn pháp lý và tuân thủ quy định.",
+    "managerId": "user-005",
+    "status": "active",
+    "createdAt": "2025-05-29",
+    "updatedAt": "2026-10-01"
+  },
+  {
+    "id": "dept-extra-020",
+    "name": "Mobile",
+    "description": "Đơn vị mobile hỗ trợ vận hành và phát triển tổ chức.",
+    "managerId": "user-005",
+    "status": "inactive",
+    "createdAt": "2025-09-16",
+    "updatedAt": "2026-09-15"
+  }
+]

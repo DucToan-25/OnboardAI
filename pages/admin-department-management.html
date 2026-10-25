@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý phòng ban | OnboardAI</title>
+    <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages/admin-department-management.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+  </head>
+  <body class="page page--admin-department-management" data-page="admin-department-management">
+    <div class="app-shell is-collapsed">
+      <header class="app-header" id="app-header">
+      </header>
+      <aside class="app-sidebar" id="app-sidebar">
+      </aside>
+      <main class="app-main" id="main-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-header__title">Quản lý phòng ban</h1>
+            <p class="page-header__description">Danh sách phòng ban dùng chung cho tài khoản, hành trình và tài liệu.</p>
+          </div>
+          <div class="page-header__actions">
+            <button class="btn btn--primary" type="button" data-action="open-department-form">Thêm phòng ban</button>
+          </div>
+        </div>
+        <div class="page-body">
+          <section class="card" aria-label="Danh sách phòng ban">
+            <form class="toolbar" data-region="department-filters" role="search">
+              <div class="toolbar__search form-field">
+                <label class="form-field__label" for="department-search">Tên phòng ban</label>
+                <input class="form-field__control" id="department-search" name="search" type="search" placeholder="Nhập tên phòng ban…" value="">
+              </div>
+              <div class="toolbar__filters form-field">
+                <label class="form-field__label" for="department-status">Trạng thái</label>
+                <select class="form-field__control" id="department-status" name="status">
+                  <option value="" selected="">Tất cả</option>
+                  <option value="active">Hoạt động</option>
+                  <option value="inactive">Ngừng hoạt động</option>
+                </select>
+              </div>
+            </form>
+            <div data-region="department-state" aria-live="polite" class="view-state" role="status" aria-busy="false" hidden="">
+            </div>
+            <div class="table-wrap" data-region="department-table">
+              <table class="table">
+                <caption class="sr-only">Danh sách phòng ban</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Phòng ban</th>
+                    <th scope="col">Mô tả</th>
+                    <th scope="col" class="table__cell--numeric">Tài khoản</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody data-region="department-rows"></tbody>
+              </table>
+            </div>
+            <p class="form-field__hint admin-departments__summary" data-region="department-summary" aria-live="polite"></p>
+          </section>
+        </div>
+      </main>
+    </div>
+    <template data-template="open-department-form" data-title="Phòng ban"><form class="form" novalidate><div class="form__grid"><div class="form-field"><label class="form-field__label" for="edit-name">Tên phòng ban</label><input class="form-field__control" id="edit-name" name="name" type="text" value="" required  ><p class="form-field__error" data-error-for="name" hidden></p></div><div class="form-field"><label class="form-field__label" for="edit-description">Mô tả</label><textarea class="form-field__control" id="edit-description" name="description" ></textarea><p class="form-field__error" data-error-for="description" hidden></p></div><div class="form-field"><label class="form-field__label" for="edit-managerId">Người quản lý</label><select class="form-field__control" id="edit-managerId" name="managerId" ></select><p class="form-field__error" data-error-for="managerId" hidden></p></div><div class="form-field"><label class="form-field__label" for="edit-status">Trạng thái</label><select class="form-field__control" id="edit-status" name="status" ><option value="active">Hoạt động</option><option value="inactive">Ngừng hoạt động</option></select><p class="form-field__error" data-error-for="status" hidden></p></div></div><div class="form__actions"><button type="button" class="btn btn--secondary">Hủy</button><button type="submit" class="btn btn--primary">Lưu</button></div></form></template>
+    <div id="modal-root">
+    </div>
+    <div id="toast-root" aria-live="polite">
+    </div>
+    <script type="module" src="../js/main.js">
+    </script>
+  </body>
+</html>

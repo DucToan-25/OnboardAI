@@ -1,0 +1,19 @@
+.page--newhire-onboarding-dashboard .nh-dashboard__label {
+  font-size: var(--font-size-small);
+  font-weight: 600;
+}
+.page--newhire-onboarding-dashboard .nh-dashboard__mentor {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  overflow-wrap: anywhere;
+}
+.page--newhire-onboarding-dashboard .nh-dashboard__mentor-details {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.page--newhire-onboarding-dashboard .nh-dashboard__contact {
+  display: grid;
+  gap: var(--space-4);
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "id": "hire-001",
+    "userId": "user-001",
+    "departmentId": "dept-product",
+    "jobTitle": "Nhân viên sản phẩm",
+    "mentorId": "user-003",
+    "journeyId": "journeys-001",
+    "startDate": "2026-10-01",
+    "status": "inProgress",
+    "notes": "Đang trong tuần đầu tiên."
+  },
+  {
+    "id": "hire-002",
+    "userId": "user-002",
+    "departmentId": "dept-engineering",
+    "jobTitle": "Lập trình viên",
+    "mentorId": "user-003",
+    "journeyId": "journeys-002",
+    "startDate": "2026-10-02",
+    "status": "inProgress",
+    "notes": "Ưu tiên làm quen quy trình phát triển."
+  },
+  {
+    "id": "hire-003",
+    "userId": "user-006",
+    "departmentId": "dept-engineering",
+    "jobTitle": "Lập trình viên frontend",
+    "mentorId": "user-003",
+    "journeyId": "journeys-002",
+    "startDate": "2026-10-03",
+    "status": "inProgress",
+    "notes": "Tuần thứ hai; đã hoàn tất bước thiết lập, đang làm quen quy trình nhóm."
+  },
+  {
+    "id": "hire-004",
+    "userId": "user-007",
+    "departmentId": "dept-product",
+    "jobTitle": "Chuyên viên phân tích sản phẩm",
+    "mentorId": "user-003",
+    "journeyId": "journeys-001",
+    "startDate": "2026-10-05",
+    "status": "inProgress",
+    "notes": "Đang tìm hiểu tài liệu sản phẩm và hoạt động phối hợp liên phòng ban."
+  },
+  {
+    "id": "hire-005",
+    "userId": "user-008",
+    "departmentId": "dept-engineering",
+    "jobTitle": "Lập trình viên backend",
+    "mentorId": "user-003",
+    "journeyId": "journeys-002",
+    "startDate": "2026-10-07",
+    "status": "inProgress",
+    "notes": "Đang thực hành quy trình phát triển và kiểm tra quyền truy cập công cụ."
+  },
+  {
+    "id": "hire-006",
+    "userId": "user-009",
+    "departmentId": "dept-product",
+    "jobTitle": "Chuyên viên nghiên cứu người dùng",
+    "mentorId": "user-003",
+    "journeyId": "journeys-001",
+    "startDate": "2026-10-09",
+    "status": "inProgress",
+    "notes": "Đã nhận tài khoản; ưu tiên tìm hiểu vai trò và mục tiêu tuần đầu."
+  },
+  {
+    "id": "hire-007",
+    "userId": "user-010",
+    "departmentId": "dept-engineering",
+    "jobTitle": "Nhân viên kiểm thử phần mềm",
+    "mentorId": "user-003",
+    "journeyId": "journeys-002",
+    "startDate": "2026-10-12",
+    "status": "inProgress",
+    "notes": "Vừa bắt đầu; đang hoàn thiện thông tin và kiểm tra tài khoản."
+  },
+  {
+    "id": "hire-008",
+    "userId": "user-011",
+    "departmentId": "dept-product",
+    "jobTitle": "Nhân viên vận hành sản phẩm",
+    "mentorId": "user-003",
+    "journeyId": "journeys-001",
+    "startDate": "2026-10-15",
+    "status": "notStarted",
+    "notes": "Dự kiến nhận việc ngày 15/10; đã gửi lời mời và chuẩn bị checklist."
+  },
+  {
+    "id": "hire-009",
+    "userId": "user-038",
+    "departmentId": "dept-engineering",
+    "jobTitle": "Lập trình viên Backend",
+    "mentorId": "user-013",
+    "journeyId": "journeys-002",
+    "startDate": "2026-09-21",
+    "status": "inProgress",
+    "notes": "Đang hội nhập giai đoạn tăng tốc; theo dõi kết quả nhiệm vụ thực tế, chuẩn bị mốc đánh giá 30 ngày. Tích hợp API và chuẩn hóa hợp đồng dữ liệu."
+  },
+  {
+    "id": "hire-010",
+    "userId": "user-039",
+    "departmentId": "dept-engineering",
+    "jobTitle": "Kỹ sư dữ liệu",
+    "mentorId": "user-013",
+    "journeyId": "journeys-002",
+    "startDate": "2026-09-21",
+    "status": "inProgress",
+    "notes": "Đang hội nhập giai đoạn tăng tốc; theo dõi kết quả nhiệm vụ thực tế, chuẩn bị mốc đánh giá 30 ngày. Tiếp cận luồng dữ liệu và kiểm tra chất lượng."
+  },
+  {
+    "id": "hire-011",
+    "userId": "user-040",
+    "departmentId": "dept-product",
+    "jobTitle": "Chuyên viên kiểm thử trải nghiệm",
+    "mentorId": "user-023",
+    "journeyId": "journeys-001",
+    "startDate": "2026-09-21",
+    "status": "inProgress",
+    "notes": "Đang hội nhập giai đoạn tăng tốc; theo dõi kết quả nhiệm vụ thực tế, chuẩn bị mốc đánh giá 30 ngày. Rà soát luồng thao tác và khả năng sử dụng."
+  },
+  {
+    "id": "hire-068",
+    "userId": "user-097",
+    "departmentId": "dept-engineering",
+    "jobTitle": "Kỹ sư kiểm thử phần mềm",
+    "mentorId": "user-012",
+    "journeyId": "journeys-002",
+    "startDate": "2026-11-09",
+    "status": "notStarted",
+    "notes": "Dự kiến nhận việc 2026-11-09; đã gửi lời mời, chuẩn bị thiết bị và lịch gặp mentor. Nội dung ưu tiên: kiểm thử hồi quy và chuẩn hóa báo cáo lỗi."
+  }
+]

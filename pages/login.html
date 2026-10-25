@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập · OnboardAI</title>
+    <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages/login.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+  </head>
+  <body class="page page--login" data-page="login">
+    <div class="simple-layout">
+      <main class="simple-layout__content login__layout" id="main-content">
+        <section class="card" aria-labelledby="login-heading">
+          <div class="login__heading">
+            <img class="login__brand" src="../assets/images/logo.svg" alt="OnboardAI" width="152" height="32">
+            <h1 class="page-header__title" id="login-heading">Đăng nhập</h1>
+            <p class="page-header__description">Truy cập hành trình hội nhập của bạn.</p>
+            <p class="form-field__hint">Tài khoản cần được quản trị viên kích hoạt trước khi đăng nhập.</p>
+          </div>
+          <form class="form" data-region="login-form" novalidate="">
+            <div data-region="login-fields" class="form__grid">
+              <div class="form-field">
+                <label class="form-field__label" for="field-email-1">
+                  Email hoặc mã tài khoản
+                  <span class="form-field__required" aria-hidden="true">*</span>
+                </label>
+                <input type="text" class="form-field__control" id="field-email-1" name="email" required="" aria-describedby="field-email-1-error" autocomplete="username" placeholder="Nhập email hoặc mã tài khoản" value="">
+                <p class="form-field__error" id="field-email-1-error" data-error-for="email" hidden="">
+                </p>
+              </div>
+              <div class="form-field">
+                <label class="form-field__label" for="field-password-2">
+                  Mật khẩu
+                  <span class="form-field__required" aria-hidden="true">*</span>
+                </label>
+                <div class="login__password-control">
+                  <input type="password" class="form-field__control" id="field-password-2" name="password" required="" aria-describedby="field-password-2-error" autocomplete="current-password">
+                  <button class="btn btn--ghost btn--sm" type="button" data-action="toggle-password" aria-label="Hiện mật khẩu" aria-pressed="false">Hiện</button>
+                </div>
+                <p class="form-field__error" id="field-password-2-error" data-error-for="password" hidden="">
+                </p>
+              </div>
+            </div>
+            <div class="login__links">
+              <button class="btn btn--ghost btn--sm" type="button" data-action="forgot-password">Quên mật khẩu?</button>
+              <button class="btn btn--ghost btn--sm" type="button" data-action="contact-hr">Liên hệ HR</button>
+            </div>
+            <button class="btn btn--primary" type="submit" data-action="login">Đăng nhập</button>
+          </form>
+          <div data-region="login-state" aria-live="polite" class="view-state" role="status" aria-busy="false" hidden="">
+          </div>
+        </section>
+      </main>
+    </div>
+    <template data-template="forgot-password" data-title="Quên mật khẩu"><p>Bản mô phỏng chưa hỗ trợ tự đặt lại mật khẩu. Liên hệ người quản lý tài khoản để được hỗ trợ; hệ thống không gửi email xác minh.</p></template>
+    <template data-template="contact-hr" data-title="Liên hệ HR"><p>Liên hệ cán bộ HR phụ trách tiếp nhận qua kênh liên lạc đã được công ty cung cấp. Chức năng gửi yêu cầu hỗ trợ chưa được kết nối.</p></template>
+    <div id="modal-root">
+    </div>
+    <div id="toast-root" aria-live="polite">
+    </div>
+    <script type="module" src="../js/main.js">
+    </script>
+  </body>
+</html>

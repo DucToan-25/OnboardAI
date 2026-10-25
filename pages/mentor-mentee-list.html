@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Danh sách mentee | OnboardAI</title>
+    <link rel="icon" href="../assets/images/logo-mark.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+  </head>
+  <body class="page page--mentor-mentee-list" data-page="mentor-mentee-list">
+    <div class="app-shell is-collapsed">
+      <header class="app-header" id="app-header">
+      </header>
+      <aside class="app-sidebar" id="app-sidebar">
+      </aside>
+      <main class="app-main" id="main-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-header__title">Danh sách mentee</h1>
+            <p class="page-header__description">Theo dõi nhân sự bạn đang hướng dẫn.</p>
+          </div>
+        </div>
+        <div class="page-body" data-region="mentee-page">
+          <div class="stats-grid" data-region="mentee-stats" aria-label="Thống kê mentee">
+            <article class="card stat-card">
+              <p class="stat-card__label">Tổng mentee</p>
+              <p class="stat-card__value">—</p>
+            </article>
+            <article class="card stat-card">
+              <p class="stat-card__label">Đang hội nhập</p>
+              <p class="stat-card__value">—</p>
+            </article>
+            <article class="card stat-card">
+              <p class="stat-card__label">Cần hỗ trợ</p>
+              <p class="stat-card__value">—</p>
+            </article>
+          </div>
+          <section class="card">
+            <div class="card__header">
+              <h2 class="card__title">Nhân sự được hướng dẫn</h2>
+            </div>
+            <form class="toolbar" data-region="mentee-filters" role="search">
+              <div class="form-field toolbar__search">
+                <label class="form-field__label" for="mentee-search">Tìm tên hoặc email</label>
+                <input class="form-field__control" id="mentee-search" name="search" type="search" placeholder="Nhập tên hoặc email" value="">
+              </div>
+              <div class="form-field toolbar__filters">
+                <label class="form-field__label" for="mentee-status">Trạng thái</label>
+                <select class="form-field__control" id="mentee-status" name="status"><option value="">Tất cả trạng thái</option></select>
+              </div>
+            </form>
+            <div data-region="list-state" aria-live="polite" class="view-state" role="status" aria-busy="false" hidden="">
+            </div>
+            <div class="table-wrap" data-region="mentee-table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Nhân sự</th>
+                    <th scope="col">Phòng ban</th>
+                    <th scope="col">Ngày bắt đầu</th>
+                    <th scope="col">Tiến độ</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody data-region="mentee-rows"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <div id="modal-root">
+    </div>
+    <div id="toast-root" aria-live="polite">
+    </div>
+    <script type="module" src="../js/main.js">
+    </script>
+  </body>
+</html>

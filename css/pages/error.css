@@ -1,0 +1,6 @@
+.page--error .error-page__layout { max-width: 440px; }
+.page--error .error-page__panel { display: grid; justify-items: center; gap: var(--space-4); text-align: center; }
+.page--error .error-page__brand { margin-bottom: var(--space-3); }
+.page--error .error-page__code { color: var(--color-primary); font-size: 64px; line-height: 1; font-weight: 700; }
+.page--error .error-page__title { font-size: var(--font-size-section); }
+.page--error .error-page__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); }

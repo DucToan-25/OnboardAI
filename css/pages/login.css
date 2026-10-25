@@ -1,0 +1,30 @@
+.page--login .login__layout {
+  width: 100%;
+  max-width: 380px;
+}
+
+.page--login .login__heading {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+
+.page--login .login__brand {
+  width: 152px;
+  height: 32px;
+}
+
+.page--login .login__password-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-2);
+}
+
+.page--login .login__links {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}

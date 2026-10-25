@@ -1,0 +1,14 @@
+[
+  {
+    "id": "company-001",
+    "companyName": "OnboardAI",
+    "tagline": "Cùng nhau tạo khởi đầu tốt đẹp",
+    "mission": "Giúp nhân sự mới tự tin hòa nhập, nắm bắt công việc và phát triển ngay từ ngày đầu tiên thông qua quy trình onboarding rõ ràng, tài liệu tập trung và sự đồng hành của mentor.",
+    "vision": "Xây dựng nền tảng hội nhập nhân sự thông minh, thân thiện và dễ mở rộng, giúp doanh nghiệp nâng cao trải nghiệm nhân viên và phát triển bền vững.",
+    "coreValues": "Tôn trọng; Hợp tác; Học hỏi; Đổi mới; Trách nhiệm; Minh bạch; Bảo mật",
+    "about": "OnboardAI là dự án nền tảng hỗ trợ quản lý quy trình hội nhập nhân viên mới. Hệ thống kết nối nhân sự, mentor và bộ phận HR thông qua hành trình onboarding, checklist nhiệm vụ, thư viện tài liệu, lịch check-in và tin tức nội bộ. Nội dung này là dữ liệu minh họa cho dự án học tập.",
+    "logoUrl": "assets/images/logo.svg",
+    "updatedAt": "2026-10-14",
+    "updatedBy": "user-004"
+  }
+]
