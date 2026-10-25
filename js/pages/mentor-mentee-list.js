@@ -21,6 +21,8 @@ export async function initPage({ ui }) {
     region('mentee-rows').replaceChildren(...visible.map(hire => {
       const row = element('tr'); row.dataset.id = hire.id;
       const name = element('td'); name.append(element('strong', '', hire.user?.fullName || hire.userId), element('p', 'form-field__hint', hire.user?.email || ''));
+     const highlightBadge= element ('span','Badge badge--warning','cần chú ý đặc biệt');
+     name.append(highlightBadge);
       const progress = getProgress(hire.id);
       const statusCell = element('td'); statusCell.append(createStatusBadge('newHires', hire.status));
       const actions = element('td', 'table__actions'); actions.append(actionButton('Chi tiết', 'open-mentee', hire.id));
