@@ -1,7 +1,12 @@
-import { getSystemSettings, updateSystemSettings, getDataUpdateBackup, restoreDataUpdateBackup } from '../data/settings.js';
+import {
+  getSystemSettings,
+  updateSystemSettings,
+  getDataUpdateBackup,
+  restoreDataUpdateBackup,
+  resetDemoData,
+} from '../data/settings.js';
 import { listUsers } from '../data/people.js';
 import { listDepartments, getReadableDocuments } from '../data/resources.js';
-import { resetDemoData } from '../data/store.js';
 import { bindForm } from '../common/page-ui.js';
 import { watchData, showError } from '../common/data-ui.js';
 import { initOrganizationManagement } from '../common/organization-ui.js';

@@ -23,30 +23,30 @@
   },
   {
     "id": "user-003",
-    "fullName": "Lê Thu Hà",
-    "email": "ha.le@example.com",
+    "fullName": "Phan Thanh Tăng",
+    "email": "phantang03102007@example.com",
     "role": "mentor",
     "departmentId": "dept-engineering",
     "jobTitle": "Mentor kỹ thuật",
     "status": "active",
     "createdAt": "2025-03-12",
-    "password": "ThuHa123"
+    "password": "@Tang2007"
   },
   {
     "id": "user-004",
-    "fullName": "Phạm Ngọc Linh",
-    "email": "linh.pham@example.com",
+    "fullName": "Vi Trung Kiên",
+    "email": "vitrungkien2006@example.com",
     "role": "hr",
     "departmentId": "dept-people",
     "jobTitle": "Chuyên viên nhân sự",
     "status": "active",
     "createdAt": "2024-08-10",
-    "password": "NgocLinh2007"
+    "password": "@Kien2006"
   },
   {
     "id": "user-005",
-    "fullName": "Đỗ Quang Minh",
-    "email": "minh.do@example.com",
+    "fullName": "Trung Kiên",
+    "email": "admin@example.com",
     "role": "admin",
     "departmentId": "dept-people",
     "jobTitle": "Quản trị viên",
@@ -244,12 +244,12 @@
   {
     "id": "user-097",
     "fullName": "Nguyễn Đức Toàn",
-    "email": "user097@example.test",
+    "email": "ndt03012007@example.com",
     "role": "newHire",
     "departmentId": "dept-engineering",
-    "jobTitle": "Kỹ sư kiểm thử phần mềm",
+    "jobTitle": "Lập trình viên Fontend",
     "status": "active",
     "createdAt": "2024-06-05",
-    "password": "Demo-Onboard-097!"
+    "password": "@Toan2007"
   }
 ]

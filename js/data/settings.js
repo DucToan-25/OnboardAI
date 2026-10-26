@@ -1,5 +1,12 @@
 import { requireRoles } from '../common/auth.js';
-import { StoreError, getById, update, getSeedBackupInfo, restoreSeedBackup } from './store.js';
+import {
+  StoreError,
+  getById,
+  update,
+  getSeedBackupInfo,
+  restoreSeedBackup,
+  resetDemoData as resetStoredDemoData,
+} from './store.js';
 const EDITABLE = ['organizationName', 'supportEmail', 'supportPhone', 'onboardingDays', 'reminderDays'];
 export function getSystemSettings() {
   requireRoles(['admin']);
@@ -39,4 +46,8 @@ export function getDataUpdateBackup() {
 export function restoreDataUpdateBackup() {
   requireRoles(['admin']);
   return restoreSeedBackup();
+}
+export async function resetDemoData() {
+  requireRoles(['admin']);
+  return resetStoredDemoData();
 }

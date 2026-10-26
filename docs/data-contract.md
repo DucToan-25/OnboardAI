@@ -32,7 +32,7 @@ Ngày không có giờ dùng `YYYY-MM-DD`. Thời điểm chấp nhận ISO ho�
 
 - Session chỉ lưu `userId`; service đọc lại role/status từ users. Query URL không cấp hoặc truyền role.
 - Mọi mutation gọi `requireRoles` và kiểm tra quan hệ đối tượng trong service. `permissions.js` cung cấp cùng rule cho route/action/field; `getEditableFields()` được dùng cho profile, user và newHire update.
-- Profile chỉ tự sửa `fullName/email`. Admin quản lý tài khoản/phòng ban/settings; HR quản lý journey/hồ sơ và dashboard; Mentor chỉ ghi task/check-in cho mentee hiện tại; NewHire chỉ thao tác task/hồ sơ của mình.
+- Profile chỉ tự sửa `fullName/email`. Admin quản lý tài khoản/phòng ban/settings và là vai trò duy nhất được đặt lại dữ liệu demo; thao tác reset phải kiểm tra lại phiên Admin đang hoạt động ở tầng nghiệp vụ. HR quản lý journey/hồ sơ và dashboard; Mentor chỉ ghi task/check-in cho mentee hiện tại; NewHire chỉ thao tác task/hồ sơ của mình.
 - Password không được trả sang page. Input AI không bị quét bằng password của users; UI chỉ cảnh báo không nhập mật khẩu, token hoặc dữ liệu nhạy cảm.
 
 ## Vòng đời AI

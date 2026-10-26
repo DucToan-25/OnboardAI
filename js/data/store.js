@@ -39,6 +39,23 @@ function assertVersion() {
 function assertCollection(name) {
   if (!COLLECTIONS.includes(name)) throw new Error('Collection chưa được đăng ký.');
 }
+function hasActiveAdminSession() {
+  try {
+    const session = read('currentUser');
+    const users = read('users');
+    if (!session || typeof session.userId !== 'string' || !Array.isArray(users)) return false;
+    const matches = users.filter(user => user?.id === session.userId);
+    return matches.length === 1 && matches[0].status === 'active' && matches[0].role === 'admin';
+  } catch {
+    return false;
+  }
+}
+function requireResetAdmin() {
+  if (!hasActiveAdminSession()) {
+    throw new StoreError('FORBIDDEN', 'Chỉ tài khoản Admin đang hoạt động được đặt lại dữ liệu demo.');
+  }
+}
+export function canResetDemoData() { return hasActiveAdminSession(); }
 function validateItems(name, items) {
   if (!Array.isArray(items)) throw new Error(`${name} phải là một mảng.`);
   const ids = new Set();
@@ -291,6 +308,9 @@ export function restoreSeedBackup() {
   return info;
 }
 export async function resetDemoData() {
+  // Reset is destructive and may be offered while initialization is failing, so it
+  // validates the saved session directly instead of depending on initialized services.
+  requireResetAdmin();
   // Validate the complete canonical source before removing any saved work.
   const [versions, seeds] = await Promise.all([loadSeedVersions(), Promise.all(COLLECTIONS.map(loadSeed))]);
   const backup = new Map(Object.keys(STORAGE_KEYS).map(name => [name, storage('getItem', name)]));

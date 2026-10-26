@@ -10,7 +10,7 @@ Trạng thái hiện hành ngày 25/10/2026. Có 19 route: 12 màn hình nền t
 | UI-03 | SV1 | `newhire-ai-help.html` | NewHire | History: create/read/archive/delete | Policy Q&A draft → Save/Accept/Reject | TODO Figma/OBS/PR |
 | UI-04 | SV1 | `newhire-document-library.html` | NewHire | Đọc/lọc tài liệu theo scope | — | TODO Figma/OBS/PR |
 | UI-05 | SV1 | `login.html` | Public | Login/logout/hướng dẫn hỗ trợ | — | TODO Figma/OBS/PR |
-| UI-06 | SV1 | `profile.html` | 4 role | Đọc/sửa hồ sơ cá nhân; reset demo | — | TODO Figma/OBS/PR |
+| UI-06 | SV1 | `profile.html` | 4 role | Đọc/sửa hồ sơ cá nhân | — | TODO Figma/OBS/PR |
 | UI-07 | SV2 | `mentor-mentee-list.html` | Mentor | Đọc/lọc mentee và tiến độ | — | TODO Figma/OBS/PR |
 | UI-08 | SV2 | `mentor-checkin-note.html` | Mentor | Create/read/update/cancel check-in | — | TODO Figma/OBS/PR |
 | UI-09 | SV2 | `mentor-task-assignment.html` | Mentor | CRUD/archive task | Checklist draft → Save/Accept/Reject | TODO Figma/OBS/PR |
@@ -21,7 +21,7 @@ Trạng thái hiện hành ngày 25/10/2026. Có 19 route: 12 màn hình nền t
 | UI-14 | SV3 | `hr-dashboard.html` | HR | Đọc tiến độ, history read/archive/delete | Progress Risk draft → Save/Accept/Reject | TODO Figma/OBS/PR |
 | UI-15 | SV3 | `admin-department-management.html` | Admin | CRUD/archive phòng ban | — | TODO Figma/OBS/PR |
 | UI-16 | SV3 | `admin-user-management.html` | Admin | CRUD/vô hiệu hóa/khôi phục tài khoản | — | TODO Figma/OBS/PR |
-| UI-17 | SV3 | `admin-system-settings.html` | Admin | Read/update/reset singleton settings; Reset thay Delete | — | TODO Figma/OBS/PR |
+| UI-17 | SV3 | `admin-system-settings.html` | Admin | Read/update/reset singleton settings; chỉ Admin được reset dữ liệu demo | — | TODO Figma/OBS/PR |
 | UI-18 | SV3 | `404.html` | Public | Điều hướng route không tồn tại | — | TODO Figma/OBS/PR |
 
 ## Trạng thái kỹ thuật

@@ -265,6 +265,7 @@ await test('version manifest supports legacy shape and rejects misspelled collec
   for (const value of [null, [], { users: '5' }, { users: 1.5 }]) assert.throws(() => store.validateSeedVersions(value), { code: 'INVALID_DATA' });
 });
 await test('reset validates manifest and records versions for the next page', () => withSeedSync(async source => {
+  login('admin');
   const before = new Map(memory);
   source.version.news = -1;
   const fresh = await reloadStore();
@@ -279,6 +280,20 @@ await test('one auth implementation; password is mandatory and omitted from publ
   assert.throws(() => auth.login(account('admin').id));
   const user = login('admin'); assert.ok(!('password' in user));
   assert.deepEqual(JSON.parse(memory.get('onboardai_currentUser')), { userId: user.id });
+});
+await test('only an active Admin session can reset demo data', async () => {
+  auth.logout();
+  assert.equal(store.canResetDemoData(), false);
+  for (const role of ['newHire', 'mentor', 'hr']) {
+    login(role);
+    const before = new Map(memory);
+    assert.equal(store.canResetDemoData(), false);
+    await assert.rejects(store.resetDemoData(), { code: 'FORBIDDEN' });
+    await assert.rejects(settings.resetDemoData(), { code: 'FORBIDDEN' });
+    assert.deepEqual(memory, before);
+  }
+  login('admin');
+  assert.equal(store.canResetDemoData(), true);
 });
 await test('inactive account cannot log in', () => {
   const user = seedUsers.find(user => user.status !== 'active');
@@ -519,6 +534,7 @@ await test('date parsing validates Vietnam wall time and invalid calendar dates'
   assert.equal(parseStoredDate('2026-10-19 10:00').toISOString(), '2026-10-19T03:00:00.000Z'); assert.equal(parseStoredDate('2026-02-30'), null);
 });
 await test('reset validates source before removing existing data', async () => {
+  login('admin');
   const before = new Map(memory);
   const savedFetch = globalThis.fetch;
   globalThis.fetch = async input => {
@@ -530,6 +546,7 @@ await test('reset validates source before removing existing data', async () => {
   finally { globalThis.fetch = savedFetch; }
 });
 await test('reset restores prior data if a write fails after preflight', async () => {
+  login('admin');
   const before = new Map(memory); let failedOnce = false;
   failWrite = key => key === 'onboardai_tasks' && !failedOnce && (failedOnce = true);
   await assert.rejects(store.resetDemoData()); failWrite = null;
@@ -537,7 +554,9 @@ await test('reset restores prior data if a write fails after preflight', async (
 });
 await test('logout keeps data; reset only clears registered project keys', async () => {
   const before = memory.get('onboardai_tasks'); auth.logout(); assert.equal(memory.get('onboardai_tasks'), before);
-  memory.set('unrelated_site', 'preserve'); await store.resetDemoData(); assert.equal(memory.get('unrelated_site'), 'preserve'); assert.equal(auth.getCurrentUser(), null);
+  const loggedOutState = new Map(memory);
+  await assert.rejects(store.resetDemoData(), { code: 'FORBIDDEN' }); assert.deepEqual(memory, loggedOutState);
+  login('admin'); memory.set('unrelated_site', 'preserve'); await settings.resetDemoData(); assert.equal(memory.get('unrelated_site'), 'preserve'); assert.equal(auth.getCurrentUser(), null);
   assert.equal(store.getById('tasks', task.id), null); assert.equal(Object.keys(store.STORAGE_KEYS).length, 16);
 });
 await test('HTTP server serves modules and blocks private paths and unsupported methods', async () => {
